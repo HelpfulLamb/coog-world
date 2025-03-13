@@ -1,3 +1,3 @@
 node_modules
 .env
-C:\coog-world\DigiCertGlobalRootCA.crt.pem
+coog-world/DigiCertGlobalRootCA.crt.pem
