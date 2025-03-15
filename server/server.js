@@ -12,14 +12,14 @@ db.getConnection((err) => {
 
 const server = http.createServer(async (req, res) => {
     if(req.url === '/coogworld' && req.method === 'GET'){
-        db.query('SELECT 1 + 1 AS solution', (error, results) =>{
+        db.query('SELECT * FROM rides', (error, results) =>{
             if(error){
                 console.error('Database connection error: ', error);
                 res.writeHead(500, {'Content-type':'text/plain'});
                 return res.end('Database connection failed.')
             }
-            res.writeHead(200, {'Content-type':'text/plain'});
-            res.end(`Database connection successful. Result: ${results[0].solution}`);
+            res.writeHead(200, {'Content-type':'application/json'});
+            res.end(`Database connection successful. Result: ${JSON.stringify(results[0])}`);
         });
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
