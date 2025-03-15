@@ -5,6 +5,7 @@
 .nav-main{
     background-color: #c8102e;
     padding: 2rem 0;
+    position: static;
 }
 #site-title{
     font-family: sans-serif;
@@ -36,6 +37,7 @@ a:hover{
 li{
     list-style: none;
 }
+
 footer{
     text-align: center;
 }

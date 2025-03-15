@@ -1,6 +1,8 @@
 function Tickets(){
     return(
-        <h1>Purchase Tickets</h1>
+        <>
+            <h1>Purchase Tickets</h1>
+        </>
     )
 }
 
