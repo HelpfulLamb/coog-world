@@ -9,9 +9,9 @@ const db = mysql.createPool({
     user: process.env.DB_user,
     password: process.env.DB_password,
     database: process.env.DB_database,
-    ssl:{
-        ca: fs.readFileSync(process.env.SSL_CERT)
-    }
+    /*ssl:{
+       ca: fs.readFileSync(process.env.SSL_CERT)
+    } */
 });
 
 const query = 'SELECT * FROM rides';
