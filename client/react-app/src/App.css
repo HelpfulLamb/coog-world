@@ -1,6 +1,13 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
+}
+#root{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
 }
 .nav-main{
     background-color: #c8102e;
@@ -37,7 +44,74 @@ a:hover{
 li{
     list-style: none;
 }
-
-footer{
+#tickets-title{
     text-align: center;
+    font-family: sans-serif;
+    font-size: 3rem;
+    margin: 3rem 0;
+}
+.price-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.price-card{
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
+    padding: 20px;
+    margin: 30px;
+    text-align: center;
+    max-width: 250px;
+    display: inline-block;
+}
+.price-card h2{
+    padding: 25px 0;
+    font-size: 2.5rem;
+}
+.price-card:hover h2{
+    color:#c8102e;
+}
+.fancy{
+    background-color: transparent;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-top: 2rem;
+    outline: none;
+    overflow: visible;
+    padding: 1.25em 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 13px;
+}
+.fancy:hover{
+    background-color: #c8102e;
+    color: #ffffff;
+    box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
+}
+.overlay{
+    width: 100%;
+    height: 100vh;
+    color: blue;
+}
+.closebtn:hover{
+    cursor: pointer;
+}
+footer{
+    flex-shrink: 0;
+    text-align: center;
+    margin-top: auto;
+    background-color: #F5ECE0;
+    padding: 10px;
+    font-size: 15px;
 }

@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const fs = require('fs')
 dotenv.config({ path: './.env' });
@@ -9,9 +9,9 @@ const db = mysql.createPool({
     user: process.env.DB_user,
     password: process.env.DB_password,
     database: process.env.DB_database,
-    /*ssl:{
+    ssl:{
        ca: fs.readFileSync(process.env.SSL_CERT)
-    } */
+    }
 });
 
 const query = 'SELECT * FROM rides';
