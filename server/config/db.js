@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const fs = require('fs')
 dotenv.config({ path: './.env' });
 
+// create connection to database
 const db = mysql.createPool({
     connectionLimit: process.env.DB_connectionLimit,
     host: process.env.DB_host,
@@ -14,12 +15,12 @@ const db = mysql.createPool({
     }
 });
 
-const query = 'SELECT * FROM rides';
-db.query(query, (err, result) => {
-    if(err){
-        console.error('Error: ', err);
+// test database connection
+db.getConnection((err) => {
+    if(err) {
+        console.log(err);
     } else {
-        console.log('Success', result);
+        console.log('MySQL Connected...');
     }
 });
 
