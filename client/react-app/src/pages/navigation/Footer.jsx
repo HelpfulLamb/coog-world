@@ -1,7 +1,7 @@
 function Footer(){
     return(
         <footer>
-            <p>&copy; {new Date().getFullYear()} CoogWorld</p>
+            <p>&copy; {new Date().getFullYear()} CoogWorld. All rights reserved.</p>
         </footer>
     );
 }
