@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import Modal from './Modal.jsx';
 
 function TicketCard({title, price, description1, description2}){
-    const [openModal, setOpenModal] = useState(false);
     return(
         <>
             <div className='price-card'>
@@ -13,7 +11,7 @@ function TicketCard({title, price, description1, description2}){
                     <li>{description1}</li>
                     <li>{description2}</li>
                 </ul>
-                <button className='fancy' onClick={() => setOpenModal(true)}>Purchase</button>
+                <button className='fancy'>Purchase</button>
             </div>
         </>
     )
