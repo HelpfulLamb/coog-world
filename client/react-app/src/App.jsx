@@ -12,17 +12,19 @@ import Footer from './pages/navigation/Footer.jsx';
 function App() {
     return(
         <>
-            <Header />
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/home' element={<Home />} />
-                <Route path='/tickets' element={<Tickets />} />
-                <Route path='/services' element={<Services />} />
-                <Route path='/cart' element={<Cart />} />
-                <Route path='/contact' element={<Contact />} />
-                <Route path='/registration' element={<Register />} />
-            </Routes>
-            <Footer/>
+            <div id='root'>
+                <Header />
+                <Routes>
+                    <Route path='/' element={<Home />} />
+                    <Route path='/home' element={<Home />} />
+                    <Route path='/tickets' element={<Tickets />} />
+                    <Route path='/services' element={<Services />} />
+                    <Route path='/cart' element={<Cart />} />
+                    <Route path='/contact' element={<Contact />} />
+                    <Route path='/registration' element={<Register />} />
+                </Routes>
+                <Footer/>
+            </div>
         </>
     );
 }
