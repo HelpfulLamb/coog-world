@@ -1,3 +1,4 @@
+const app = require('express');
 const http = require('http');
 const { rideRoutes } = require('./routes/rideRoutes.js');
 const { ticketRoutes } = require('./routes/ticketRoutes.js');

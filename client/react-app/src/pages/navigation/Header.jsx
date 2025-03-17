@@ -3,7 +3,9 @@ function Header(){
     return(
         <nav className="nav-main">
             <div className="header-container">
-                <h1 id="site-title">CoogWorld</h1>
+                <h1>
+                    <Link to='/' id="site-title">CoogWorld</Link>
+                </h1>
                 <ul className="header-list">
                     <li><Link to="/home" className="nav-link">Home</Link></li>
                     <li><Link to="/tickets" className="nav-link">Tickets</Link></li>
