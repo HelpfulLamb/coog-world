@@ -11,7 +11,7 @@
 }
 .nav-main{
     background-color: #c8102e;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     position: static;
 }
 #site-title{
@@ -107,11 +107,16 @@ li{
 .closebtn:hover{
     cursor: pointer;
 }
+#registration-title{
+    text-align: center;
+    margin: 2rem;
+    font-size: 35px;
+}
 footer{
     flex-shrink: 0;
     text-align: center;
     margin-top: auto;
     background-color: #F5ECE0;
     padding: 10px;
-    font-size: 15px;
+    font-size: 14px;
 }

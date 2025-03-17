@@ -3,34 +3,21 @@ import { useState } from 'react';
 
 function Register(){
     return (
-        <form className='form'>
-            <p className='title'>Register</p>
-            <p className='message'>Signup now and get full access to our app.</p>
-            <div className='flex'>
-                <label>
-                    <input required placeholder type="text"className='input' />
-                    <span>Firstname</span>
-                </label>
-                <label>
-                    <input required placeholder type="text"className='input' />
-                    <span>Lastname</span>
-                </label>
-            </div>
-            <label>
-                <input required placeholder type="email"className='input' />
-                <span>Email</span>
-            </label>
-            <label>
-                <input required placeholder type="password"className='input' />
-                <span>Password</span>
-            </label>
-            <label>
-                <input required placeholder type="password"className='input' />
-                <span>Confirm Password</span>
-            </label>
-            <button className='submit'>Submit</button>
-            <p className='signin'>Already have an account?<a href="#">Sign In</a></p>
-        </form>
+        <>
+            <h2 id='registration-title'>Registration Form</h2>
+            <form className='form-registry'>
+                <label>First Name</label>
+                <input type="text" placeholder='firstname' />
+                <label>Last Name</label>
+                <input type="text" placeholder='lastname' />
+                <label>Email</label>
+                <input type="email" placeholder='example@email.com' />
+                <label>Address</label>
+                <input type="text" />
+                <label>Password</label>
+                <input type="Password" />
+            </form>
+        </>
     )
 }
 
