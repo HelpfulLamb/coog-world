@@ -1,8 +1,8 @@
-import headerImage from '../images/header2.jpg';
+import headerImage from '../images/IMG_2392.png';
 function Home(){
     return(
         <>
-            <h2>This is Home</h2>
+            <img src={headerImage} alt="CoogWorld Logo" draggable='false' />
 
         </>
     )
