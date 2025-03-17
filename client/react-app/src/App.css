@@ -11,13 +11,16 @@
 }
 .nav-main{
     background-color: #c8102e;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     position: static;
 }
 #site-title{
     font-family: sans-serif;
     color: #ffffff;
     font-size: 2.5rem;
+}
+#site-title:hover{
+    cursor: pointer;
 }
 .header-container{
     display: flex;
@@ -99,13 +102,88 @@ li{
     color: #ffffff;
     box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
 }
-.overlay{
-    width: 100%;
-    height: 100vh;
-    color: blue;
+#shop-title{
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 3rem;
+    margin: 3rem 0;
 }
-.closebtn:hover{
+.shop-hover-container{
+    position: relative;
+    display: inline-block;
+}
+.shop-hover-container .shop-hover-text{
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+}
+.shop-hover-container:hover .shop-hover-text{
+    visibility: visible;
+}
+.shop-link{
+    color: #000000;
+    font-family: sans-serif;
+    font-size: 1.1rem;
+}
+.shop-link-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.shop-link-card{
+    background-color: transparent;
+    border: transparent;
+    box-shadow: 5px 10px 10px rgba(75, 61, 61, 0.466);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: black;
     cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    outline: none;
+    overflow: visible;
+    padding: 200px 400px;
+    position: relative;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 13px;
+    max-width: 700px;
+    max-height: 400px;
+}
+.shop-link-text{
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.shop-link-text h2{
+    padding: 25px 0;
+    font-size: 3.5rem;
+}
+.shop-link-text h3{
+    font-size: 1.5rem;
+}
+.shop-link-card:hover{
+    background-color: #c8102e;
+    color: #ffffff;
+    box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
+}
+#registration-title{
+    text-align: center;
+    margin: 2rem;
+    font-size: 35px;
 }
 footer{
     flex-shrink: 0;
@@ -113,5 +191,5 @@ footer{
     margin-top: auto;
     background-color: #F5ECE0;
     padding: 10px;
-    font-size: 15px;
+    font-size: 14px;
 }

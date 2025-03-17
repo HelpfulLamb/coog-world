@@ -1,4 +1,4 @@
-const {TicketType} = require('../models/ticketModel.js');
+const { TicketType } = require('../models/ticketModel.js');
 
 const getTicketTypes = async (req, res) => {
     try {
