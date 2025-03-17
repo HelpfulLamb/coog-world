@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 function ShopCard({title, description1, button}){
     return(
-        <a href={button}> 
+        <Link to={button}> 
             <button className='shop-link-card'>
                 <div className='shop-link-text'>
                     <h2>{title}</h2>
                     <h3>{description1}</h3>
                 </div>
             </button>
-        </a>
+        </Link>
     )
 }
 
