@@ -1,4 +1,4 @@
-const { getWeather } = require('../controllers/weatherController.js');
+const weatherController = require('../controllers/weatherController.js');
 const express = require('express');
 const weatherRouter = express.Router();
 

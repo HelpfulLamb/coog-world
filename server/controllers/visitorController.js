@@ -1,17 +1,50 @@
-const { Visitor } = require('../models/weatherModel.js');
+const userModel = require('../models/visitorModel.js');
 
-const getVisitors = async (req, res) => {
+exports.createUser = async (req, res) => {
     try {
-        const visitors = await Visitor.getAll();
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(visitors));
+        const {fname, lname, email, phone, address, purchased_tickets, ticket_type} = req.body;
+        const userId = await userModel.createUsers(fname, lname, email, phone, address, purchased_tickets, ticket_type);
+        res.status(201).json({id: userId, fname, lname, email, phone, address, purchased_tickets, ticket_type});
     } catch (error) {
-        console.error('Error fetching visitors: ', err);
-        res.writeHead(500, {'Content-Type': 'text/plain'});
-        res.end('Internal Server Error');
+        res.status(500).json({message: error.message});
     }
 };
 
-module.exports = {
-    getVisitors
-}
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await userModel.getAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getUserById = async (req, res) => {
+    try {
+        const user = await userModel.getUserById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.deleteAllUsers = async () => {
+    try {
+        await userModel.deleteAllUsers();
+        res.status(200).json({ message: 'All users deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteUserById = async (req, res) => {
+    try {
+        await userModel.deleteUserById(req.params.id);
+        res.status(200).json({ message: 'User deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

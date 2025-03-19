@@ -1,20 +1,5 @@
-const { db } = require('../config/db.js');
+const db = require('../config/db.js');
 
-const Employee = {
-    getAll: () => {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM employees';
-            db.query(query, (err, results) => {
-                if(err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
-            });
-        });
-    },
-};
-
-module.exports = {
-    Employee
+exports.createEmployee = async (emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, ) => {
+    
 };
