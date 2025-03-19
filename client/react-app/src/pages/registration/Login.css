@@ -34,12 +34,15 @@ body {
 
 /* === Login Form === */
 .login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-    background-color: var(--body-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px); /* Adjust for header height */
+  background-color: var(--body-bg);
+  padding-top: 60px;  /* Creates space for the header */
+  box-sizing: border-box;
 }
+
 
 .form {
   background: var(--form-bg);

@@ -1,4 +1,5 @@
 import './App.css'
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
@@ -11,6 +12,7 @@ import Merchandise from './pages/shops/Merchandise.jsx';
 import Contact from './pages/Contact.jsx';
 import Register from './pages/registration/Register.jsx';
 import Footer from './pages/navigation/Footer.jsx';
+
 
 function App() {
     return(
