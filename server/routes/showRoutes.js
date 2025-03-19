@@ -1,8 +1,18 @@
-const { getShows } = require('../controllers/showController.js');
+const showController = require('../controllers/showController.js');
 const express = require('express');
 const showRouter = express.Router();
 
-showRouter.get('/', getShows);
+// create new shows
+showRouter.post('/', showController.createShow);
+
+// retrieve shows (all or specific)
+showRouter.get('/', showController.getAllShows);
+showRouter.get('/:id', showController.getShowById);
+
+// delete shows (all or specific)
+showRouter.delete('/', showController.deleteAllShows);
+showRouter.delete('/:id', showController.deleteShowById);
+
 
 module.exports = {
     showRouter
