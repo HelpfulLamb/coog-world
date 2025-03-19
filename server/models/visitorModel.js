@@ -23,5 +23,5 @@ exports.deleteAllUsers = async () => {
 };
 
 exports.deleteUserById = async (id) => {
-    await db.query('DELETE FROM visitor WHERE Visitor_ID = ?', [id])
+    await db.query('DELETE FROM visitors WHERE Visitor_ID = ?', [id]);
 };

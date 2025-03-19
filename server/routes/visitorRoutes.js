@@ -7,11 +7,11 @@ visitorRouter.post('/', visitorController.createUser);
 
 // retrieve users (all or specific)
 visitorRouter.get('/', visitorController.getAllUsers);
-visitorRouter.get('/', visitorController.getUserById);
+visitorRouter.get('/:id', visitorController.getUserById);
 
 // delete users (all or specific)
 visitorRouter.delete('/', visitorController.deleteAllUsers);
-visitorRouter.delete('/', visitorController.deleteUserById);
+visitorRouter.delete('/:id', visitorController.deleteUserById);
 
 module.exports = {
     visitorRouter

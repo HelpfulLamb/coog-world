@@ -31,7 +31,7 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-exports.deleteAllUsers = async () => {
+exports.deleteAllUsers = async (req, res) => {
     try {
         await userModel.deleteAllUsers();
         res.status(200).json({ message: 'All users deleted successfully.' });

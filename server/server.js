@@ -4,9 +4,9 @@ const cors = require('cors');
 const { rideRouter } = require('./routes/rideRoutes.js');
 const { ticketRouter } = require('./routes/ticketRoutes.js');
 const { visitorRouter } = require('./routes/visitorRoutes.js');
+const { employeeRouter } = require('./routes/employeeRoutes.js');
 
 /*const { boothRouter } = require('./routes/boothRoutes.js');
-const { employeeRouter } = require('./routes/employeeRoutes.js');
 const { inventoryRouter } = require('./routes/inventoryRoutes.js');
 const { maintenanceRouter } = require('./routes/maintenanceRoutes.js');
 const { serviceRouter } = require('./routes/serviceRoutes.js');
@@ -21,9 +21,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-//app.use('/api/rides', rideRouter);
-//app.use('/api/ticket-type', ticketRouter);
+app.use('/api/rides', rideRouter);
+app.use('/api/ticket-type', ticketRouter);
 app.use('/api/users', visitorRouter);
+app.use('/api/employees', employeeRouter);
 
 app.use((req, res) => {
     res.status(404).send('Not Found');

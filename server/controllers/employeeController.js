@@ -1,17 +1,50 @@
-const { Employee } = require('../models/employeeModel.js');
+const employeeModel = require('../models/employeeModel.js');
 
-const getEmployees = async (req, res) => {
+exports.createEmployee = async (req, res) => {
     try {
-        const employees = await Employee.getAll();
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(employees));
+        const {emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact} = req.body;
+        const employeeId = await employeeModel.createEmployee(emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact);
+        res.status(201).json({id: employeeId, emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact});
     } catch (error) {
-        console.error('Error fetching employees: ', err);
-        res.writeHead(500, {'Content-Type': 'text/plain'});
-        res.end('Internal Server Error');
+        res.status(500).json({message: error.message});
     }
 };
 
-module.exports = {
-    getEmployees
-}
+exports.getAllEmployees = async (req, res) => {
+    try {
+        const employees = await employeeModel.getAllEmployees();
+        res.status(200).json(employees);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getEmployeeById = async (req, res) => {
+    try {
+        const employee = await employeeModel.getEmployeeById(req.params.id);
+        if(!employee){
+            return res.status(404).json({message: 'Employee not found'});
+        }
+        res.status(200).json(employee);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteAllEmployees = async (req, res) => {
+    try {
+        await employeeModel.deleteAllEmployees();
+        res.status(200).json({message: 'All employees deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteEmployeeById = async (req, res) => {
+    try {
+        await employeeModel.deleteEmployeeById(req.params.id);
+        res.status(200).json({message: 'Employee deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
