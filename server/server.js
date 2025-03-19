@@ -5,6 +5,8 @@ const { rideRouter } = require('./routes/rideRoutes.js');
 const { ticketRouter } = require('./routes/ticketRoutes.js');
 const { visitorRouter } = require('./routes/visitorRoutes.js');
 const { employeeRouter } = require('./routes/employeeRoutes.js');
+const { shopRouter } = require('./routes/shopRoutes.js');
+const { showRouter } = require('./routes/showRoutes.js');
 
 /*const { boothRouter } = require('./routes/boothRoutes.js');
 const { inventoryRouter } = require('./routes/inventoryRoutes.js');
@@ -25,6 +27,8 @@ app.use('/api/rides', rideRouter);
 app.use('/api/ticket-type', ticketRouter);
 app.use('/api/users', visitorRouter);
 app.use('/api/employees', employeeRouter);
+app.use('/api/shops', shopRouter);
+app.use('/api/shows', showRouter);
 
 app.use((req, res) => {
     res.status(404).send('Not Found');
