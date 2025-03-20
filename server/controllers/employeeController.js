@@ -31,6 +31,18 @@ exports.getEmployeeById = async (req, res) => {
     }
 };
 
+exports.getEmployeeInfo = async (req, res) => {
+    try {
+        const info = await employeeModel.getEmployeeInfo(req.params.id);
+        if(!info){
+            return res.status(404).json({message: 'Employee information not found.'});
+        }
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.deleteAllEmployees = async (req, res) => {
     try {
         await employeeModel.deleteAllEmployees();

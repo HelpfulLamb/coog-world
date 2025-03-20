@@ -18,6 +18,11 @@ exports.getEmployeeById = async (id) => {
     return employee[0];
 };
 
+exports.getEmployeeInfo = async (id) => {
+    const [info] = await db.query('SELECT e.First_name, e.Last_name, e.Emp_phone, e.Emp_email, e.Emp_sec, e.Emp_salary, e.Start_date, o.Type FROM employees as e, occupation as o WHERE e.Emp_sec = o.Occ_ID and Emp_ID = ?', [id]);
+    return info;
+}
+
 exports.deleteAllEmployees = async () => {
     await db.query('DELETE FROM employees');
 };

@@ -8,6 +8,7 @@ employeeRouter.post('/', employeeController.createEmployee);
 // retrieve employees (all or specific)
 employeeRouter.get('/', employeeController.getAllEmployees);
 employeeRouter.get('/:id', employeeController.getEmployeeById);
+employeeRouter.get('/info/:id', employeeController.getEmployeeInfo);
 
 // delete employees (all or specific)
 employeeRouter.delete('/', employeeController.deleteAllEmployees);
