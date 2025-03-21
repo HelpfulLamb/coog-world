@@ -1,10 +1,13 @@
 import React from 'react';
 import './Dashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const handleLogout = () => {
         
         console.log('User  logged out');
+        navigate('/');
     };
 
     return (
