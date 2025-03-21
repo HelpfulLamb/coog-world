@@ -63,7 +63,7 @@ function Register() {
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
-                    <button type="submit" className="button button-block">Register</button>
+                    <button type="submit" className="fancy">Register</button>
                     <p className="already-registered">
                         Already have an account? <a href="/login">Login</a>
                     </p>

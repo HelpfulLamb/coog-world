@@ -3,22 +3,21 @@
     justify-content: center;
     align-items: center;
     height: 100vh; 
-    background-color: var(--body-bg);
+    background-color: #f5ece0; 
 }
 
 .form {
-    background: var(--form-bg);
+    background: rgba(255, 255, 255, 0.9); 
     padding: 40px;
     max-width: 400px;
     width: 100%;
-    border-radius: var(--br);
-    box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
+    border-radius: 10px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
 
 h1 {
-    text-align: center;
-    color: var(--white);
+    color: #c8102e; 
     margin-bottom: 20px;
 }
 
@@ -31,10 +30,10 @@ input {
     width: 100%;
     padding: 12px;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--gray-light);
-    color: var(--white);
+    border: 1px solid #ccc; 
+    color: #000; 
     font-size: 18px;
-    border-radius: var(--br);
+    border-radius: 5px; 
     outline: none;
 }
 
@@ -42,7 +41,7 @@ label {
     position: absolute;
     top: 12px;
     left: 14px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7); 
     font-size: 18px;
     transition: all 0.3s ease;
 }
@@ -52,26 +51,26 @@ input:focus + label,
     top: -18px;
     left: 8px;
     font-size: 14px;
-    color: var(--white);
+    color: #c8102e; 
 }
 
-.button {
-    background-color: var(--main);
-    color: var(--white);
+.fancy {
+    background-color: #c8102e; 
+    color: #ffffff;
     border: none;
     padding: 12px;
     width: 100%;
-    border-radius: 6px;
+    border-radius: 5px; 
     font-weight: bold;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
-.button:hover {
-    background-color: var(--main-dark);
+.fancy:hover {
+    background-color: #a60e2e; 
 }
 
-/* === Success & Error Messages === */
+
 .error-message {
     color: yellow;
     text-align: center;
@@ -84,51 +83,17 @@ input:focus + label,
     margin-top: 10px;
 }
 
-/* === Already Registered Link === */
+
 .already-registered {
     margin-top: 15px;
-    color: var(--gray-light);
+    color: #000; 
 }
 
 .already-registered a {
-    color: var(--white);
-}
-
-.already-registered a:hover {
-    color: var(--main);
-}
-h1, label {
-    color: var(--white);
-}
-
-input {
-    background: rgba(0, 0, 0, 0.2); /* Darkened input background */
-    color: var(--white); /* Text is now white for readability */
-    border: 1px solid var(--gray-light); 
-}
-
-input::placeholder {
-    color: rgba(255, 255, 255, 0.5); /* Placeholder text visibility */
-}
-
-.button {
-    background-color: var(--main);
-    color: var(--white);
-}
-
-.already-registered {
-    color: var(--white); /* Ensures the text is readable */
-}
-
-.already-registered a {
-    color: var(--main);
+    color: #c8102e;
     text-decoration: underline;
 }
 
-.error-message {
-    color: yellow;
-}
-
-.success-message {
-    color: #4CAF50;
+.already-registered a:hover {
+    color: #a60e2e; 
 }
