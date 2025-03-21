@@ -2,13 +2,13 @@ const express = require('express');
 const cors = require('cors');
 
 
-const { boothRouter } = require('./routes/boothRoutes.js');
+//const { boothRouter } = require('./routes/boothRoutes.js');
 const { rideRouter } = require('./routes/rideRoutes.js');
 const { ticketRouter } = require('./routes/ticketRoutes.js');
 const { visitorRouter } = require('./routes/visitorRoutes.js');
 const { employeeRouter } = require('./routes/employeeRoutes.js');
 const { serviceRouter } = require('./routes/serviceRoutes.js');
-const { shopRouter } = require('./routes/shopRoutes.js');
+//const { shopRouter } = require('./routes/shopRoutes.js');
 const { showRouter } = require('./routes/showRoutes.js');
 const { inventoryRouter } = require('./routes/inventoryRoutes.js');
 const { maintenanceRouter } = require('./routes/maintenanceRoutes.js');
@@ -21,13 +21,13 @@ app.use(express.json());
 app.use(cors());
 
 
-app.use('/api/booths', boothRouter);
+//app.use('/api/booths', boothRouter);
 app.use('/api/rides', rideRouter);
 app.use('/api/ticket-type', ticketRouter);
 app.use('/api/users', visitorRouter);
 app.use('/api/employees', employeeRouter);
 app.use('/api/services', serviceRouter);
-app.use('/api/shops', shopRouter);
+//app.use('/api/shops', shopRouter);
 app.use('/api/shows', showRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/maintenance', maintenanceRouter);

@@ -2,9 +2,9 @@ const inventoryModel = require('../models/inventoryModel.js');
 
 exports.createUnit = async (req, res) => {
     try {
-        const {item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level} = req.body;
-        const inventoryId = await inventoryModel.createUnit(item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level);
-        res.status(201).json({id: inventoryId, item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level});
+        const {item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by} = req.body;
+        const inventoryId = await inventoryModel.createUnit(item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by);
+        res.status(201).json({id: inventoryId, item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
