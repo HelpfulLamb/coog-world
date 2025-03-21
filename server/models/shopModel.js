@@ -1,9 +1,9 @@
 const db = require('../config/db.js');
 
-exports.createShop = async (name, location, open_time, close_time, type, cost, revenue, staffers, merch_type, merch_cost, merch_inv, merch_sold) => {
+exports.createShop = async (name, location, open_time, close_time, type, cost, staffers, merch_sold) => {
     const [result] = await db.query(
-        'INSERT INTO shops (Shop_name, Shop_location, Shop_open, Shop_close, Shop_type, Shop_cost, Shop_rev, Staff_num, Merch_type, Merch_cost, Merch_inv, Merch_sold) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [name, location, open_time, close_time, type, cost, revenue, staffers, merch_type, merch_cost, merch_inv, merch_sold]
+        'INSERT INTO shops (Shop_name, shop_location, Shop_open, Shop_close, Shop_type, Shop_cost, Staff_num, Merch_sold) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [name, location, open_time, close_time, type, cost, staffers, merch_sold]
     );
     return result.insertId;
 };

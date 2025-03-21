@@ -2,9 +2,9 @@ const shopModel = require('../models/shopModel.js');
 
 exports.createShop = async (req, res) => {
     try {
-        const {name, location, open_time, close_time, type, cost, revenue, staffers, merch_type, merch_cost, merch_inv, merch_sold} = req.body;
-        const shopId = await shopModel.createShop(name, location, open_time, close_time, type, cost, revenue, staffers, merch_type, merch_cost, merch_inv, merch_sold);
-        res.status(201).json({id: shopId, name, location, open_time, close_time, type, cost, revenue, staffers, merch_type, merch_cost, merch_inv, merch_sold});
+        const {name, location, open_time, close_time, type, cost, staffers, merch_sold} = req.body;
+        const shopId = await shopModel.createShop(name, location, open_time, close_time, type, cost, staffers, merch_sold);
+        res.status(201).json({id: shopId, name, location, open_time, close_time, type, cost, staffers, merch_sold});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

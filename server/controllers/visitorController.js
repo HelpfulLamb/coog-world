@@ -2,9 +2,9 @@ const userModel = require('../models/visitorModel.js');
 
 exports.createUser = async (req, res) => {
     try {
-        const {fname, lname, email, phone, address, purchased_tickets, ticket_type} = req.body;
-        const userId = await userModel.createUsers(fname, lname, email, phone, address, purchased_tickets, ticket_type);
-        res.status(201).json({id: userId, fname, lname, email, phone, address, purchased_tickets, ticket_type});
+        const {fname, lname, email, password, phone, address} = req.body;
+        const userId = await userModel.createUsers(fname, lname, email, password, phone, address);
+        res.status(201).json({id: userId, fname, lname, email, password, phone, address});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

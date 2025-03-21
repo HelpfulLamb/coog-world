@@ -2,9 +2,9 @@ const boothModel = require('../models/boothModel.js');
 
 exports.createBooth = async (req, res) => {
     try {
-        const {name, location, start_time, end_time, cost, revenue, staffers, status} = req.body;
-        const boothId = await boothModel.createBooth(name, location, start_time, end_time, cost, revenue, staffers, status);
-        res.status(201).json({id: boothId, name, location, start_time, end_time, cost, revenue, staffers, status});
+        const {name, location, start_time, end_time, cost, staffers, status} = req.body;
+        const boothId = await boothModel.createBooth(name, location, start_time, end_time, cost, staffers, status);
+        res.status(201).json({id: boothId, name, location, start_time, end_time, cost, staffers, status});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

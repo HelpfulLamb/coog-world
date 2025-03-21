@@ -2,9 +2,9 @@ const employeeModel = require('../models/employeeModel.js');
 
 exports.createEmployee = async (req, res) => {
     try {
-        const {emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact} = req.body;
-        const employeeId = await employeeModel.createEmployee(emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact);
-        res.status(201).json({id: employeeId, emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, hours, emergency_contact});
+        const {fname, lname, phone, email, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact} = req.body;
+        const employeeId = await employeeModel.createEmployee(emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, emergency_contact);
+        res.status(201).json({id: employeeId, fname, lname, phone, email, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

@@ -1,9 +1,9 @@
 const db = require('../config/db.js');
 
-exports.createUnit = async (item_id, item_type, item_name, item_quantity, shop, booth, unit_price, restocked_last, reorder_level) => {
+exports.createUnit = async (item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level) => {
     const [result] = await db.query(
-        'INSERT INTO inventory (ItemID, Item_type, Item_name, Item_quantity, Shop_ID, Booth_ID, Unit_price, Last_restocked_date, Reorder_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [item_id, item_type, item_name, item_quantity, shop, booth, unit_price, restocked_last, reorder_level]
+        'INSERT INTO inventory (Item_type, Item_name, Item_quantity, Unit_price, Last_restocked_date, Reorder_level) VALUES (?, ?, ?, ?, ?, ?)',
+        [item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level]
     );
     return result.insertId;
 };

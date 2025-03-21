@@ -1,9 +1,9 @@
 const db = require('../config/db.js');
 
-exports.createBooth = async (name, location, start_time, end_time, cost, revenue, staffers, status) => {
+exports.createBooth = async (name, location, start_time, end_time, cost, staffers, status) => {
     const [result] = await db.query(
-        'INSERT INTO booths (Booth_name, Booth_loc, Booth_start, Booth_end, Booth_cost, Booth_rev, Staff_num, Is_operate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [name, location, start_time, end_time, cost, revenue, staffers, status]
+        'INSERT INTO booths (Booth_name, Booth_loc, Booth_start, Booth_end, Booth_cost, Staff_num, Is_operate) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [name, location, start_time, end_time, cost, staffers, status]
     );
     return result.insertId;
 };

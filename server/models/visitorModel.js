@@ -1,9 +1,9 @@
 const db = require('../config/db.js');
 
-exports.createUsers = async (fname, lname, email, phone, address, purchased_tickets, ticket_type) => {
+exports.createUsers = async (fname, lname, email, password, phone, address) => {
     const [result] = await db.query(
-        'INSERT INTO visitors (First_name, Last_name, Email, Phone, Address, Tickets_purchased, Ticket_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [fname, lname, email, phone, address, purchased_tickets, ticket_type]
+        'INSERT INTO visitors (First_name, Last_name, Email, Password, Phone, Address) VALUES (?, ?, ?, ?, ?, ?)',
+        [fname, lname, email, password, phone, address]
     );
     return result.insertId;
 };
