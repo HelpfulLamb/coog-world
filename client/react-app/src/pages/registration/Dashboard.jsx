@@ -3,7 +3,7 @@ import './Dashboard.css';
 
 const Dashboard = () => {
     const handleLogout = () => {
-        // Handle logout logic here
+        
         console.log('User  logged out');
     };
 

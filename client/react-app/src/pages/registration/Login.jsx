@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate(); 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here (e.g., validate username and password)
+  
         console.log('Username:', username);
         console.log('Password:', password);
 
-        // After successful login, navigate to the dashboard
-        navigate('/dashboard'); // Change this to the path of your dashboard
+        
+        navigate('/dashboard'); 
     };
 
     return (
@@ -27,7 +27,7 @@ const Login = () => {
                         id="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username" // Placeholder for username
+                        placeholder="Username" 
                         required
                     />
                 </div>
@@ -37,7 +37,7 @@ const Login = () => {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password" // Placeholder for password
+                        placeholder="Password" 
                         required
                     />
                 </div>
