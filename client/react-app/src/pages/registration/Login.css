@@ -1,133 +1,45 @@
-@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600');
-
-/* === Variables (Match Theme) === */
-:root {
-    --body-bg: #f8f1f1; 
-    --form-bg: #c8102e; /* Dark red */
-    --white: #ffffff;
-    --main: #ff0000; /* Bright red */
-    --main-dark: #a3001e; 
-    --gray-light: #d3d3d3;
-    --br: 4px;
-}
-
-/* === Global Styles === */
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-html {
-  overflow-y: scroll;
-}
-
-body {
-  background: var(--body-bg);
-  font-family: 'Titillium Web', sans-serif;
+.login-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
-  margin: 0;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5ece0;
 }
 
-/* === Login Form === */
-.login-page {
+#login-title {
+  font-family: sans-serif;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: #c8102e; 
+}
+
+.login-form {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 60px); /* Adjust for header height */
-  background-color: var(--body-bg);
-  padding-top: 60px;  /* Creates space for the header */
-  box-sizing: border-box;
+  flex-direction: column;
+  width: 300px; 
 }
 
-
-.form {
-  background: var(--form-bg);
-  padding: 40px;
-  max-width: 400px;
-  width: 100%;
-  border-radius: var(--br);
-  box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-h1 {
-  text-align: center;
-  color: var(--white);
-  margin-bottom: 20px;
-}
-
-/* === Form Fields === */
-.field-wrap {
-  position: relative;
-  margin-bottom: 30px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--gray-light);
-  color: var(--white);
-  font-size: 18px;
-  border-radius: var(--br);
-  outline: none;
+.form-group {
+  margin-bottom: 1.5rem;
 }
 
 label {
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 18px;
-  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
 
-input:focus + label,
-.filled + label {
-  top: -18px;
-  left: 8px;
-  font-size: 14px;
-  color: var(--white);
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-/* === Buttons === */
-.button {
-    background-color: var(--main);
-    color: var(--white);
-    border: none;
-    padding: 12px;
-    width: 100%;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
+input:focus {
+  border-color: #c8102e; 
 }
 
-.button:hover {
-    background-color: var(--main-dark);
-}
-
-/* === Forgot Password === */
-.forgot {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.forgot a {
-  color: var(--gray-light);
-}
-
-.forgot a:hover {
-  color: var(--white);
-}
-
-/* === Error Message === */
-.error-message {
-  color: yellow;
-  text-align: center;
-  margin-top: 10px;
+button {
+  margin-top: 1rem;
 }
