@@ -1,17 +1,50 @@
-const { Maintenance } = require('../models/maintenanceModel.js');
+const maintenanceModel = require('../models/maintenanceModel.js');
 
-const getMaintenance = async (req, res) => {
+exports.createMaintenance = async (req, res) => {
     try {
-        const maintenance = await Maintenance.getAll();
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(maintenance));
+        const {maint_date, cost, repair_date, type, objective, num} = req.body;
+        const maintenanceId = await maintenanceModel.createMaintenance(maint_date, cost, repair_date, type, objective, num);
+        res.status(201).json({id: maintenanceId, maint_date, cost, repair_date, type, objective, num});
     } catch (error) {
-        console.error('Error fetching maintenance: ', err);
-        res.writeHead(500, {'Content-Type': 'text/plain'});
-        res.end('Internal Server Error');
+        res.status(500).json({message: error.message});
     }
 };
 
-module.exports = {
-    getMaintenance
-}
+exports.getAllMaintenance = async (req, res) => {
+    try {
+        const maintenance = await maintenanceModel.getAllMaintenance();
+        res.status(200).json(maintenance);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getMaintenanceById = async (req, res) => {
+    try {
+        const maintenance = await maintenanceModel.getMaintenanceById(req.params.id);
+        if(!maintenance){
+            return res.status(404).json({message: 'Maintenance not found'});
+        }
+        res.status(200).json(maintenance);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteAllMaintenance = async (req, res) => {
+    try {
+        await maintenanceModel.deleteAllMaintenance();
+        res.status(200).json({message: 'All maintenance deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteMaintenanceById = async (req, res) => {
+    try {
+        await maintenanceModel.deleteMaintenanceById(req.params.id);
+        res.status(200).json({message: 'Maintenance deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};

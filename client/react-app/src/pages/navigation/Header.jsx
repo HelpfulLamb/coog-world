@@ -13,6 +13,7 @@ function Header(){
                     <li><Link to="/services" className="nav-link">Services</Link></li>
                     <li><Link to="/contact" className="nav-link">Contact</Link></li>
                     <li><Link to="/registration" className="nav-link">Register</Link></li>
+                    <li><Link to="/login" className="nav-link">Login</Link></li>
                 </ul>
             </div>
         </nav>

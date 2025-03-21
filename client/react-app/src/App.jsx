@@ -1,4 +1,5 @@
 import './App.css'
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
@@ -10,6 +11,8 @@ import Parkshops from './pages/shops/Parkshops.jsx';
 import Merchandise from './pages/shops/Merchandise.jsx';
 import Contact from './pages/Contact.jsx';
 import Register from './pages/registration/Register.jsx';
+import Login from './pages/registration/Login.jsx';
+import Dashboard from './pages/registration/Dashboard.jsx';
 import Footer from './pages/navigation/Footer.jsx';
 
 function App() {
@@ -28,6 +31,8 @@ function App() {
                     <Route path='/registration' element={<Register />} />
                     <Route path='/parkshops' element={<Parkshops />} />
                     <Route path='/merch' element={<Merchandise />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/dashboard' element={<Dashboard />} />
                 </Routes>
                 <Footer/>
             </div>
