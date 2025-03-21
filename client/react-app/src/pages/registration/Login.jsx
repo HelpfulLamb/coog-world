@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './Login.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
+        // Handle login logic here (e.g., validate username and password)
         console.log('Username:', username);
         console.log('Password:', password);
+
+        // After successful login, navigate to the dashboard
+        navigate('/dashboard'); // Change this to the path of your dashboard
     };
 
     return (

@@ -12,6 +12,7 @@ import Merchandise from './pages/shops/Merchandise.jsx';
 import Contact from './pages/Contact.jsx';
 import Register from './pages/registration/Register.jsx';
 import Login from './pages/registration/Login.jsx';
+import Dashboard from './pages/registration/Dashboard.jsx';
 import Footer from './pages/navigation/Footer.jsx';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                     <Route path='/parkshops' element={<Parkshops />} />
                     <Route path='/merch' element={<Merchandise />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='/dashboard' element={<Dashboard />} />
                 </Routes>
                 <Footer/>
             </div>
