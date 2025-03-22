@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 import './Register.css';
 
 function Register() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        username: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
+        phone: '',
+        address: '',
         confirmPassword: ''
     });
     const [message, setMessage] = useState({ error: '', success: '' });
@@ -15,12 +20,12 @@ function Register() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        const { username, email, password, confirmPassword } = formData;
+        const { first_name, last_name, email, password, phone, address, confirmPassword } = formData;
 
         // Basic Validation
-        if (!username || !email || !password || !confirmPassword) {
+        if (!first_name || !last_name || !email || !password || !phone || !address || !confirmPassword) {
             setMessage({ error: 'All fields are required.', success: '' });
             return;
         }
@@ -35,9 +40,41 @@ function Register() {
             return;
         }
 
-        setMessage({ success: 'Account successfully created!', error: '' });
-        console.log('New User Details:', formData);
-        setFormData({ username: '', email: '', password: '', confirmPassword: '' });
+        try {
+            const response = await fetch('http://localhost:3305/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name,
+                    last_name,
+                    email,
+                    password,
+                    phone,
+                    address
+                }),
+            });
+
+            const data = await response.json();
+            if(response.ok){
+                setMessage({success: 'Account successfully created!', error: ''});
+                setFormData({
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    password: '',
+                    phone: '',
+                    address: '',
+                    confirmPassword: ''
+                });
+                navigate('/login');
+            } else {
+                setMessage({error: data.message || 'Registration failed.', success: ''});
+            }
+        } catch (error) {
+            setMessage({error: 'An error occurred. Please try again.', success: ''});
+        }
     };
 
     return (
@@ -45,7 +82,7 @@ function Register() {
             <div className="form">
                 <h1>Create an Account</h1>
                 <form onSubmit={handleRegister}>
-                    {['username', 'email', 'password', 'confirmPassword'].map((field, index) => (
+                    {['first_name', 'last_name', 'email', 'password', 'phone', 'address', 'confirmPassword'].map((field, index) => (
                         <div className="field-wrap" key={index}>
                             <input
                                 type={field.includes('password') ? 'password' : 'text'}
@@ -57,17 +94,15 @@ function Register() {
                                 className={formData[field] ? 'filled' : ''}
                             />
                             <label className={formData[field] ? 'active' : ''}>
-                                {field.charAt(0).toUpperCase() + field.slice(1)}<span className="req">*</span>
+                                {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}<span className="req">*</span>
                             </label>
                         </div>
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <button type="submit" className="button button-block">Register</button>
-                    <p className="already-registered">
-                        Already have an account? <a href="/login">Login</a>
-                    </p>
                 </form>
+                <p className="already-registered">Already have an account? <Link to={'/login'}>Login</Link></p>
             </div>
         </div>
     );

@@ -1,5 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 function Header(){
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const authStatus = localStorage.getItem('isAuthenticated');
+        if(authStatus === 'true'){
+            setIsAuthenticated(true);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userType');
+        setIsAuthenticated(false);
+        navigate('/login');
+    };
+
     return(
         <nav className="nav-main">
             <div className="header-container">
@@ -12,8 +30,15 @@ function Header(){
                     <li><Link to="/shop" className="nav-link">Shop</Link></li>
                     <li><Link to="/services" className="nav-link">Services</Link></li>
                     <li><Link to="/contact" className="nav-link">Contact</Link></li>
-                    <li><Link to="/registration" className="nav-link">Register</Link></li>
-                    <li><Link to="/login" className="nav-link">Login</Link></li>
+                    {isAuthenticated ? (
+                        <li>
+                            <button onClick={handleLogout} className='nav-link logout-button'>Logout</button>
+                        </li>
+                    ) : (
+                        <>
+                            <li><Link to='/login' className='nav-link'>Login</Link></li>
+                        </>
+                    )}
                 </ul>
             </div>
         </nav>

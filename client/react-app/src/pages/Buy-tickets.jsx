@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function TicketCard({title, price, description1, description2}){
@@ -77,7 +76,7 @@ function Tickets(){
     }, []);
 
     if(loading){
-        return <div>Loading...</div>;
+        return <></>;
     }
     if(error){
         return <div>Error: {error}</div>;
