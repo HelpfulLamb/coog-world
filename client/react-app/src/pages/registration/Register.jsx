@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './Register.css';
 
 function Register() {
@@ -57,8 +57,8 @@ function Register() {
             });
 
             const data = await response.json();
-            if (response.ok) {
-                setMessage({ success: 'Account successfully created!', error: '' });
+            if(response.ok){
+                setMessage({success: 'Account successfully created!', error: ''});
                 setFormData({
                     first_name: '',
                     last_name: '',
@@ -70,10 +70,10 @@ function Register() {
                 });
                 navigate('/login');
             } else {
-                setMessage({ error: data.message || 'Registration failed.', success: '' });
+                setMessage({error: data.message || 'Registration failed.', success: ''});
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred. Please try again.', success: '' });
+            setMessage({error: 'An error occurred. Please try again.', success: ''});
         }
     };
 
