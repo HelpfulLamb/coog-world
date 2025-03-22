@@ -72,7 +72,7 @@ input:focus + label,
 
 
 .error-message {
-    color: yellow;
+    color: red;
     text-align: center;
     margin-top: 10px;
 }
@@ -96,4 +96,11 @@ input:focus + label,
 
 .already-registered a:hover {
     color: #a60e2e; 
+}
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: #4CAF50;
 }

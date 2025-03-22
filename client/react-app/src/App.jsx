@@ -1,6 +1,7 @@
 import './App.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
 import Tickets from './pages/Buy-tickets.jsx';
@@ -28,10 +29,10 @@ function App() {
                     <Route path='/cart' element={<Cart />} />
                     <Route path='/shop' element={<Shop />} />
                     <Route path='/contact' element={<Contact />} />
+                    <Route path='/login' element={<Login />} />
                     <Route path='/registration' element={<Register />} />
                     <Route path='/parkshops' element={<Parkshops />} />
                     <Route path='/merch' element={<Merchandise />} />
-                    <Route path='/login' element={<Login />} />
                     <Route path='/dashboard' element={<Dashboard />} />
                 </Routes>
                 <Footer/>

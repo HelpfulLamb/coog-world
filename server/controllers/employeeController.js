@@ -10,6 +10,23 @@ exports.createEmployee = async (req, res) => {
     }
 };
 
+exports.loginEmployee = async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        const employee = await employeeModel.findEmployeeByEmail(email);
+        if(!employee){
+            return res.status(404).json({message: 'Employee not found.'});
+        }
+        if(employee.Emp_password !== password){
+            return res.status(401).json({message: 'Invalid Password.'});
+        }
+        res.status(200).json({message: 'Employee Login Successful'});
+    } catch (error) {
+        console.error('Error during employee login: ', error);
+        res.status(500).json({message: 'An error occurred. Please try again.'});
+    }
+};
+
 exports.getAllEmployees = async (req, res) => {
     try {
         const employees = await employeeModel.getAllEmployees();
