@@ -1,20 +1,27 @@
-const { db } = require('../config/db.js');
+const db = require('../config/db.js');
 
-const Visitor = {
-    getAll: () => {
-        return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM visitors';
-            db.query(query, (err, results) => {
-                if(err) {
-                    reject(err);
-                } else {
-                    resolve(results);
-                }
-            });
-        });
-    },
+exports.createUsers = async (fname, lname, email, password, phone, address) => {
+    const [result] = await db.query(
+        'INSERT INTO visitors (First_name, Last_name, Email, Password, Phone, Address) VALUES (?, ?, ?, ?, ?, ?)',
+        [fname, lname, email, password, phone, address]
+    );
+    return result.insertId;
 };
 
-module.exports = {
-    Visitor
+exports.getAllUsers = async () => {
+    const [users] = await db.query('SELECT * FROM visitors');
+    return users;
+};
+
+exports.getUserById = async (id) => {
+    const [user] = await db.query('SELECT * FROM visitors WHERE Visitor_ID = ?', [id]);
+    return user[0];
+};
+
+exports.deleteAllUsers = async () => {
+    await db.query('DELETE FROM visitors');
+};
+
+exports.deleteUserById = async (id) => {
+    await db.query('DELETE FROM visitors WHERE Visitor_ID = ?', [id]);
 };

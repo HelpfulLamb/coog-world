@@ -75,6 +75,9 @@ li{
 .price-card:hover h2{
     color:#c8102e;
 }
+.parking-card h2{
+    font-size: 2rem;
+}
 .fancy{
     background-color: transparent;
     border: 2px solid black;
