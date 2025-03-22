@@ -73,7 +73,7 @@ input:focus + label,
 
 /* === Success & Error Messages === */
 .error-message {
-    color: yellow;
+    color: red;
     text-align: center;
     margin-top: 10px;
 }
@@ -126,7 +126,7 @@ input::placeholder {
 }
 
 .error-message {
-    color: yellow;
+    color: red;
 }
 
 .success-message {

@@ -3,7 +3,8 @@ const express = require('express');
 const visitorRouter = express.Router();
 
 // create new user
-visitorRouter.post('/', visitorController.createUser);
+visitorRouter.post('/register', visitorController.registerUser);
+visitorRouter.post('/login', visitorController.loginUser);
 
 // retrieve users (all or specific)
 visitorRouter.get('/', visitorController.getAllUsers);

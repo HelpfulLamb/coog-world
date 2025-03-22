@@ -4,6 +4,7 @@ const employeeRouter = express.Router();
 
 // create new employee
 employeeRouter.post('/', employeeController.createEmployee);
+employeeRouter.post('/login', employeeController.loginEmployee);
 
 // retrieve employees (all or specific)
 employeeRouter.get('/', employeeController.getAllEmployees);
