@@ -1,11 +1,12 @@
 import './Shops.css';
 import { useEffect, useState } from 'react';
+import shopImage from '../../images/shop1.webp'
 
 function ShopCard({title, description1, description2, location}){
     return(
         <>
             <div className='shop-card'>
-                <img src="" alt='shop image' />
+                <img src={shopImage} alt='shop image' draggable='false' />
                 <h3>{title}</h3>
                 <p>{description1}</p>
                 <p>{description2}</p>
