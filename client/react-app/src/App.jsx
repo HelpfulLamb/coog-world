@@ -1,6 +1,7 @@
-import './App.css'
-import React, { useEffect, useState } from 'react';
+import './App.css';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext.jsx'; // Updated path to .jsx
 
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
@@ -17,8 +18,8 @@ import Dashboard from './pages/registration/Dashboard.jsx';
 import Footer from './pages/navigation/Footer.jsx';
 
 function App() {
-    return(
-        <>
+    return (
+        <AuthProvider>
             <div id='root'>
                 <Header />
                 <Routes>
@@ -35,9 +36,9 @@ function App() {
                     <Route path='/merch' element={<Merchandise />} />
                     <Route path='/dashboard' element={<Dashboard />} />
                 </Routes>
-                <Footer/>
+                <Footer />
             </div>
-        </>
+        </AuthProvider>
     );
 }
 
