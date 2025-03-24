@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 
 const { rideRouter } = require('./routes/rideRoutes.js');
@@ -31,6 +32,10 @@ app.use('/api/maintenance', maintenanceRouter);
 app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 
+app.use(express.static(path.join(__dirname, 'client')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 app.use((req, res) => {
     res.status(404).send('Not Found');
