@@ -5,12 +5,12 @@ exports.findEmployeeByEmail = async (email) => {
     return employee[0];
 };
 
-exports.createEmployee = async (fname, lname, phone, email, password, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact) => {
-    const [result] = await db.query(
-        'INSERT INTO employees (First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date, End_date, Emp_in, Emp_out, Emp_emer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [fname, lname, phone, email, password, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact]
+exports.createEmployee = async (employeeData) => {
+    const {First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date} = employeeData;
+    await db.query(
+        'INSERT INTO employees (First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date]
     );
-    return result.insertId;
 };
 
 exports.getAllEmployees = async () => {
@@ -23,8 +23,9 @@ exports.getEmployeeById = async (id) => {
     return employee[0];
 };
 
-exports.getEmployeeInfo = async (id) => {
-    const [info] = await db.query('SELECT e.First_name, e.Last_name, e.Emp_phone, e.Emp_email, e.Emp_sec, e.Emp_salary, e.Start_date, o.Type FROM employees as e, occupation as o WHERE e.Emp_sec = o.Occ_ID and Emp_ID = ?', [id]);
+exports.getEmployeeInfo = async () => {
+    const [info] = await db.query(
+        'SELECT e.Emp_ID, e.First_name, e.Last_name, e.Emp_email, s.area_name, o.Occ_name, e.Emp_salary, e.Start_date FROM employees as e, sectors as s, occupation as o WHERE e.Emp_sec = s.area_id and e.Emp_pos = o.Occ_ID and e.Emp_pos < 9 ORDER BY e.Emp_ID');
     return info;
 }
 
@@ -32,6 +33,6 @@ exports.deleteAllEmployees = async () => {
     await db.query('DELETE FROM employees');
 };
 
-exports.deleteEmployeeById = async (id) => {
-    await db.query('DELETE FROM employees WHERE Emp_ID = ?', [id]);
+exports.deleteEmployeeById = async (empid) => {
+    await db.query('DELETE FROM employees WHERE Emp_ID IN ?', [empid]);
 };

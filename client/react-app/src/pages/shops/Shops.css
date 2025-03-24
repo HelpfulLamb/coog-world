@@ -9,11 +9,58 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 16px;
-    width: 200px;
     text-align: center;
 }
 .shop-card img {
     width: 100%;
     height: auto;
     border-radius: 8px;
+    user-select: none;
+}
+.merch-container{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+.merch-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    width: 250px;
+}
+.merch-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    user-select: none;
+}
+.merch-card .fancy{
+    background-color: transparent;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-top: 2rem;
+    outline: none;
+    overflow: visible;
+    padding: .8em .8em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 11px;
+}
+.merch-card .fancy:hover{
+    background-color: #c8102e;
+    color: #ffffff;
+    box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
 }

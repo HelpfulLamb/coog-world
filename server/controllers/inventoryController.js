@@ -19,18 +19,6 @@ exports.getAllInventory = async (req, res) => {
     }
 };
 
-exports.getUnitById = async (req, res) => {
-    try {
-        const unit = await inventoryModel.getUnitById(req.params.id);
-        if(!unit){
-            return res.status(404).json({message: 'Unit not found'});
-        }
-        res.status(200).json(unit);
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    }
-};
-
 exports.deleteAllInventory = async (req, res) => {
     try {
         await inventoryModel.deleteAllInventory();
@@ -44,6 +32,15 @@ exports.deleteUnitById = async (req, res) => {
     try {
         await inventoryModel.deleteUnitById(req.params.id);
         res.status(200).json({message: 'Unit deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getAllAvailableItems = async (req, res) => {
+    try {
+        const merch = await inventoryModel.getAllAvailableItems();
+        res.status(200).json(merch);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
