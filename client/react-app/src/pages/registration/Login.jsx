@@ -3,8 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
 import './Login.css';
 
+export const Logout = (navigate) => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userType');
+    navigate('/login');
+};
+
 const Login = () => {
-    const { setIsAuthenticated } = useAuth(); 
+    const { setIsAuthenticated } = useAuth();
     const [role, setRole] = useState(null); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,7 +36,7 @@ const Login = () => {
         try {
             const response = await fetch(
                 role === 'employee' ? 'http://localhost:3305/api/employees/login' 
-                : 'http://localhost:3305/api/users/login',
+                                    : 'http://localhost:3305/api/users/login',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -45,12 +51,8 @@ const Login = () => {
                 localStorage.setItem('userType', role);
                 setIsAuthenticated(true); 
 
-                // Redirect to the profile page for users
-                if (role === 'user') {
-                    navigate('/profile'); // Redirect to the profile page
-                } else {
-                    navigate('/employee-dashboard'); // Redirect to the employee dashboard
-                }
+                // Redirect based on role
+                navigate(role === 'user' ? '/profile' : '/employee-dashboard');
             } else {
                 setMessage({ error: data.message || 'Login Failed.', success: '' });
             }
@@ -66,7 +68,7 @@ const Login = () => {
 
             {!role ? (
                 <div className="role-selection">
-                    <button className="fancy" onClick={() => setRole('user')}>User  Login</button>
+                    <button className="fancy" onClick={() => setRole('user')}>User Login</button>
                     <button className="fancy employee-login" onClick={() => setRole('employee')}>Employee Login</button>
                 </div>
             ) : (

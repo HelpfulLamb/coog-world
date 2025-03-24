@@ -1,10 +1,17 @@
 const rideModel = require('../models/rideModel.js');
 
 exports.createRide = async (req, res) => {
+    const {Ride_name, Ride_type, Ride_cost, Ride_staff} = req.body;
+    if(!Ride_name || !Ride_type || !Ride_cost || !Ride_staff){
+        return res.status(400).json({message: 'All fields are required! Somethings missing.'});
+    }
     try {
-        const {name, type, maintenance_date, cost, operators, status} = req.body;
-        const rideId = await rideModel.createRide(name, type, maintenance_date, cost, operators, status);
-        res.status(201).json({id: rideId, name, type, maintenance_date, cost, operators, status});
+        const existingRide = await rideModel.findRideByName(Ride_name);
+        if(existingRide){
+            return res.status(400).json({message: 'A ride with that name already exits. Please try a new name.'});
+        }
+        await rideModel.createRide({Ride_name, Ride_type, Ride_cost, Ride_staff});
+        res.status(201).json({message: 'New ride added successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -14,6 +21,18 @@ exports.getAllRides = async (req, res) => {
     try {
         const rides = await rideModel.getAllRides();
         res.status(200).json(rides);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getRideInfo = async (req, res) => {
+    try {
+        const info = await rideModel.getRideInfo();
+        if(!info){
+            return res.status(404).json({message: 'Ride information not found.'});
+        }
+        res.status(200).json(info);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

@@ -13,15 +13,17 @@ exports.getAllInventory = async () => {
     return inventory;
 };
 
-exports.getUnitById = async (id) => {
-    const [unit] = await db.query('SELECT * FROM inventory WHERE ItemID = ?', [id]);
-    return unit[0];
-};
-
 exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };
 
 exports.deleteUnitById = async (id) => {
     await db.query('DELETE FROM inventory WHERE InventoryID = ?', [id]);
+};
+
+exports.getAllAvailableItems = async () => {
+    const [merchandise] = await db.query(
+        'SELECT i.Item_name, i.Item_price, i.Item_desc, i.Item_type FROM items as i, inventory as s, kiosks as k WHERE i.Item_ID = s.Item_ID and k.Kiosk_ID = s.Kiosk_ID and k.Kiosk_operate = 1 and s.Item_quantity > 0 ORDER BY i.Item_ID'
+    );
+    return merchandise;
 };

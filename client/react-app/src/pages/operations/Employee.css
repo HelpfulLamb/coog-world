@@ -1,0 +1,27 @@
+.employee-table-container {
+    width: 100%;
+    overflow-x: auto; /* Add horizontal scroll for small screens */
+}
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+.employee-table th,
+.employee-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+}
+.employee-table th {
+    background-color: #007bff; /* Header background color */
+    color: white; /* Header text color */
+    font-weight: bold;
+}
+.employee-table tbody tr:hover {
+    background-color: #f5f5f5; /* Highlight row on hover */
+}
+.employee-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternate row color */
+}
