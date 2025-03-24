@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const fs = require('fs')
-dotenv.config({ path: './.env' });
+dotenv.config({ path: './coog-world/server/config/.env' });
 
 // create connection to database
 const db = mysql.createPool({
