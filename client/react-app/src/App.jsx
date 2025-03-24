@@ -20,6 +20,10 @@ import Employee from './pages/operations/Employees.jsx';
 import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
 import Show from './pages/operations/Shows.jsx';
+import TicketReport from './pages/operations/Tickets.jsx';
+import Inventory from './pages/operations/Inventory.jsx';
+import Maintenance from './pages/operations/MaintenanceReport.jsx';
+import Weather from './pages/operations/WeatherReport.jsx';
 
 function App() {
     const location = useLocation();
@@ -45,6 +49,10 @@ function App() {
                         <Route path='rides' element={<Ride />} />
                         <Route path='shows' element={<Show />} />
                         <Route path='kiosks' element={<Kiosk />} />
+                        <Route path='ticket-report' element={<TicketReport />} />
+                        <Route path='inventory-report' element={<Inventory />} />
+                        <Route path='maintenance-report' element={<Maintenance />} />
+                        <Route path='weather-report' element={<Weather />} />
                     </Route>
                     <Route path="*" element={<div>404 - Page Not Found</div>} />
                 </Routes>
