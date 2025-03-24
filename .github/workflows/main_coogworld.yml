@@ -42,8 +42,8 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           mkdir -p deployment
-          cp -r ../client/react-app/dist deployment/client
-          cp -r ../server deployment/server
+          cp -r client/react-app/dist deployment/client
+          cp -r server deployment/server
           zip -r release.zip deployment
 
       - name: Upload artifact for deployment job
