@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-
+// Import routers
 const { rideRouter } = require('./routes/rideRoutes.js');
 const { ticketRouter } = require('./routes/ticketRoutes.js');
 const { visitorRouter } = require('./routes/visitorRoutes.js');
@@ -13,13 +13,14 @@ const { maintenanceRouter } = require('./routes/maintenanceRoutes.js');
 const { weatherRouter } = require('./routes/weatherRoutes.js');
 const { kioskRouter } = require('./routes/kioskRouter.js');
 
-
 const PORT = process.env.PORT || 3000;
 const app = express();
-app.use(express.json());
-app.use(cors());
 
+// Middleware
+app.use(express.json()); // Parse JSON bodies
+app.use(cors()); // Enable CORS for all routes
 
+// Use routers
 app.use('/api/rides', rideRouter);
 app.use('/api/ticket-type', ticketRouter);
 app.use('/api/users', visitorRouter);
@@ -31,9 +32,10 @@ app.use('/api/maintenance', maintenanceRouter);
 app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 
-
+// Handle 404 errors
 app.use((req, res) => {
     res.status(404).send('Not Found');
 });
 
+// Start the server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
