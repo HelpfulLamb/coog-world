@@ -10,7 +10,7 @@ function ShopCard({title, description1, description2, location}){
                 <h3>{title}</h3>
                 <p>{description1}</p>
                 <p>{description2}</p>
-                <p>{location}</p>
+                <p>Location: {location}</p>
             </div>
         </>
     )
@@ -23,11 +23,11 @@ function Parkshops(){
 
     const descriptions = [
         {
-            description1: 'Visit the Magic Shop for all things magical.',
-            description2: 'Clothing and More.',
+            description1: 'Visit this Swim Shop for all things water related.',
+            description2: 'Clothing and More',
         },
         {
-            description1: 'Wands for Sale',
+            description1: 'Experience the world of magic with your very own wand.',
             description2: 'Toyshop',
         }
     ];
