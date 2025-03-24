@@ -2,54 +2,69 @@ const userModel = require('../models/visitorModel.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// Register a new user
 exports.registerUser = async (req, res) => {
     const { first_name, last_name, email, password, phone, address } = req.body;
-    
+
     if (!first_name || !last_name || !email || !password || !phone || !address) {
         return res.status(400).json({ message: 'All fields are required!' });
     }
-    
+
     try {
         const existingUser = await userModel.findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ message: 'An account with this email already exists.' });
         }
 
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        await userModel.createUser({ first_name, last_name, email, password: hashedPassword, phone, address });
+        console.log('🔒 Hashed Password:', hashedPassword);
+
+        // Store the user in the database
+        await userModel.createUsers({ 
+            first_name, 
+            last_name, 
+            email, 
+            password: hashedPassword, // Store the hashed password
+            phone, 
+            address 
+        });
 
         res.status(201).json({ message: 'User registered successfully.' });
     } catch (error) {
-        console.error('Error registering user:', error);
+        console.error('❌ Error registering user:', error);
         res.status(500).json({ message: 'An error occurred. Please try again.' });
     }
 };
 
-// Login user
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
-    
+
     try {
         const user = await userModel.findUserByEmail(email);
+
         if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
+            return res.status(400).json({ message: 'User not found.' });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Invalid Password.' });
+        console.log("🔍 Entered Password:", password);
+        console.log("🔍 Stored Password in DB:", user.Password);
+
+        const isMatch = await bcrypt.compare(password, user.Password);
+        console.log("✅ Password Match:", isMatch);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials.' });
         }
 
-        const token = jwt.sign({ visitor_id: user.visitor_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ message: 'Login Successful', token });
+        res.status(200).json({ message: 'Login successful.', user });
     } catch (error) {
-        console.error('Error during login:', error);
+        console.error('Error logging in:', error);
         res.status(500).json({ message: 'An error occurred. Please try again.' });
     }
 };
 
-// Get all users
+
+
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await userModel.getAllUsers();
@@ -59,7 +74,7 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-// Get user by ID
+
 exports.getUserById = async (req, res) => {
     try {
         const user = await userModel.getUserById(req.params.id);
@@ -72,7 +87,7 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// Get user profile
+
 exports.getUserProfile = async (req, res) => {
     const visitorId = req.user.visitor_id;
     try {
@@ -86,7 +101,7 @@ exports.getUserProfile = async (req, res) => {
     }
 };
 
-// Update user profile
+
 exports.updateUserProfile = async (req, res) => {
     const visitorId = req.user.visitor_id;
     const { first_name, last_name, email, phone, address } = req.body;
@@ -99,7 +114,7 @@ exports.updateUserProfile = async (req, res) => {
     }
 };
 
-// Get order history
+
 exports.getOrderHistory = async (req, res) => {
     const visitorId = req.user.visitor_id;
     try {
@@ -110,7 +125,7 @@ exports.getOrderHistory = async (req, res) => {
     }
 };
 
-// Delete all users
+
 exports.deleteAllUsers = async (req, res) => {
     try {
         await userModel.deleteAllUsers();
@@ -120,7 +135,7 @@ exports.deleteAllUsers = async (req, res) => {
     }
 };
 
-// Delete user by ID
+
 exports.deleteUserById = async (req, res) => {
     try {
         await userModel.deleteUserById(req.params.id);

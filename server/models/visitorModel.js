@@ -1,12 +1,18 @@
 const db = require('../config/db.js');
 
 exports.findUserByEmail = async (email) => {
-    const [user] = await db.query('SELECT * FROM visitors WHERE email = ?', [email]);
-    return user.length > 0 ? user[0] : null;  // Ensure it doesn't return undefined
+    const [user] = await db.query('SELECT First_name, Last_name, Email, Password FROM visitors WHERE email = ?', [email]);
+    console.log("🔍 User from DB:", user);
+    return user.length > 0 ? user[0] : null;
 };
 
-exports.createUser = async (userData) => { // ✅ Changed `createUsers` → `createUser`
+
+
+
+
+exports.createUsers = async (userData) => { 
     const { first_name, last_name, email, password, phone, address } = userData;
+
     await db.query(
         'INSERT INTO visitors (First_name, Last_name, Email, Password, Phone, Address) VALUES (?, ?, ?, ?, ?, ?)',
         [first_name, last_name, email, password, phone, address]
@@ -20,10 +26,9 @@ exports.getAllUsers = async () => {
 
 exports.getUserById = async (id) => {
     const [user] = await db.query('SELECT * FROM visitors WHERE Visitor_ID = ?', [id]);
-    return user.length > 0 ? user[0] : null;  // Ensure it doesn't return undefined
+    return user.length > 0 ? user[0] : null;  
 };
 
-// ✅ Added missing updateUserById function
 exports.updateUserById = async (id, userData) => {
     const { first_name, last_name, email, phone, address } = userData;
     await db.query(
@@ -32,7 +37,7 @@ exports.updateUserById = async (id, userData) => {
     );
 };
 
-// ✅ Added missing getOrderHistoryByUserId function
+
 exports.getOrderHistoryByUserId = async (id) => {
     const [orders] = await db.query(
         'SELECT * FROM orders WHERE Visitor_ID = ?',

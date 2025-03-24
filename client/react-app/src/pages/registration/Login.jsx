@@ -44,7 +44,13 @@ const Login = () => {
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userType', role);
                 setIsAuthenticated(true); 
-                navigate(role === 'employee' ? '/employee-dashboard' : '/');
+
+                // Redirect to the profile page for users
+                if (role === 'user') {
+                    navigate('/profile'); // Redirect to the profile page
+                } else {
+                    navigate('/employee-dashboard'); // Redirect to the employee dashboard
+                }
             } else {
                 setMessage({ error: data.message || 'Login Failed.', success: '' });
             }
@@ -58,7 +64,6 @@ const Login = () => {
         <div className="login-container">
             <h1 id="login-title">Login to Your Account</h1>
 
-            
             {!role ? (
                 <div className="role-selection">
                     <button className="fancy" onClick={() => setRole('user')}>User  Login</button>
@@ -66,7 +71,6 @@ const Login = () => {
                 </div>
             ) : (
                 <>
-                    
                     <form onSubmit={handleSubmit} className="login-form">
                         <div className="form-group">
                             <input
@@ -91,7 +95,6 @@ const Login = () => {
                         <button type="submit" className="fancy">Login</button>
                     </form>
                     
-                
                     <button className="back-button" onClick={() => setRole(null)}>← Back</button>
                 </>
             )}
