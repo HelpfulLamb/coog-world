@@ -14,7 +14,8 @@ exports.getAllKiosks = async () => {
 };
 
 exports.getAllMerchShops = async () => {
-    const [merchShops] = await db.query("SELECT * FROM kiosks WHERE Kiosk_type = 'Merch' and Kiosk_operate = 1 ");
+    const [merchShops] = await db.query(
+        "SELECT k.Kiosk_name, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_type = 'Merch' and k.Kiosk_operate = 1 and s.area_ID = k.Kiosk_loc ");
     return merchShops;
 };
 

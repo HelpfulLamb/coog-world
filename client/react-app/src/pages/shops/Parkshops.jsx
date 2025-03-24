@@ -23,12 +23,12 @@ function Parkshops(){
 
     const descriptions = [
         {
-            description1: 'Shop info 1',
-            description2: 'Shop info 1.1',
+            description1: 'Visit the Magic Shop for all things magical.',
+            description2: 'Clothing and More.',
         },
         {
-            description1: 'Shop info 2',
-            description2: 'Shop info 2.1',
+            description1: 'Wands for Sale',
+            description2: 'Toyshop',
         }
     ];
 
@@ -69,7 +69,7 @@ function Parkshops(){
             <h1 id='shop-title'>Explore the shops of Coog World!</h1>
             <div className='shop-container'>
                 {shopOptions.map((shop, index) => (
-                    <ShopCard key={index} title={shop.Kiosk_name} description1={shop.description1} description2={shop.description2} location={shop.Kiosk_loc} />
+                    <ShopCard key={index} title={shop.Kiosk_name} description1={shop.description1} description2={shop.description2} location={shop.area_name} />
                 ))}
             </div>
         </>
