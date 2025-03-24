@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
+import About from './pages/AboutUs.jsx';
 import Tickets from './pages/Buy-tickets.jsx';
 import Services from './pages/Services.jsx';
 import Cart from './pages/Cart.jsx';
@@ -34,6 +35,7 @@ function App() {
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route path='/home' element={<Home />} />
+                    <Route path='/about-us' element={<About />} />
                     <Route path='/tickets' element={<Tickets />} />
                     <Route path='/services' element={<Services />} />
                     <Route path='/cart' element={<Cart />} />
