@@ -1,0 +1,23 @@
+.ride-table-container {
+    margin: 20px;
+}
+.ride-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.ride-table th, .ride-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.ride-table th {
+    background-color: #f4f4f4;
+    text-align: left;
+}
+.add-ride-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

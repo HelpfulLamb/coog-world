@@ -1,9 +1,15 @@
 const db = require('../config/db.js');
 
-exports.createRide = async (name, type, maintenance_date, cost, operators, status) => {
+exports.findRideByName = async (name) => {
+    const [ride] = await db.query('SELECT Ride_name FROM rides WHERE Ride_name = ?', [name])
+    return ride[0];
+}
+
+exports.createRide = async (rideData) => {
+    const {Ride_name, Ride_type, Ride_cost, Ride_staff} = rideData;
     const [result] = await db.query(
-        'INSERT INTO rides (Ride_name, Ride_type, Ride_maint, Ride_cost, Ride_op, Is_operate) VALUES (?, ?, ?, ?, ?, ?)',
-        [name, type, maintenance_date, cost, operators, status]
+        'INSERT INTO rides (Ride_name, Ride_type, Ride_cost, Ride_staff) VALUES (?, ?, ?, ?)',
+        [Ride_name, Ride_type, Ride_cost, Ride_staff]
     );
     return result.insertId;
 };
@@ -11,6 +17,13 @@ exports.createRide = async (name, type, maintenance_date, cost, operators, statu
 exports.getAllRides = async () => {
     const [rides] = await db.query('SELECT * FROM rides');
     return rides;
+};
+
+exports.getRideInfo = async () => {
+    const [info] = await db.query(
+        'SELECT Ride_ID, Ride_name, Ride_type, Ride_maint, Ride_cost, Ride_staff, Is_operate, Ride_created FROM rides'
+    );
+    return info;
 };
 
 exports.getRideById = async (id) => {

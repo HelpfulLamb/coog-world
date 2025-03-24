@@ -3,10 +3,11 @@ const express = require('express');
 const rideRouter = express.Router();
 
 // create new rides
-rideRouter.post('/', rideController.createRide);
+rideRouter.post('/create-ride', rideController.createRide);
 
 // retrieve rides (all or specific)
 rideRouter.get('/', rideController.getAllRides);
+rideRouter.get('/info', rideController.getRideInfo);
 rideRouter.get('/:id', rideController.getRideById);
 
 // delete rides (all or specific)
