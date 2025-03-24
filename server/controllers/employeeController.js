@@ -1,12 +1,21 @@
 const employeeModel = require('../models/employeeModel.js');
 
 exports.createEmployee = async (req, res) => {
+    const {First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date} = req.body;
+    console.log('Request Body: ', req.body);
+    if(!First_name || !Last_name || !Emp_phone || !Emp_email || !Emp_password || !Emp_sec || !Emp_pos || !Emp_salary || !Start_date){
+        return res.status(400).json({message: 'All fields are required! Somethings missing.'});
+    }
     try {
-        const {fname, lname, phone, email, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact} = req.body;
-        const employeeId = await employeeModel.createEmployee(emp_id, fname, lname, phone, email, section, position, location, salary, start_date, end_date, clock_in, clock_out, emergency_contact);
-        res.status(201).json({id: employeeId, fname, lname, phone, email, section, position, salary, start_date, end_date, clock_in, clock_out, emergency_contact});
+        const existingEmployee = await employeeModel.findEmployeeByEmail(Emp_email);
+        if(existingEmployee){
+            return res.status(400).json({message: 'An Employee account with that email already exists. Log in or try again.'});
+        }
+        await employeeModel.createEmployee({First_name, Last_name, Emp_phone, Emp_email, Emp_password, Emp_sec, Emp_pos, Emp_salary, Start_date});
+        res.status(201).json({message: 'New Employee Added Successfully.'});
     } catch (error) {
-        res.status(500).json({message: error.message});
+        console.error('Error adding new employee: ', error);
+        res.status(500).json({message: 'An error occurred. Please try again.'});
     }
 };
 
@@ -71,7 +80,11 @@ exports.deleteAllEmployees = async (req, res) => {
 
 exports.deleteEmployeeById = async (req, res) => {
     try {
-        await employeeModel.deleteEmployeeById(req.params.id);
+        const {empid} = req.body;
+        if(!empid || !Array.isArray(empid)){
+            return res.status(400).json({message: 'Invalid employee IDs provided.'});
+        }
+        await employeeModel.deleteEmployeeById(empid);
         res.status(200).json({message: 'Employee deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
