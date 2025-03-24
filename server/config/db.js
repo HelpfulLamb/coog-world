@@ -1,7 +1,8 @@
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const fs = require('fs')
-dotenv.config({ path: './coog-world/server/config/.env' });
+dotenv.config({ path: './.env' });
+
 
 // create connection to database
 const db = mysql.createPool({
@@ -23,5 +24,6 @@ db.getConnection((err) => {
         console.log('MySQL Connected...');
     }
 });
+
 
 module.exports = db.promise();
