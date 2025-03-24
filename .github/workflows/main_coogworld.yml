@@ -42,7 +42,7 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           mkdir -p deployment
-          cp -r client/build deployment/client
+          cp -r client/react-app/build deployment/client
           cp -r server deployment/server
           zip -r release.zip deployment
 
