@@ -26,25 +26,22 @@ jobs:
         working-directory: ./client/react-app
         run: |
           npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm run build
           
       - name: Build client
-        working-directory: ./client
-        run: npm run build
+        run: |
+          mkdir -p server/client
+          cp -r client/react-app/dist/* server/client/
         
       - name: Install server dependencies
         working-directory: ./server
         run: |
           npm install
-          npm run build --if-present
 
       - name: Zip artifact for deployment
         run: |
-          mkdir -p deployment
-          cp -r client/build deployment/client
-          cp -r server deployment/server
-          zip -r release.zip deployment
+          cd server
+          zip -r ../release.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -83,5 +80,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CoogWorld'
-          package: deployment/client
+          package: .
           
