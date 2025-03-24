@@ -30,7 +30,7 @@ jobs:
           npm run test --if-present
           
       - name: Build client
-        working-directory: ./client
+        working-directory: ./client/react-app
         run: npm run build
         
       - name: Install server dependencies
