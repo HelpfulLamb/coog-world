@@ -40,11 +40,10 @@ jobs:
           npm run build --if-present
 
       - name: Zip artifact for deployment
-        working-directory: ${{github.workspace}}
         run: |
           mkdir -p deployment
-          cp -r client/react-app/build deployment/client
-          cp -r server deployment/server
+          cp -r ./client/react-app/build deployment/client
+          cp -r ./server deployment/server
           zip -r release.zip deployment
 
       - name: Upload artifact for deployment job
