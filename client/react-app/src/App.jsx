@@ -10,7 +10,6 @@ import Cart from './pages/Cart.jsx';
 import Shop from './pages/shops/Shops.jsx';
 import Parkshops from './pages/shops/Parkshops.jsx';
 import Merchandise from './pages/shops/Merchandise.jsx';
-import Contact from './pages/Contact.jsx';
 import Register from './pages/registration/Register.jsx';
 import Login from './pages/registration/Login.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
@@ -39,7 +38,6 @@ function App() {
                     <Route path='/services' element={<Services />} />
                     <Route path='/cart' element={<Cart />} />
                     <Route path='/shop' element={<Shop />} />
-                    <Route path='/contact' element={<Contact />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/registration' element={<Register />} />
                     <Route path='/parkshops' element={<Parkshops />} />
@@ -61,5 +59,6 @@ function App() {
         </>
     );
 }
+
 
 export default App;
