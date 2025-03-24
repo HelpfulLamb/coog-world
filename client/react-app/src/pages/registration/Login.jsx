@@ -23,8 +23,8 @@ const Login = () => {
         }
         try {
             const response = await fetch(
-                isEmployeeLogin ? 'http://localhost:3305/api/employees/login'
-                : 'http://localhost:3305/api/users/login',
+                isEmployeeLogin ? '/api/employees/login'
+                : '/api/users/login',
                 {
                     method: 'POST',
                     headers: {

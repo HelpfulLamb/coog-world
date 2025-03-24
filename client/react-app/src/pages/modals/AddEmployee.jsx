@@ -33,7 +33,7 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
             return;
         }
         try {
-            const response = await fetch('http://localhost:3305/api/employees/create-employee', {
+            const response = await fetch('/api/employees/create-employee', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
