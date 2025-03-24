@@ -10,9 +10,9 @@ const db = mysql.createPool({
     user: process.env.DB_user,
     password: process.env.DB_password,
     database: process.env.DB_database,
-    ssl:{
-       ca: fs.readFileSync(process.env.SSL_CERT)
-    }
+    ssl: {
+        rejectUnauthorized: false
+    }    
 });
 
 // test database connection
@@ -24,4 +24,6 @@ db.getConnection((err) => {
     }
 });
 
-module.exports = db.promise();
+module.exports = {
+    db
+};

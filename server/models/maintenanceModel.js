@@ -1,27 +1,20 @@
-const db = require('../config/db.js');
+const { db } = require('../config/db.js');
 
-exports.createMaintenance = async (maint_date, cost, repair_date, type, objective, num) => {
-    const [result] = await db.query(
-        'INSERT INTO maintenance (Maintenance_Date, Repair_Cost, Repair_Date, Maint_cost, Maint_Type, Maint_obj, Maint_num) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [maint_date, cost, repair_date, type, objective, num]
-    );
-    return result.insertId;
+const Maintenance = {
+    getAll: () => {
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM maintenance';
+            db.query(query, (err, results) => {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
 };
 
-exports.getAllMaintenance = async () => {
-    const [maintenances] = await db.query('SELECT * FROM maintenance');
-    return maintenances;
-};
-
-exports.getMaintenanceById = async (id) => {
-    const [maintenance] = await db.query('SELECT * FROM maintenance WHERE MaintID = ?', [id]);
-    return maintenance[0];
-};
-
-exports.deleteAllMaintenance = async () => {
-    await db.query('DELETE FROM maintenance');
-};
-
-exports.deleteMaintenanceById = async (id) => {
-    await db.query('DELETE FROM maintenance WHERE MaintID = ?', [id]);
+module.exports = {
+    Maintenance
 };

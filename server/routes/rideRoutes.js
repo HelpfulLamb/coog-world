@@ -1,19 +1,19 @@
-const rideController = require('../controllers/rideController.js');
+const { getRides } = require('../controllers/rideController.js');
 const express = require('express');
 const rideRouter = express.Router();
 
-// create new rides
-rideRouter.post('/', rideController.createRide);
+rideRouter.get('/', getRides);
 
-// retrieve rides (all or specific)
-rideRouter.get('/', rideController.getAllRides);
-rideRouter.get('/:id', rideController.getRideById);
-
-// delete rides (all or specific)
-rideRouter.delete('/', rideController.deleteAllRides);
-rideRouter.delete('/:id', rideController.deleteRideById);
-
+// const rideRoutes = (req, res) => {
+//     if(req.url === '/rides' && req.method === 'GET'){
+//         getRides(req, res);
+//     } else {
+//         res.writeHead(404, {'Content-Type': 'text/plain'});
+//         res.end('Not Found');
+//     }
+// }
 
 module.exports = {
     rideRouter
+    // rideRoutes
 }
