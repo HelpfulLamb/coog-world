@@ -34,7 +34,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
                             <td>{employee.Emp_email}</td>
                             <td>{employee.area_name}</td>
                             <td>{employee.Occ_name}</td>
-                            <td>${employee.Emp_salary?.toLocaleString()}</td>
+                            <td>${Number(employee.Emp_salary).toLocaleString()}</td>
                             <td>{formatDate(employee.Start_date)}</td>
                         </tr>
                     ))}

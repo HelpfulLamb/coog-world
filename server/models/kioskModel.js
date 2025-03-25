@@ -13,6 +13,12 @@ exports.getAllKiosks = async () => {
     return kiosks;
 };
 
+exports.getKioskInfo = async () => {
+    const [info] = await db.query(
+        'SELECT k.Kiosk_ID, k.Kiosk_name, k.Kiosk_type, k.Kiosk_cost, k.Kiosk_created, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_loc = s.area_ID');
+    return info;
+};
+
 exports.getAllMerchShops = async () => {
     const [merchShops] = await db.query(
         "SELECT k.Kiosk_name, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_type = 'Merch' and k.Kiosk_operate = 1 and s.area_ID = k.Kiosk_loc ");

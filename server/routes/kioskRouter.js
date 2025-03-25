@@ -8,6 +8,7 @@ kioskRouter.post('/shop', kioskController.createShop)
 
 // retrieve kiosks (all or specific)
 kioskRouter.get('/', kioskController.getAllKiosks);
+kioskRouter.get('/info', kioskController.getKioskInfo);
 kioskRouter.get('/shops', kioskController.getAllMerchShops);
 kioskRouter.get('/booths', kioskController.getAllBooths);
 kioskRouter.get('/foods', kioskController.getAllFoodShops);

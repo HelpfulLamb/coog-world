@@ -29,6 +29,15 @@ exports.getAllKiosks = async (req, res) => {
     }
 };
 
+exports.getKioskInfo = async (req, res) => {
+    try {
+        const kiosks = await kioskModel.getKioskInfo();
+        res.status(200).json(kiosks);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllMerchShops = async (req, res) => {
     try {
         const shops = await kioskModel.getAllMerchShops();
