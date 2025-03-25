@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -44,19 +45,19 @@ function Home() {
         <div style={cardStyle}>
           <h2>🎟️ Tickets</h2>
           <p>Choose the pass that fits your adventure: single day, weekend, or season!</p>
-          <a href="/tickets" className="fancy">View Ticket Options</a>
+          <Link to="/tickets" className="fancy">View Ticket Options</Link>
         </div>
 
         <div style={cardStyle}>
           <h2>🎢 Rides</h2>
           <p>From kid-friendly coasters to jaw-dropping thrill rides, we’ve got it all.</p>
-          <a href="/services" className="fancy">Explore Attractions</a>
+          <Link to="/services" className="fancy">Explore Attractions</Link>
         </div>
 
         <div style={cardStyle}>
           <h2>🍔 Shops & Perks</h2>
           <p>Enjoy food, games, and exclusive Coog World merchandise throughout the park!</p>
-          <a href="/shop" className="fancy">Browse Shops</a>
+          <Link to="/shop" className="fancy">Browse Shops</Link>
         </div>
       </section>
 
