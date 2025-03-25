@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 function TicketCard({title, price, description1, description2}){
     return(
         <>
             <div className='price-card'>
                 <h3>{title}</h3>
-                <h2>${price}</h2>
+                <h2>{price}</h2>
                 <ul>
                     <li>{description1}</li>
                     <li>{description2}</li>
@@ -17,19 +17,12 @@ function TicketCard({title, price, description1, description2}){
     )
 }
 
-function ParkingCard({title, price, description1, description2}){
-    return(
-        <div className='price-card parking-card'>
-            <h3>{title}</h3>
-            <h2>+${price}</h2>
-            <ul>
-                <li>{description1}</li>
-                <li>{description2}</li>
-            </ul>
-            <button className='fancy'>Add Parking</button>
-        </div>
-    );
-}
+TicketCard.propTypes = {
+    title: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired,
+    description1: PropTypes.string.isRequired,
+    description2: PropTypes.string.isRequired,
+};
 
 function Tickets(){
     const [ticketOptions, setTicketOptions] = useState([]);
