@@ -5,7 +5,7 @@ dotenv.config({ path: './.env' });
 
 
 // create connection to database
-const db = mysql.createPool({
+const dbConfig = {
     connectionLimit: process.env.DB_connectionLimit,
     host: process.env.DB_host,
     user: process.env.DB_user,
@@ -14,7 +14,10 @@ const db = mysql.createPool({
     ssl:{
        ca: fs.readFileSync(process.env.SSL_CERT)
     }
-});
+};
+
+
+const db =mysql.createPool(dbConfig);
 
 // test database connection
 db.getConnection((err) => {
