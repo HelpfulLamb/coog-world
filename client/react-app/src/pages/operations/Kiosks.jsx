@@ -52,7 +52,7 @@ function Kiosk(){
     useEffect(() => {
         const fetchKiosk = async () => {
             try {
-                const response = await fetch('http://localhost:3305/api/kiosks/info');
+                const response = await fetch('/api/kiosks/info');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }

@@ -54,7 +54,7 @@ function Ride(){
     useEffect(() => {
         const fetchRides = async () => {
             try {
-                const response = await fetch('http://localhost:3305/api/rides/info');
+                const response = await fetch('/api/rides/info');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
