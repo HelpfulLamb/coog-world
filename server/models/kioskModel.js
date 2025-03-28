@@ -1,10 +1,10 @@
 const db = require('../config/db.js');
 
-exports.createBooth = async (userData) => {
-    const {name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by} = userData;
+exports.createKiosk = async (userData) => {
+    const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = userData;
     await db.query(
-        'INSERT INTO kiosks (Kiosk_name, Kiosk_type, Kiosk_operate, Kiosk_loc, Staff_num, Kiosk_cost, Kiosk_created, Kiosk_created_by, Kiosk_updated, Kiosk_updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by]
+        'INSERT INTO kiosks (Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num) VALUES (?, ?, ?, ?, ?)',
+        [Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num]
     );
 };
 

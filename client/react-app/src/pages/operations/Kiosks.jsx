@@ -53,16 +53,35 @@ function Kiosk(){
         const fetchKiosk = async () => {
             try {
                 const response = await fetch('http://localhost:3305/api/kiosks/info');
+                if(!response.ok){
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                setKioskInformation(data);
             } catch (error) {
-                
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
+        fetchKiosk();
     }, []);
+
+    const handleAddKiosk = (newKiosk) => {
+        setKioskInformation([...kioskInformation, newKiosk]);
+    };
+    if(loading){
+        return <div>Loading...</div>
+    }
+    if(error){
+        return <div>Error: {error}</div>
+    }
 
     return(
         <>
             <h1>Coog World Kiosks</h1>
-            <p>This is where information of Shops and Booths will be displayed.</p>
+            <KioskTable kioskInformation={kioskInformation} setIsModalOpen={setIsModalOpen} />
+            <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
         </>
     )
 }

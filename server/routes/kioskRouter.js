@@ -3,8 +3,9 @@ const express = require('express');
 const kioskRouter = express.Router();
 
 // create new kiosks
-kioskRouter.post('/booth', kioskController.createBooth);
-kioskRouter.post('/shop', kioskController.createShop)
+// kioskRouter.post('/booth', kioskController.createBooth);
+// kioskRouter.post('/shop', kioskController.createShop);
+kioskRouter.post('/create-kiosk', kioskController.createKiosk);
 
 // retrieve kiosks (all or specific)
 kioskRouter.get('/', kioskController.getAllKiosks);

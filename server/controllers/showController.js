@@ -2,9 +2,9 @@ const showModel = require('../models/showModel.js');
 
 exports.createShow = async (req, res) => {
     try {
-        const {name, cost, start_time, end_time, location, capacity, performers, staffers, maintenance_date, status} = req.body;
-        const showId = await showModel.createShow(name, cost, start_time, end_time, location, capacity, performers, staffers, maintenance_date, status);
-        res.status(201).json({id: showId, name, cost, start_time, end_time, location, capacity, performers, staffers, maintenance_date, status});
+        const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost} = req.body;
+        const showId = await showModel.createShow({Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost});
+        res.status(201).json({id: showId, Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -13,6 +13,15 @@ exports.createShow = async (req, res) => {
 exports.getAllShows = async (req, res) => {
     try {
         const shows = await showModel.getAllShows();
+        res.status(200).json(shows);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getShowInfo = async (req, res) => {
+    try {
+        const shows = await showModel.getShowInfo();
         res.status(200).json(shows);
     } catch (error) {
         res.status(500).json({message: error.message});
