@@ -4,42 +4,71 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f5ece0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+                    url('./images/coasterbackground.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 0 1rem;
 }
+
 
 #login-title {
   font-family: sans-serif;
-  font-size: 3rem;
+  font-size: 2.5rem; /* Keep font size reasonable */
   margin-bottom: 2rem;
   color: #c8102e; 
 }
 
+/* Styling for the login form */
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 300px; 
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-label {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  width: 300px;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent */
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
 }
 
 input {
-  padding: 0.5rem;
+  padding: 1rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 1rem;
+  box-sizing: border-box; /* Prevent overflow */
 }
 
 input:focus {
-  border-color: #c8102e; 
+  border-color: #c8102e;
+  outline: none;
 }
 
+/* Button Styles */
 button {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #fff;
+  background-color: #c8102e;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #b30826; /* Darker color on hover */
+}
+
+.employee-login {
+  background-color: #4a4a4a;
+  color: white;
+}
+
+.employee-login:hover {
+  background-color: #333;
 }
