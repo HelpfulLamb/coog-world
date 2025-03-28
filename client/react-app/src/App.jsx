@@ -1,6 +1,7 @@
-import './App.css'
+import './App.css';
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext.jsx';
 
 import Header from './pages/navigation/Header.jsx';
 import Home from './pages/Home.jsx';
@@ -27,9 +28,10 @@ import Weather from './pages/operations/WeatherReport.jsx';
 
 function App() {
     const location = useLocation();
-    const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard')
-    return(
-        <>
+    const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
+
+    return (
+        <AuthProvider>
             <div id='root'>
                 {!isEmployeeDashboard && <Header />}
                 <Routes>
@@ -58,9 +60,8 @@ function App() {
                 </Routes>
                 {!isEmployeeDashboard && <Footer />}
             </div>
-        </>
+        </AuthProvider>
     );
 }
-
 
 export default App;
