@@ -1,5 +1,5 @@
 import AddRide from "../modals/AddRide";
-import './Ride.css'
+import './Report.css'
 import { useEffect, useState } from "react";
 
 function RideTable({rideInformation, setIsModalOpen}){
@@ -11,8 +11,8 @@ function RideTable({rideInformation, setIsModalOpen}){
         return date.toLocaleDateString();
     };
     return(
-        <div className="ride-table-container">
-            <table className="ride-table">
+        <div className="table-container">
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Ride ID</th>
@@ -39,7 +39,7 @@ function RideTable({rideInformation, setIsModalOpen}){
                 </tbody>
             </table>
             <div>
-                <button className="add-ride-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
             </div>
         </div>
     );

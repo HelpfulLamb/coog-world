@@ -2,13 +2,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
+    height: 110vh; 
     background-color: var(--body-bg);
 }
 
 .form {
-    background: var(--form-bg);
-    padding: 40px;
+    background-color: #ffff;
+    padding: 50px;
     max-width: 400px;
     width: 100%;
     border-radius: var(--br);
