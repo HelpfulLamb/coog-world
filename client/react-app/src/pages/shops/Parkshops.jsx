@@ -35,7 +35,7 @@ function Parkshops(){
     useEffect(() => {
         const fetchShops = async () => {
             try {
-                const response = await fetch('/api/kiosks/shops');
+                const response = await fetch('http://localhost:3305/api/kiosks/shops');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }

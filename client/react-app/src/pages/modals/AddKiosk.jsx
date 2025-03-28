@@ -27,7 +27,7 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
             return;
         }
         try {
-            const response = await fetch('/api/kiosks/create-kiosk', {
+            const response = await fetch('http://localhost:3305/api/kiosks/create-kiosk', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

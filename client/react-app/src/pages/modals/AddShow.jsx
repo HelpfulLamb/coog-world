@@ -29,7 +29,7 @@ function AddShow({isOpen, onClose, onAddShow}){
             return;
         }
         try {
-            const response = await fetch('/api/shows/create-show', {
+            const response = await fetch('http://localhost:3305/api/shows/create-show', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
