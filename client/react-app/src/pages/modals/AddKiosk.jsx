@@ -1,86 +1,85 @@
 import { useState } from "react";
 
-function AddRide({isOpen, onClose, onAddRide}){
-    const [newRide, setNewRide] = useState({
-        Ride_name: '',
-        Ride_type: '',
-        Ride_cost: '',
-        Ride_staff: ''
+function AddKiosk({isOpen, onClose, onAddKiosk}){
+    const [newKiosk, setNewKiosk] = useState({
+        Kiosk_name: '',
+        Kiosk_type: '',
+        Kiosk_cost: '',
+        Kiosk_loc: '',
+        Staff_num: ''
     });
 
     const [message, setMessage] = useState({error: '', success: ''});
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
-        setNewRide({...newRide, [name]: value});
+        setNewKiosk({...newKiosk, [name]: value});
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting ride data: ', newRide);
-        if(!newRide.Ride_name || !newRide.Ride_type || !newRide.Ride_cost || !newRide.Ride_staff){
-            setMessage({error: 'All fields are required.', success: ''});
+        if(!newKiosk.Kiosk_name || !newKiosk.Kiosk_type || !newKiosk.Kiosk_cost || !newKiosk.Kiosk_loc || !newKiosk.Staff_num){
+            setMessage({error: 'All fields required.', success: ''});
             return;
         }
-        if(isNaN(newRide.Ride_staff)){
-            setMessage({error: 'Number of Staff operating rides OR the cost of the ride MUST be numbers.', success: ''});
+        if(isNaN(newKiosk.Staff_num)){
+            setMessage({error: 'Number of staff working the kiosks OR cost of the kiosk(s) MUST be numbers.', success: ''});
             return;
         }
-
         try {
-            const response = await fetch('/api/rides/create-ride', {
+            const response = await fetch('/api/kiosks/create-kiosk', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify(newRide),
+                body: JSON.stringify(newKiosk),
             });
             const data = await response.json();
-            console.log('Backend repsonse: ', data);
+            console.log('Backend Response: ', data);
             if(response.ok){
-                setMessage({success: 'Ride added successfully!', error: ''});
-                setNewRide({
-                    Ride_name: '',
-                    Ride_type: '',
-                    Ride_cost: '',
-                    Ride_staff: '',
+                setMessage({success: 'Kisk added successfully!', error: ''});
+                setNewKiosk({
+                    Kiosk_name: '',
+                    Kiosk_type: '',
+                    Kiosk_cost: '',
+                    Kiosk_loc: '',
+                    Staff_num: '',
                 });
-                onAddRide(data.ride);
+                onAddKiosk(data.kiosk);
                 setTimeout(() => {onClose(); window.location.href = window.location.href;});
             } else {
-                setMessage({error: data.message || 'Failed to add ride.', success: ''});
+                setMessage({error: data.message || 'Failed to add kiosk.', success: ''});
             }
         } catch (error) {
             setMessage({error: 'An error occurred. Please try again.', success: ''});
         }
     };
     if(!isOpen) return null;
-
     return(
         <div className="modal-overlay">
             <div className="modal">
-                <h2>Add New Ride</h2>
+                <h2>Add New Kiosk</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Ride_name', 'Ride_type', 'Ride_cost', 'Ride_staff'].map((field) => (
+                    {['Kiosk_name', 'Kiosk_type', 'Kiosk_cost', 'Kiosk_loc', 'Staff_num'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
                                 {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                             </label>
                             <input 
                             id={field}
-                            type={field === 'Ride_cost' ? 'number' : field === 'Ride_staff' ? 'number' : 'text'}
+                            type={field === 'Staff_num' ? 'number' : 'text'}
                             name={field}
                             required
                             autoComplete="off"
-                            value={newRide[field]}
+                            value={newKiosk[field]}
                             onChange={handleInputChange}
-                            placeholder={field.replace(/_/g,' ').toLowerCase()} />
+                            placeholder={field.replace(/_/g, ' ').toLowerCase()} />
                         </div>
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
-                        <button type="submit" className="button button-block">Add Ride</button>
+                        <button type="submit" className="button button-block">Add Kiosk</button>
                         <button type="button" onClick={onClose} className="button button-block cancel-button">Cancel</button>
                     </div>
                 </form>
@@ -89,4 +88,4 @@ function AddRide({isOpen, onClose, onAddRide}){
     );
 }
 
-export default AddRide;
+export default AddKiosk;

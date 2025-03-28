@@ -1,16 +1,22 @@
 const db = require('../config/db.js');
 
-exports.createBooth = async (userData) => {
-    const {name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by} = userData;
+exports.createKiosk = async (userData) => {
+    const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = userData;
     await db.query(
-        'INSERT INTO kiosks (Kiosk_name, Kiosk_type, Kiosk_operate, Kiosk_loc, Staff_num, Kiosk_cost, Kiosk_created, Kiosk_created_by, Kiosk_updated, Kiosk_updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by]
+        'INSERT INTO kiosks (Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num) VALUES (?, ?, ?, ?, ?)',
+        [Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num]
     );
 };
 
 exports.getAllKiosks = async () => {
     const [kiosks] = await db.query('SELECT * FROM kiosks');
     return kiosks;
+};
+
+exports.getKioskInfo = async () => {
+    const [info] = await db.query(
+        'SELECT k.Kiosk_ID, k.Kiosk_name, k.Kiosk_type, k.Kiosk_cost, k.Kiosk_created, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_loc = s.area_ID');
+    return info;
 };
 
 exports.getAllMerchShops = async () => {

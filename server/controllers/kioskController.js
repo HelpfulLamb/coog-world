@@ -1,20 +1,10 @@
 const kioskModel = require('../models/kioskModel.js');
 
-exports.createBooth = async (req, res) => {
+exports.createKiosk = async (req, res) => {
     try {
-        const {name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by} = req.body;
-        const kioskId = await kioskModel.createKiosk(name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by);
-        res.status(201).json({id: kioskId, name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by});
-    } catch (error) {
-        res.status(500).json({message: error.message});
-    }
-};
-
-exports.createShop = async (req, res) => {
-    try {
-        const {name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by} = req.body;
-        const kioskId = await kioskModel.createKiosk(name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by);
-        res.status(201).json({id: kioskId, name, type, operational, location, staffers, cost, date_created, created_by, date_updated, updated_by});
+        const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = req.body;
+        const kioskId = await kioskModel.createKiosk({Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num});
+        res.status(201).json({id: kioskId, Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -23,6 +13,15 @@ exports.createShop = async (req, res) => {
 exports.getAllKiosks = async (req, res) => {
     try {
         const kiosks = await kioskModel.getAllKiosks();
+        res.status(200).json(kiosks);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getKioskInfo = async (req, res) => {
+    try {
+        const kiosks = await kioskModel.getKioskInfo();
         res.status(200).json(kiosks);
     } catch (error) {
         res.status(500).json({message: error.message});

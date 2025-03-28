@@ -1,16 +1,22 @@
 const db = require('../config/db.js');
 
-exports.createShow = async (name, cost, start_time, end_time, location, capacity, performers, staffers, maintenance_date, status) => {
-    const [result] = await db.query(
-        'INSERT INTO shows (Show_name, Show_cost, Show_start, Show_end, Stage_location, Seat_num, Perf_num, Staff_num, Stage_maint, Is_operate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [name, cost, start_time, end_time, location, capacity, performers, staffers, maintenance_date, status]
+exports.createShow = async (userData) => {
+    const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost} = userData;
+    await db.query(
+        'INSERT INTO shows (Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost]
     );
-    return result.insertId;
 };
 
 exports.getAllShows = async () => {
     const [shows] = await db.query('SELECT * FROM shows');
     return shows;
+};
+
+exports.getShowInfo = async () => {
+    const [info] = await db.query(
+        'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.daily_runs, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');
+    return info;
 };
 
 exports.getShowById = async (id) => {
