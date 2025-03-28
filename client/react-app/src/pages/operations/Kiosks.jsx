@@ -1,5 +1,5 @@
 import AddKiosk from "../modals/AddKiosk";
-import './Kiosk.css';
+import './Report.css';
 import { useEffect, useState } from "react";
 
 function KioskTable({kioskInformation, setIsModalOpen}){
@@ -11,8 +11,8 @@ function KioskTable({kioskInformation, setIsModalOpen}){
         return date.toLocaleDateString();
     };
     return(
-        <div className="kiosk-table-container">
-            <table className="kiosk-table">
+        <div className="table-container">
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Kiosk ID</th>
@@ -37,7 +37,7 @@ function KioskTable({kioskInformation, setIsModalOpen}){
                 </tbody>
             </table>
             <div>
-                <button className="add-kiosk-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
+                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
             </div>
         </div>
     );

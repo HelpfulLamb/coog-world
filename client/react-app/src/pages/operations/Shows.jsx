@@ -1,4 +1,5 @@
 import AddShow from "../modals/AddShow";
+import './Report.css';
 import { useState, useEffect } from "react";
 
 function ShowTable({showInformation, setIsModalOpen}){
@@ -11,25 +12,24 @@ function ShowTable({showInformation, setIsModalOpen}){
     };
 
     const calculateDuration = (start, end) => {
-        const startTime = new Date(start);
-        const endTime = new Date(end);
-        const millisecondDiff = endTime - startTime;
-        const minuteDiff = millisecondDiff / 60000;
-        const hours = Math.floor(minuteDiff / 60);
-        const minutes = Math.floor(minuteDiff % 60);
+        const [startHour, startMinute] = start.split(':').map(Number);
+        const [endHour, endMinute] = end.split(':').map(Number);
+        const startTotalMin = startHour * 60 + startMinute;
+        const endTotalMin = endHour * 60 + endMinute;
+        const diffMin = endTotalMin - startTotalMin;
+        const hours = Math.floor(diffMin / 60);
+        const minutes = diffMin % 60;
         return `${hours}h ${minutes}min`;
     };
 
     return(
-        <div>
-            <table>
+        <div className="table-container">
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Show ID</th>
                         <th>Show Name</th>
                         <th>Location</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
                         <th>Duration</th>
                         <th>Total Performers</th>
                         <th>Daily Runs</th>
@@ -43,8 +43,6 @@ function ShowTable({showInformation, setIsModalOpen}){
                             <td>{show.Show_ID}</td>
                             <td>{show.Show_name}</td>
                             <td>{show.Stage_name}</td>
-                            <td>{show.Show_start}</td>
-                            <td>{show.Show_end}</td>
                             <td>{calculateDuration(show.Show_start, show.Show_end)}</td>
                             <td>{show.Perf_num}</td>
                             <td>{show.daily_runs}</td>
@@ -55,7 +53,7 @@ function ShowTable({showInformation, setIsModalOpen}){
                 </tbody>
             </table>
             <div>
-                <button className="add-show-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
+                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
             </div>
         </div>
     );

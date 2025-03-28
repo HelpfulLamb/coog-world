@@ -11,8 +11,8 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
         return date.toLocaleDateString();
     };
     return(
-        <div className="employee-table-container">
-            <table className="employee-table">
+        <div className="table-container">
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Employee ID</th>
@@ -41,7 +41,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
                 </tbody>
             </table>
             <div>
-                <button className="add-employee-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
             </div>
         </div>
     );

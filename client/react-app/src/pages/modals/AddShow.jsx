@@ -64,17 +64,20 @@ function AddShow({isOpen, onClose, onAddShow}){
             <div className="modal">
                 <h2>Add New Show</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Show_name', 'Stage_ID', 'Show_start', 'Show_end', 'Perf_num', 'daily_runs', 'Show_cost'].map((field, index) => (
-                        <div className="field-wrap" key={index}>
+                    {['Show_name', 'Stage_ID', 'Show_start', 'Show_end', 'Perf_num', 'daily_runs', 'Show_cost'].map((field) => (
+                        <div className="modal-input-group" key={field}>
+                            <label htmlFor={field}>
+                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                            </label>
                             <input 
+                            id={field}
                             type={field === 'Stage_ID' ? 'number' : field === 'Perf_num' ? 'number' : field === 'daily_runs' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
                             name={field}
                             required
                             autoComplete="off" 
                             value={newShow[field]}
                             onChange={handleInputChange}
-                            className={newShow[field] ? 'filled' : ''}
-                            placeholder={field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim()} />
+                            placeholder={field.replace(/_/g, ' ').toLowerCase()} />
                         </div>
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}

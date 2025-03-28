@@ -60,17 +60,20 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
             <div className="modal">
                 <h2>Add New Kiosk</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Kiosk_name', 'Kiosk_type', 'Kiosk_cost', 'Kiosk_loc', 'Staff_num'].map((field, index) => (
-                        <div className="field-wrap" key={index}>
+                    {['Kiosk_name', 'Kiosk_type', 'Kiosk_cost', 'Kiosk_loc', 'Staff_num'].map((field) => (
+                        <div className="modal-input-group" key={field}>
+                            <label htmlFor={field}>
+                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                            </label>
                             <input 
+                            id={field}
                             type={field === 'Staff_num' ? 'number' : 'text'}
                             name={field}
                             required
                             autoComplete="off"
                             value={newKiosk[field]}
                             onChange={handleInputChange}
-                            className={newKiosk[field] ? 'filled' : ''}
-                            placeholder={field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim()} />
+                            placeholder={field.replace(/_/g, ' ').toLowerCase()} />
                         </div>
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}

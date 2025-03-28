@@ -61,17 +61,20 @@ function AddRide({isOpen, onClose, onAddRide}){
             <div className="modal">
                 <h2>Add New Ride</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Ride_name', 'Ride_type', 'Ride_cost', 'Ride_staff'].map((field, index) => (
-                        <div className="field-wrap" key={index}>
+                    {['Ride_name', 'Ride_type', 'Ride_cost', 'Ride_staff'].map((field) => (
+                        <div className="modal-input-group" key={field}>
+                            <label htmlFor={field}>
+                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                            </label>
                             <input 
+                            id={field}
                             type={field === 'Ride_cost' ? 'number' : field === 'Ride_staff' ? 'number' : 'text'}
                             name={field}
                             required
                             autoComplete="off"
                             value={newRide[field]}
                             onChange={handleInputChange}
-                            className={newRide[field] ? 'filled' : ''}
-                            placeholder={field.replace(/_/g,' ').replace(/([A-Z])/g, ' $1').trim()} />
+                            placeholder={field.replace(/_/g,' ').toLowerCase()} />
                         </div>
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
