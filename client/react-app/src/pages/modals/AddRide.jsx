@@ -1,3 +1,4 @@
+//This is used when adding rides to the database
 import { useState } from "react";
 
 function AddRide({isOpen, onClose, onAddRide}){
@@ -61,7 +62,7 @@ function AddRide({isOpen, onClose, onAddRide}){
             <div className="modal">
                 <h2>Add New Ride</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Ride_name', 'Ride_type', 'Ride_cost', 'Ride_staff'].map((field) => (
+                    {['Ride_name', 'Ride_cost', 'Ride_staff'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
                                 {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
@@ -77,6 +78,26 @@ function AddRide({isOpen, onClose, onAddRide}){
                             placeholder={field.replace(/_/g,' ').toLowerCase()} />
                         </div>
                     ))}
+                    {/* Dropdown for Ride_type */}
+                    <div className="modal-input-group">
+                        <label htmlFor="Ride_type">Type of Ride</label>
+                        <select
+                            id="Ride_type"
+                            name="Ride_type"
+                            required
+                            value={newRide.Ride_type}
+                            onChange={handleInputChange}
+                        >
+                            <option value="">Select a type</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Water">Water</option>
+                            <option value="Thrill">Thrill</option>
+                            <option value="Family">Family</option>
+                            <option value="Spinning">Spinning</option>
+                            <option value="Water Coaster">Water Coaster</option>
+                            <option value="Extreme">Extreme</option>
+                        </select>
+                    </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
