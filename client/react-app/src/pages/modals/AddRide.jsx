@@ -28,7 +28,7 @@ function AddRide({isOpen, onClose, onAddRide}){
         }
 
         try {
-            const response = await fetch('/api/rides/create-ride', {
+            const response = await fetch('http://localhost:3305/api/rides/create-ride', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

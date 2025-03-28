@@ -56,7 +56,7 @@ function Employee(){
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await fetch('/api/employees/info');
+                const response = await fetch('http://localhost:3305/api/employees/info');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }

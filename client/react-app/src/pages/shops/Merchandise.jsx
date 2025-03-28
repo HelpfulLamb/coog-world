@@ -24,7 +24,7 @@ function Merchandise(){
     useEffect(() => {
         const fetchMerch = async () => {
             try {
-                const response = await fetch('/api/inventory/merchandise');
+                const response = await fetch('http://localhost/api/inventory/merchandise');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }

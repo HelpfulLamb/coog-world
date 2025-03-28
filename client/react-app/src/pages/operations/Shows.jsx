@@ -68,7 +68,7 @@ function Show(){
     useEffect(() => {
         const fetchShow = async () => {
             try {
-                const response = await fetch('/api/shows/info');
+                const response = await fetch('http://localhost:3305/api/shows/info');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
