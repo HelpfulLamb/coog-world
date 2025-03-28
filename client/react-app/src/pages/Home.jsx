@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function Home() {
   return (
@@ -18,21 +19,25 @@ function Home() {
       </div>
 
       {/* 🏞️ PARK WELCOME */}
-      <section style={{
-        textAlign: 'center',
-        padding: '3rem 2rem'
-      }}>
+      <motion.section
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        style={{
+          textAlign: 'center',
+          padding: '3rem 2rem'
+        }}
+>
         <h1 style={{ fontSize: '3rem', color: '#c8102e' }}>Welcome to Coog World!</h1>
         <p style={{
-          fontSize: '1.25rem',
-          maxWidth: '700px',
-          margin: '1rem auto',
-          color: '#444'
-        }}>
-          Coog World is Houston’s #1 stop for all things fun, friendly, and frightening!<br />
-          You won't be worrying about tuition costs with THIS Cougar Spirit!
-        </p>
-      </section>
+           fontSize: '1.25rem',
+           maxWidth: '700px',
+           margin: '1rem auto',
+           color: '#444'
+        }}>Coog World is Houston's #1 stop for all things fun, friendly, and frightening!<br />
+            You won't be worrying about tuition costs with THIS Cougar Spirit!
+      </p>
+  </motion.section>
 
       {/* 🎟️ TICKETS OVERVIEW */}
       <section style={{
