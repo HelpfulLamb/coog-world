@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext'; // Adjust the import based on your AuthContext setup
+import { useAuth } from '../../context/AuthContext.jsx'; // Adjust the import based on your AuthContext setup
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
