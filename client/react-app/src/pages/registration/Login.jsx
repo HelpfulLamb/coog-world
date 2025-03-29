@@ -35,8 +35,6 @@ const Login = () => {
 
         try {
             const response = await fetch(
-                isEmployeeLogin ? '/api/employees/login'
-                : '/api/users/login',
                 role === 'employee' ? '/api/employees/login' 
                                     : '/api/users/login',
                 {
