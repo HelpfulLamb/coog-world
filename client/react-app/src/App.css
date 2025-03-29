@@ -192,7 +192,6 @@ li{
   margin: 0;
   color: lightyellow;  
   z-index: 2;
-  
 }
 .shop-link-card:hover .shop-link-text {
   z-index: 2;
