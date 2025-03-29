@@ -35,8 +35,8 @@ const Login = () => {
 
         try {
             const response = await fetch(
-                role === 'employee' ? 'http://localhost:3305/api/employees/login' 
-                                    : 'http://localhost:3305/api/users/login',
+                role === 'employee' ? '/api/employees/login' 
+                                    : '/api/users/login',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
