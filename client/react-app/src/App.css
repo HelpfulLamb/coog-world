@@ -120,60 +120,60 @@ li{
     margin: 3rem 0;
 }
 .shop-hover-container {
-position: relative;
-display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 .shop-hover-container .shop-hover-text {
-visibility: hidden;
-width: 120px;
-background-color: #ffffff;
-color: #000000;
-text-align: center;
-border-radius: 6px;
-padding: 5px 0;
-position: absolute;
-z-index: 1;
+    visibility: hidden;
+    width: 120px;
+    background-color: #ffffff;
+    color: #000000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
 }
 .shop-hover-container:hover .shop-hover-text {
-visibility: visible;
+    visibility: visible;
 }
 .shop-link {
-color: #000000;
-font-size: 1.1rem;
+    color: #000000;
+    font-size: 1.1rem;
 }
 .shop-link-container {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 2rem;
-flex-wrap: wrap;
-padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 2rem;
 }
 .shop-link-card {
-background-color: #ffffff;
-border: 1px solid #ddd;
-border-radius: 12px;
-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-padding: 2rem;
-max-width: 300px;
-text-align: center;
-color: black;
-transition: all 0.2s ease-in-out;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    max-width: 300px;
+    text-align: center;
+    color: black;
+    transition: all 0.2s ease-in-out;
 }
 .shop-link-card:hover {
-background-color: white;
-transform: scale(1.02);
-box-shadow: 5px 5px 10px rgba(200, 16, 46, 0.4);
+    background-color: white;
+    transform: scale(1.02);
+    box-shadow: 5px 5px 10px rgba(200, 16, 46, 0.4);
 }
 .shop-link-text {
-margin: 0;
+    margin: 0;
 }
 .shop-link-text h2 {
-padding: 1rem 0;
-font-size: 2.5rem;
+    padding: 1rem 0;
+    font-size: 2.5rem;
 }
 .shop-link-text h3 {
-font-size: 1.2rem;
+    font-size: 1.2rem;
 }
 #site-logo {
     height: 75px;
