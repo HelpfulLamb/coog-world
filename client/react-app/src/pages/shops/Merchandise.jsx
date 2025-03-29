@@ -49,7 +49,7 @@ function Merchandise(){
             <h1 id='shop-title'>Awaken the Coog Spirit!</h1>
             <div className='merch-container'>
                 {merchOptions.map((merch, index) => (
-                    <MerchCard key={index} title={merch.Item_name} price={merch.Item_price} description={merch.Item_desc} />
+                    <MerchCard key={index} title={merch.Item_name} price={merch.Item_shop_price} description={merch.Item_desc} />
                 ))}
             </div>
         </>

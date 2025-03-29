@@ -115,64 +115,96 @@ li{
     box-shadow: 5px 5px 5px rgba(194, 79, 79, 0.575);
 }
 #shop-title {
-    text-align: center;
-    font-size: 3rem;
-    margin: 3rem 0;
-  }
-  .shop-hover-container {
-    position: relative;
-    display: inline-block;
-  }
-  .shop-hover-container .shop-hover-text {
-    visibility: hidden;
-    width: 120px;
-    background-color: #ffffff;
-    color: #000000;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-  }
-  .shop-hover-container:hover .shop-hover-text {
-    visibility: visible;
-  }
-  .shop-link {
-    color: #000000;
-    font-size: 1.1rem;
-  }
-  .shop-link-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 2rem;
-  }
-  .shop-link-card {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    max-width: 300px;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-  }
-  .shop-link-card:hover {
-    transform: scale(1.02);
-    box-shadow: 5px 5px 10px rgba(200, 16, 46, 0.4);
-  }
-  .shop-link-text {
-    margin: 0;
-  }
-  .shop-link-text h2 {
-    padding: 1rem 0;
-    font-size: 2.5rem;
-  }
-  .shop-link-text h3 {
-    font-size: 1.2rem;
-  }
+  text-align: center;
+  font-size: 3rem;
+  margin: 3rem 0;
+}
+.shop-hover-container {
+  position: relative;
+  display: inline-block;
+}
+.shop-hover-container .shop-hover-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: #000000;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+}
+.shop-hover-container:hover .shop-hover-text {
+  visibility: visible;
+}
+.shop-link {
+  color: #000000;
+  font-size: 1.1rem;
+}
+.shop-link-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 2rem;
+}
+.shop-link-card {
+  background-color: #ffffff; 
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  color: white; 
+  height: 300px; 
+  position: relative;
+  overflow: hidden;
+}
+.shop-link-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); 
+  opacity: 1; 
+  transition: all 0.3s ease-in-out; 
+  z-index: 1; 
+  border-radius: 12px;
+}
+.shop-link-card:hover::before {
+  background-color: rgba(200, 16, 46); 
+  transition: opacity 0.3s ease-in-out; 
+  opacity: 1; 
+}
+.shop-link-card:hover {
+  transform: scale(1.02);
+  box-shadow: 5px 5px 10px rgba(200, 16, 46, 0.4);
+}
+.shop-link-text {
+  position: relative; 
+  margin: 0;
+  color: lightyellow;  
+  z-index: 2;
+}
+.shop-link-card:hover .shop-link-text {
+  z-index: 2;
+  color: white; 
+  background-color: transparent; 
+}
+.shop-link-text h2 {
+  padding: 1rem 0;
+  font-size: 2.5rem;
+}
+.shop-link-text h3 {
+  font-size: 1.2rem;
+}
 #site-logo {
     height: 75px;
     object-fit: contain;

@@ -15,6 +15,7 @@ import Merchandise from './pages/shops/Merchandise.jsx';
 import Register from './pages/registration/Register.jsx';
 import Login from './pages/registration/Login.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
+import Profile from './pages/registration/Profile.jsx';
 import Footer from './pages/navigation/Footer.jsx';
 
 import Employee from './pages/operations/Employees.jsx';
@@ -46,6 +47,7 @@ function App() {
                     <Route path='/registration' element={<Register />} />
                     <Route path='/parkshops' element={<Parkshops />} />
                     <Route path='/merch' element={<Merchandise />} />
+                    <Route path='/profile' element={<Profile />} />
                     <Route path='/employee-dashboard' element={<Dashboard />}>
                         <Route path='employees' element={<Employee />} />
                         <Route path='rides' element={<Ride />} />

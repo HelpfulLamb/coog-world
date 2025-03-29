@@ -24,13 +24,13 @@ function Home() {
       }}>
         <h1 style={{ fontSize: '3rem', color: '#c8102e' }}>Welcome to Coog World!</h1>
         <p style={{
-          fontSize: '1.25rem',
-          maxWidth: '700px',
-          margin: '1rem auto',
-          color: '#444'
+           fontSize: '1.25rem',
+           maxWidth: '700px',
+           margin: '1rem auto',
+           color: '#444'
         }}>
-          Coog World is Houston’s #1 stop for all things fun, friendly, and frightening!<br />
-          You won't be worrying about tuition costs with THIS Cougar Spirit!
+            Coog World is Houston's #1 stop for all things fun, friendly, and frightening!<br />
+            You won't be worrying about tuition costs with THIS Cougar Spirit!
         </p>
       </section>
 
