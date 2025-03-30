@@ -13,6 +13,11 @@ exports.getAllMaintenance = async () => {
     return maintenances;
 };
 
+exports.getMaintenanceInfo = async () => {
+    const [info] = await db.query('SELECT Maintenance_Date, Maint_cost, Maint_Type, Maint_Status FROM maintenance');
+    return info;
+};
+
 exports.getMaintenanceById = async (id) => {
     const [maintenance] = await db.query('SELECT * FROM maintenance WHERE MaintID = ?', [id]);
     return maintenance[0];

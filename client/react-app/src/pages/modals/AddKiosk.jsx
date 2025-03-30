@@ -60,22 +60,43 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
             <div className="modal">
                 <h2>Add New Kiosk</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Kiosk_name', 'Kiosk_type', 'Kiosk_cost', 'Kiosk_loc', 'Staff_num'].map((field) => (
-                        <div className="modal-input-group" key={field}>
-                            <label htmlFor={field}>
-                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
-                            </label>
-                            <input 
-                            id={field}
-                            type={field === 'Staff_num' ? 'number' : 'text'}
-                            name={field}
-                            required
-                            autoComplete="off"
-                            value={newKiosk[field]}
-                            onChange={handleInputChange}
-                            placeholder={field.replace(/_/g, ' ').toLowerCase()} />
+                    <div className="modal-form-grid">
+                        {['Kiosk_name', 'Kiosk_cost', 'Staff_num'].map((field) => (
+                            <div className="modal-input-group" key={field}>
+                                <label htmlFor={field}>
+                                    {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                </label>
+                                <input 
+                                id={field}
+                                type={field === 'Staff_num' ? 'number' : 'text'}
+                                name={field}
+                                required
+                                autoComplete="off"
+                                value={newKiosk[field]}
+                                onChange={handleInputChange}
+                                placeholder={field.replace(/_/g, ' ').toLowerCase()} />
+                            </div>
+                        ))}
+                        <div className="modal-input-group">
+                            <label htmlFor="Kiosk_type">Type of Kiosk</label>
+                            <select name="Kiosk_type" id="Kiosk_type" required value={newKiosk.Kiosk_type} onChange={handleInputChange}>
+                                <option value="">Select a Type</option>
+                                <option value="Food">Food</option>
+                                <option value="Merch">Merchandise</option>
+                                <option value="Game">Game Booth</option>
+                            </select>
                         </div>
-                    ))}
+                        <div className="modal-input-group">
+                            <label htmlFor="Kiosk_loc">Type of Kiosk</label>
+                            <select name="Kiosk_loc" id="Kiosk_loc" required value={newKiosk.Kiosk_loc} onChange={handleInputChange}>
+                                <option value="">Select a Location</option>
+                                <option value='1'>Magic Coogs</option>
+                                <option value='3'>Highrise Coogs</option>
+                                <option value='2'>Splash Central</option>
+                                <option value='4'>Lowball City</option>
+                            </select>
+                        </div>
+                    </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">

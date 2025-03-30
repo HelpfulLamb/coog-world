@@ -19,6 +19,15 @@ exports.getAllInventory = async (req, res) => {
     }
 };
 
+exports.getInventoryInfo = async (req, res) => {
+    try {
+        const info = await inventoryModel.getInventoryInfo();
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.deleteAllInventory = async (req, res) => {
     try {
         await inventoryModel.deleteAllInventory();

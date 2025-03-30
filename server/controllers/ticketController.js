@@ -19,6 +19,15 @@ exports.getAllTickets = async (req, res) => {
     }
 };
 
+exports.getTicketInfo = async (req, res) => {
+    try {
+        const info = await ticketModel.getTicketInfo();
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getTicketByNum = async (req, res) => {
     try {
         const ticket = await ticketModel.getTicketByNum(req.params.num);

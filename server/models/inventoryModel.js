@@ -13,6 +13,13 @@ exports.getAllInventory = async () => {
     return inventory;
 };
 
+exports.getInventoryInfo = async () => {
+    const [info] = await db.query(
+        'SELECT t.Item_ID, t.Item_name, t.Item_type, t.Item_shop_price, t.Item_supply_price, i.Item_quantity, k.Kiosk_name FROM inventory as i, items as t, kiosks as k WHERE i.Item_ID = t.Item_ID and i.Kiosk_ID = k.Kiosk_ID'
+    );
+    return info;
+};
+
 exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };

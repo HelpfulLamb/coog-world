@@ -32,7 +32,7 @@ function RideTable({rideInformation, setIsModalOpen}){
                             <td>{ride.Ride_type}</td>
                             <td>{formatDate(ride.Ride_maint)}</td>
                             <td>${Number(ride.Ride_cost).toLocaleString()}</td>
-                            <td>{ride.Is_operate}</td>
+                            <td>{ride.Is_operate ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(ride.Ride_created)}</td>
                         </tr>
                     ))}
