@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import AddEmployee from "../modals/AddEmployee.jsx";
-import './Employee.css';
 
 function EmployeeTable({employeeInformation, setIsModalOpen}){
     if (!employeeInformation || !Array.isArray(employeeInformation)) {

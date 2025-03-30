@@ -19,6 +19,15 @@ exports.getAllMaintenance = async (req, res) => {
     }
 };
 
+exports.getMaintenanceInfo = async (req, res) => {
+    try {
+        const info = await maintenanceModel.getMaintenanceInfo();
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getMaintenanceById = async (req, res) => {
     try {
         const maintenance = await maintenanceModel.getMaintenanceById(req.params.id);

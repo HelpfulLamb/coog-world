@@ -7,6 +7,7 @@ ticketRouter.post('/', ticketController.createTicket);
 
 // retreive ticket (all or specific)
 ticketRouter.get('/', ticketController.getAllTickets);
+ticketRouter.get('/info', ticketController.getTicketInfo);
 ticketRouter.get('/:num', ticketController.getTicketByNum);
 
 // delete ticket (all or specific)

@@ -13,6 +13,13 @@ exports.getAllTickets = async () => {
     return tickets;
 };
 
+exports.getTicketInfo = async () => {
+    const [info] = await db.query(
+        'SELECT ticket_id, ticket_type, price FROM ticket_type'
+    );
+    return info;
+};
+
 exports.getTicketByNum = async (num) => {
     const [ticket] = await db.query('SELECT * FROM ticket_type WHERE ticket_number = ?', [num]);
     return ticket[0];
