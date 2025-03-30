@@ -85,3 +85,16 @@
 .modal-input-group input[type="date"] {
     padding: 0.65rem; /* Slightly less padding for date inputs */
 }
+.modal-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2rem;
+    margin-bottom: 1rem;
+}
+.modal-input-group {
+    display: flex;
+    flex-direction: column;
+}
+.modal-input-group.full-width {
+    grid-column: span 2;
+}
