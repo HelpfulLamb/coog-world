@@ -1,3 +1,4 @@
+//This is used when adding an employee
 import React, {useState} from "react";
 import './Modal.css';
 
@@ -72,24 +73,37 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
             <div className="modal">
                 <h2>Add New Employee</h2>
                 <form onSubmit={handleSubmit}>
-                    {['First_name', 'Last_name', 'Emp_phone', 'Emp_email', 'Emp_password', 'Emp_sec', 'Emp_pos', 'Emp_salary', 'Start_date'].map((field) => (
-                        <div className="modal-input-group" key={field}>
-                            <label htmlFor={field}>
-                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
-                            </label>
-                            <input 
+                    {[
+                    'First_name', 'Last_name', 'Emp_phone', 'Emp_email',
+                    'Emp_password', 'Emp_sec', 'Emp_pos', 'Emp_salary', 'Start_date'
+                    ].map((field) => (
+                    <div className="modal-input-group" key={field}>
+                        <label htmlFor={field}>
+                            {field
+                                .replace(/_/g, ' ') // Replace underscores with spaces
+                                .replace(/([A-Z])/g, ' $1') // Add space before uppercase letters
+                                .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
+                                .trim()}
+                        </label>
+                        <input
                             id={field}
-                            type={field === 'Emp_sec' ? 'number' : field === 'Emp_pos' ? 'number' : field === 'Emp_salary' ? 'number' : field === 'Start_date' ? 'date' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
+                            type={
+                                ['Emp_sec', 'Emp_pos', 'Emp_salary'].includes(field) ? 'number' :
+                                field === 'Start_date' ? 'date' :
+                                field === 'Emp_email' ? 'email' :
+                                field === 'Emp_phone' ? 'tel' :
+                                'text'
+                            }
                             name={field}
                             required
                             autoComplete="off"
                             value={newEmployee[field]}
                             onChange={handleInputChange}
                             placeholder={field.replace(/_/g, ' ').toLowerCase()}
-                            />
-                            
-                        </div>
+                        />
+                    </div>
                     ))}
+
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
