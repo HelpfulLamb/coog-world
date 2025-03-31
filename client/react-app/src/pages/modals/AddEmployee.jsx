@@ -1,3 +1,4 @@
+//This is used when adding an employee
 import React, {useState} from "react";
 import './Modal.css';
 
