@@ -67,6 +67,19 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
 
     if(!isOpen) return null;
 
+    const getPlaceholders = (field) => {
+        const placeholders = {
+            'First_name': 'e.g. John',
+            'Last_name': 'e.g. Smith',
+            'Emp_phone': 'e.g. 555-123-4567',
+            'Emp_email': 'e.g. john.smith@example.com',
+            'Emp_password': 'Minimum 12 characters',
+            'Emp_salary': 'e.g. 50000',
+            'Start_date': 'Select a start date'
+        };
+        return placeholders[field] || '';
+    };
+
     return(
         <div className="modal-overlay">
             <div className="modal">
@@ -86,14 +99,14 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                                 autoComplete="off"
                                 value={newEmployee[field]}
                                 onChange={handleInputChange}
-                                placeholder={field.replace(/_/g, ' ').toLowerCase()}
+                                placeholder={getPlaceholders(field)}
                                 />
                             </div>
                         ))}
                         <div className="modal-input-group">
                             <label htmlFor="Emp_sec">Work Location</label>
                             <select name="Emp_sec" id="Emp_sec" required value={newEmployee.Emp_sec} onChange={handleInputChange}>
-                                <option value="">Select a Location</option>
+                                <option value="">-- Select a Location --</option>
                                 <option value="1">Magic Coogs</option>
                                 <option value="2">Highrise Coogs</option>
                                 <option value="3">Splash Central</option>
@@ -103,7 +116,7 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                         <div className="modal-input-group">
                             <label htmlFor="Emp_pos">Occupation</label>
                             <select name="Emp_pos" id="Emp_pos" required value={newEmployee.Emp_pos} onChange={handleInputChange}>
-                                <option value="">Select an Occupation</option>
+                                <option value="">-- Select an Occupation --</option>
                                 <option value="1">Ride Operator</option>
                                 <option value="3">Retail Staff</option>
                                 <option value="5">Game Attendant</option>

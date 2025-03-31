@@ -28,20 +28,25 @@
     margin-bottom: 1.5rem;
 }
 .modal-input-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 .modal-input-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    margin-bottom: 1em;
+    font-weight: 500;
     color: #2c3e50;
+    font-size: 0.9rem;
+    position: relative;
 }
 .modal-input-group input,
 .modal-input-group select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
@@ -88,13 +93,31 @@
 .modal-form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem 2rem;
+    gap: 1rem 2rem;
     margin-bottom: 1rem;
-}
-.modal-input-group {
-    display: flex;
-    flex-direction: column;
 }
 .modal-input-group.full-width {
     grid-column: span 2;
 }
+@media (max-width: 600px) {
+    .modal-form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-input-group.full-width {
+        grid-column: span 1;
+    }
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 0.2rem;
+}
+/*.modal-overlay label {
+    border: 1px solid red;
+    background: rgba(255, 0, 0, 0.05);
+}
+.modal-overlay input,
+.modal-overlay select {
+border: 1px solid blue;
+background: rgba(0, 0, 255, 0.05);
+}*/

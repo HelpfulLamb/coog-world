@@ -19,6 +19,15 @@ exports.getAllWeather = async (req, res) => {
     }
 };
 
+exports.getWeatherInfo = async (req, res) => {
+    try {
+        const info = await weatherModel.getWeatherInfo();
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getWeatherById = async (req, res) => {
     try {
         const weather = await weatherModel.getWeatherById(req.params.id);

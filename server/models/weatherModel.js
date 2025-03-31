@@ -13,6 +13,11 @@ exports.getAllWeather = async () => {
     return weathers;
 };
 
+exports.getWeatherInfo = async () => {
+    const [info] = await db.query('SELECT Wtr_ID, Wtr_cond, Wtr_level, Special_alerts, Wtr_created FROM weather');
+    return info
+};
+
 exports.getWeatherById = async (id) => {
     const [weather] = await db.query('SELECT * FROM weather WHERE WtrID = ?', [id]);
     return weather[0];

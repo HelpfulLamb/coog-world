@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AddEmployee from "../modals/AddEmployee.jsx";
 
 function EmployeeTable({employeeInformation, setIsModalOpen}){
-    if (!employeeInformation || !Array.isArray(employeeInformation)) {
+    if (!employeeInformation || employeeInformation.length === 0) {
         return <div>No employee data available.</div>;
     }
     const formatDate = (dateString) => {
