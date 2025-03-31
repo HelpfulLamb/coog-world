@@ -7,6 +7,7 @@ weatherRouter.post('/', weatherController.createWeather);
 
 // retrieve rides (all or specific)
 weatherRouter.get('/', weatherController.getAllWeather);
+weatherRouter.get('/info', weatherController.getWeatherInfo);
 weatherRouter.get('/:id', weatherController.getWeatherById);
 
 // delete rides (all or specific)

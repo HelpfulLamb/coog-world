@@ -55,6 +55,16 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
         }
     };
     if(!isOpen) return null;
+    const getPlaceholders = (field) => {
+        const placeholders = {
+            'Kiosk_name': 'e.g. Coog Shop',
+            'Kiosk_cost': 'e.g. 500000',
+            'Staff_num': 'e.g. 15',
+            'Kiosk_type': 'Select the type of kiosk',
+            'Kiosk_loc': 'Select the location of the kiosk'
+        };
+        return placeholders[field] || '';
+    };
     return(
         <div className="modal-overlay">
             <div className="modal">
@@ -64,7 +74,7 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                         {['Kiosk_name', 'Kiosk_cost', 'Staff_num'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
-                                    {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                    {field === 'Staff_num' ? 'Employees' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
                                 <input 
                                 id={field}
@@ -74,22 +84,22 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                                 autoComplete="off"
                                 value={newKiosk[field]}
                                 onChange={handleInputChange}
-                                placeholder={field.replace(/_/g, ' ').toLowerCase()} />
+                                placeholder={getPlaceholders(field)} />
                             </div>
                         ))}
                         <div className="modal-input-group">
                             <label htmlFor="Kiosk_type">Type of Kiosk</label>
                             <select name="Kiosk_type" id="Kiosk_type" required value={newKiosk.Kiosk_type} onChange={handleInputChange}>
-                                <option value="">Select a Type</option>
+                                <option value="">-- Select a Type --</option>
                                 <option value="Food">Food</option>
                                 <option value="Merch">Merchandise</option>
                                 <option value="Game">Game Booth</option>
                             </select>
                         </div>
                         <div className="modal-input-group">
-                            <label htmlFor="Kiosk_loc">Type of Kiosk</label>
+                            <label htmlFor="Kiosk_loc">Kiosk Located</label>
                             <select name="Kiosk_loc" id="Kiosk_loc" required value={newKiosk.Kiosk_loc} onChange={handleInputChange}>
-                                <option value="">Select a Location</option>
+                                <option value="">-- Select a Location --</option>
                                 <option value='1'>Magic Coogs</option>
                                 <option value='3'>Highrise Coogs</option>
                                 <option value='2'>Splash Central</option>

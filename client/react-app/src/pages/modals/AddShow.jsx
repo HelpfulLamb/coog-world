@@ -59,27 +59,71 @@ function AddShow({isOpen, onClose, onAddShow}){
         }
     };
     if(!isOpen) return null;
+    const getPlaceholders = (field) => {
+        const placeholders = {
+            'Show_name': 'e.g. The Great Coog',
+            'Show_cost': 'e.g. 500000',
+            'Perf_num': 'e.g. 20',
+            'Stage_ID': 'Select a stage',
+            'Show_start': 'Select a start time',
+            'Show_end': 'Select an end time',
+            'daily_runs': 'e.g. 2'
+        };
+        return placeholders[field] || '';
+    };
     return(
         <div className="modal-overlay">
             <div className="modal">
                 <h2>Add New Show</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Show_name', 'Stage_ID', 'Show_start', 'Show_end', 'Perf_num', 'daily_runs', 'Show_cost'].map((field) => (
+                    {['Show_name', 'Show_start', 'Show_end', 'Perf_num', 'Show_cost'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
-                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                {field === 'Perf_num' ? 'Performers' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                             </label>
                             <input 
                             id={field}
-                            type={field === 'Stage_ID' ? 'number' : field === 'Perf_num' ? 'number' : field === 'daily_runs' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
+                            type={field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
                             name={field}
                             required
                             autoComplete="off" 
                             value={newShow[field]}
                             onChange={handleInputChange}
-                            placeholder={field.replace(/_/g, ' ').toLowerCase()} />
+                            placeholder={getPlaceholders(field)} />
                         </div>
                     ))}
+                    <div className="modal-input-group">
+                        <label htmlFor="Stage_ID">Stage</label>
+                        <select
+                            id="Stage_ID"
+                            name="Stage_ID"
+                            required
+                            value={newShow.Stage_ID}
+                            onChange={handleInputChange}>
+                            <option value="">-- Select a Stage --</option>
+                            <option value="1">Music Hall</option>
+                            <option value="2">Cullen Performance Stage</option>
+                            <option value="3">Plaza Outdoor Stage</option>
+                            <option value="4">Leiss' Wacky Circus</option>
+                            <option value="5">The Downtown Drama</option>
+                            <option value="6">Crescent Moon Theatre</option>
+                            <option value="7">Stage of Wonder</option>
+                        </select>
+                    </div>
+                    <div className="modal-input-group">
+                        <label htmlFor="daily_runs">Daily Runs</label>
+                        <select
+                            id="daily_runs"
+                            name="daily_runs"
+                            required
+                            value={newShow.daily_runs}
+                            onChange={handleInputChange}>
+                            <option value="">---</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">

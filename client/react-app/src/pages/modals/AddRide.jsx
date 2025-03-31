@@ -57,6 +57,16 @@ function AddRide({isOpen, onClose, onAddRide}){
     };
     if(!isOpen) return null;
 
+    const getPlaceholders = (field) => {
+        const placeholders = {
+            'Ride_name': 'e.g. The Twister',
+            'Ride_cost': 'e.g. 5000000',
+            'Ride_staff': 'e.g. 5',
+            'Ride_type': 'Select the type of ride'
+        };
+        return placeholders[field] || '';
+    };
+
     return(
         <div className="modal-overlay">
             <div className="modal">
@@ -65,7 +75,7 @@ function AddRide({isOpen, onClose, onAddRide}){
                     {['Ride_name', 'Ride_cost', 'Ride_staff'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
-                                {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                {field === 'Ride_staff' ? 'Operators' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                             </label>
                             <input 
                             id={field}
@@ -75,7 +85,7 @@ function AddRide({isOpen, onClose, onAddRide}){
                             autoComplete="off"
                             value={newRide[field]}
                             onChange={handleInputChange}
-                            placeholder={field.replace(/_/g,' ').toLowerCase()} />
+                            placeholder={getPlaceholders(field)} />
                         </div>
                     ))}
                     {/* Dropdown for Ride_type */}
@@ -86,9 +96,8 @@ function AddRide({isOpen, onClose, onAddRide}){
                             name="Ride_type"
                             required
                             value={newRide.Ride_type}
-                            onChange={handleInputChange}
-                        >
-                            <option value="">Select a type</option>
+                            onChange={handleInputChange}>
+                            <option value="">-- Select a type --</option>
                             <option value="Normal">Normal</option>
                             <option value="Water">Water</option>
                             <option value="Thrill">Thrill</option>

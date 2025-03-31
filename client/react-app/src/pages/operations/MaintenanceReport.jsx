@@ -1,32 +1,42 @@
 import { useEffect, useState } from "react";
 
 function MaintenanceTable({maintenanceInformation}){
-    if(!maintenanceInformation || maintenanceInformation.length === 0){
-        return <div className="data-missing-msg">No maintenance information is currently available.</div>
-    }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
     return(
-        <div className="table-container">
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Maintenance Date</th>
-                        <th>Maintenance Cost</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {maintenanceInformation.map((maintenance) => (
-                        <tr key={maintenance.MaintID}>
-                            <td>{maintenance.Maintenance_Date}</td>
-                            <td>${maintenance.Maint_cost}</td>
-                            <td>{maintenance.Maint_Type}</td>
-                            <td>{maintenance.Maint_Status}</td>
+        <>
+        {!maintenanceInformation || maintenanceInformation.length === 0 ? (
+            <div className="data-missing-msg">No maintenance information is currently available.</div>
+        ) : (
+            <div className="table-container">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Date Reported</th>
+                            <th>Maintenance Cost</th>
+                            <th>Type</th>
+                            <th>Status</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {maintenanceInformation.map((maintenance) => (
+                            <tr key={maintenance.MaintID}>
+                                <td>{formatDate(maintenance.Maintenance_Date)}</td>
+                                <td>${Number(maintenance.Maint_cost).toLocaleString()}</td>
+                                <td>{maintenance.Maint_Type}</td>
+                                <td>{maintenance.Maint_Status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        )}
+        <div>
+            <button className="add-button">Report Maintenance</button>
         </div>
+        </>
     );
 }
 

@@ -30,7 +30,7 @@ exports.deleteUnitById = async (id) => {
 
 exports.getAllAvailableItems = async () => {
     const [merchandise] = await db.query(
-        'SELECT i.Item_name, i.Item_shop_price, i.Item_desc, i.Item_type FROM items as i, inventory as s, kiosks as k WHERE i.Item_ID = s.Item_ID and k.Kiosk_ID = s.Kiosk_ID and k.Kiosk_operate = 1 and s.Item_quantity > 0 ORDER BY i.Item_ID'
+        'SELECT Item_name, Item_shop_price, Item_desc FROM items WHERE Item_type = "shirt"'
     );
     return merchandise;
 };
