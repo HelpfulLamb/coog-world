@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background-color: #f5ece0;
+  background-color: #ffffff;
   max-width: 600px;
   margin: 0 auto;
   border: 1px solid #ccc;
@@ -59,4 +59,19 @@
 
 .purchase-item:last-child {
   border-bottom: none;
+}
+
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  background-color: #c8102e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #a60d24;
 }
