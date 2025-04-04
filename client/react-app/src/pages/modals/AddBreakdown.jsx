@@ -82,8 +82,8 @@ function AddBreakdown({isOpen, onClose, onAddBreakdown}){
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
-                        <button type="submit" className="button button-block">Add Maintenance</button>
-                        <button type="button" onClick={onClose} className="button button-block cancel-button">Cancel</button>
+                        <button type="submit">Add Maintenance</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>
