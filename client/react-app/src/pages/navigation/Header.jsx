@@ -37,6 +37,11 @@ function Header() {
                     <li><Link to="/tickets" className="nav-link">Tickets</Link></li>
                     <li><Link to="/shop" className="nav-link">Shop</Link></li>
                     <li><Link to="/services" className="nav-link">Services</Link></li>
+
+                    {isAuthenticated && (
+                        <li><Link to="/profile" className="nav-link">Profile</Link></li>
+                    )}
+
                     {isAuthenticated ? (
                         <li>
                             <button onClick={handleLogout} className='nav-link logout-button'>Logout</button>
