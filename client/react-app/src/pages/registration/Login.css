@@ -72,3 +72,36 @@ button:hover {
 .employee-login:hover {
   background-color: #333;
 }
+.back-button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  background-color: #f0f0f0;
+  color: #c8102e;
+  border: 2px solid #c8102e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  align-self: center;
+}
+
+.back-button:hover {
+  background-color: #c8102e;
+  color: #fff;
+}
+.login-container p {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.login-container p a {
+  color: #c8102e;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-container p a:hover {
+  text-decoration: underline;
+}
