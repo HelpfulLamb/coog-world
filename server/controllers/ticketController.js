@@ -1,12 +1,21 @@
 const ticketModel= require('../models/ticketModel.js');
 
 exports.createTicket = async (req, res) => {
+    const {ticket_type, price} = req.body;
+    console.log('Request Body: ', req.body);
+    if(!ticket_type || !price){
+        return res.status(400).json({message: 'All fields are required!'});
+    }
     try {
-        const {type, price} = req.body;
-        const ticketNum = await ticketModel.createTicket(type, price);
+        const existingTicket = await ticketModel.findTicketByName(ticket_type);
+        if(existingTicket){
+            return res.status(400).json({message: 'A ticket with that name already exists. Please try again.'});
+        }
+        await ticketModel.createTicket({ticket_type, price});
         res.status(201).json({num: ticketNum, type, price});
     } catch (error) {
-        res.status(500).json({message: error.message});
+        console.error('Error adding new ticket: ', error);
+        res.status(500).json({message: 'An error occurred. Please try again.'});
     }
 };
 
