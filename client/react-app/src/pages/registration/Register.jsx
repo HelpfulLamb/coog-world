@@ -89,9 +89,9 @@ function Register() {
     return (
         <div className="register-page">
             <div className="form">
-                <h1>Create an Account</h1>
+                <h1 className='register-header'>Create an Account</h1>
                 <form onSubmit={handleRegister}>
-                    {['first_name', 'last_name', 'email', 'password', 'phone', 'address', 'confirmPassword'].map((field, index) => (
+                    {['first_name', 'last_name', 'email', 'phone', 'address', 'password', 'confirmPassword'].map((field, index) => (
                         <div className="field-wrap" key={index}>
                             <input
                                 type={field.includes('password') ? 'password' : 'text'}
@@ -109,7 +109,9 @@ function Register() {
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
-                    <button type="submit" className="button button-block">Register</button>
+                    <div className='register-button'>
+                        <button type="submit">Register</button>
+                    </div>
                 </form>
                 <p className="already-registered">Already have an account? <Link to={'/login'}>Login</Link></p>
             </div>

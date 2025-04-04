@@ -51,7 +51,7 @@ function Home() {
         <div style={cardStyle}>
           <h2>🎢 Rides</h2>
           <p>From kid-friendly coasters to jaw-dropping thrill rides, we’ve got it all.</p>
-          <Link to="/services" className="fancy">Explore Attractions</Link>
+          <Link to="/parkrides" className="fancy">Explore Attractions</Link>
         </div>
 
         <div style={cardStyle}>
