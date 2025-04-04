@@ -90,7 +90,7 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                         {['First_name', 'Last_name', 'Emp_phone', 'Emp_email', 'Emp_password', 'Emp_salary', 'Start_date'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
-                                    {field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                    {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
                                 <input 
                                 id={field}

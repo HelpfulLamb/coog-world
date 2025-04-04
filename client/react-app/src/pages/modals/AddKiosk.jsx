@@ -74,7 +74,7 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                         {['Kiosk_name', 'Kiosk_cost', 'Staff_num'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
-                                    {field === 'Staff_num' ? 'Employees' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                    {field === 'Staff_num' ? 'Employees' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
                                 <input 
                                 id={field}
