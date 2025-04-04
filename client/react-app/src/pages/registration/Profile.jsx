@@ -95,8 +95,8 @@ function Profile() {
                         <label>Address:</label>
                         <input name="address" value={formData.address} onChange={handleChange} />
 
-                        <button onClick={handleEdit}>✅ Save Changes</button>
-                        <button onClick={() => setIsEditing(false)}>❌ Cancel</button>
+                        <button onClick={handleEdit} className='profile-button'>✅ Save Changes</button>
+                        <button onClick={() => setIsEditing(false)} className='profile-button'>❌ Cancel</button>
                     </>
                 ) : (
                     <>
@@ -104,8 +104,8 @@ function Profile() {
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Phone:</strong> {user.phone}</p>
                         <p><strong>Address:</strong> {user.address}</p>
-                        <button onClick={() => setIsEditing(true)}>✏️ Edit Profile</button>
-                        <button onClick={handleDelete}>🗑 Delete Account</button>
+                        <button onClick={() => setIsEditing(true)} className='profile-button'>✏️ Edit Profile</button>
+                        <button onClick={handleDelete} className='profile-button'>🗑 Delete Account</button>
                     </>
                 )}
             </div>

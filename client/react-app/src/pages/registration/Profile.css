@@ -10,13 +10,11 @@
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
 .profile-header {
   font-size: 3rem;
   color: #c8102e;
   margin-bottom: 1.5rem;
 }
-
 .profile-info, .profile-details {
   background-color: #fff;
   padding: 1.5rem;
@@ -26,29 +24,24 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
-
 .profile-info h2 {
   font-size: 2rem;
   color: #333;
 }
-
 .profile-info p, .profile-details p {
   font-size: 1.2rem;
   color: #555;
   margin: 5px 0;
 }
-
 .title-header {
   font-size: 2rem;
   color: #c8102e;
   margin-bottom: 1rem;
 }
-
 .profile-list, .purchase-list {
   list-style-type: none;
   padding: 0;
 }
-
 .profile-list li, .purchase-item {
   font-size: 1rem;
   color: #555;
@@ -56,12 +49,10 @@
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
-
 .purchase-item:last-child {
   border-bottom: none;
 }
-
-button {
+.profile-button {
   padding: 8px 16px;
   margin: 5px;
   background-color: #c8102e;
@@ -71,7 +62,6 @@ button {
   cursor: pointer;
   transition: background 0.2s ease-in-out;
 }
-
-button:hover {
+.profile-button:hover {
   background-color: #a60d24;
 }

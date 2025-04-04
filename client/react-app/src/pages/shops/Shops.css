@@ -10,6 +10,7 @@
     border-radius: 10px;
     padding: 16px;
     text-align: center;
+    background-color: #ffffff;
 }
 .shop-card img {
     width: 100%;
@@ -30,6 +31,7 @@
     padding: 16px;
     text-align: center;
     width: 250px;
+    background-color: #ffffff;
 }
 .merch-card img {
     width: 100%;

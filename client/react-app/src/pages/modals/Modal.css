@@ -41,6 +41,19 @@
     font-size: 0.9rem;
     position: relative;
 }
+.modal-input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.5); /* Placeholder text visibility */
+}
+.modal-input-group input{
+    background: rgba(0, 0, 0, 0.2); /* Darkened input background */
+    border: 1px solid #ccc;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
 .modal-input-group input,
 .modal-input-group select {
     width: 100%;
