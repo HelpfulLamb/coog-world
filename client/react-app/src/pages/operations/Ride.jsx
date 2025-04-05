@@ -36,9 +36,6 @@ function RideTable({rideInformation, setIsModalOpen}){
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
-            </div>
         </div>
     );
 }
@@ -79,7 +76,12 @@ function Ride(){
 
     return(
         <>
-            <h1>Coog World Rides</h1>
+            <div className="db-btn">
+                <h1>Coog World Rides</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                </div>
+            </div>
             <RideTable rideInformation={rideInformation} setIsModalOpen={setIsModalOpen} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
         </>

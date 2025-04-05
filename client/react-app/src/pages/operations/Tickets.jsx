@@ -28,9 +28,6 @@ function TicketTable({ticketInformation, setIsModalOpen}){
                         ))}
                     </tbody>
                 </table>
-                <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ticket</button>
-                </div>
             </div>
         </>
     );
@@ -70,7 +67,12 @@ function TicketReport(){
     }
     return(
         <>
-            <h1>Coog World Tickets</h1>
+            <div className="db-btn">
+                <h1>Coog World Tickets</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ticket</button>
+                </div>
+            </div>
             <TicketTable ticketInformation={ticketInformation} setIsModalOpen={setIsModalOpen} />
             <AddTicket isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddTicket={handleAddTicket} />
         </>

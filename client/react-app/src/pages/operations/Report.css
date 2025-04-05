@@ -30,7 +30,6 @@
 .table th:first-child {
     border-top-left-radius: 8px;
 }
-
 .table th:last-child {
     border-top-right-radius: 8px;
 }
@@ -105,4 +104,10 @@
     .add-button {
         width: 100%;
     }
+}
+.db-btn{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 40px;
 }
