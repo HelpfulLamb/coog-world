@@ -13,6 +13,7 @@ const { inventoryRouter } = require('./routes/inventoryRoutes.js');
 const { maintenanceRouter } = require('./routes/maintenanceRoutes.js');
 const { weatherRouter } = require('./routes/weatherRoutes.js');
 const { kioskRouter } = require('./routes/kioskRouter.js');
+const shopRoutes = require('./routes/shopRoutes');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -32,13 +33,15 @@ app.use('/api/inventory', inventoryRouter);
 app.use('/api/maintenance', maintenanceRouter);
 app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
+app.use('/api/shop-purchases', shopRoutes);
 
 // Serve frontend files
-app.use(express.static(path.join(__dirname, 'client')));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    });
+}
 
 // Handle 404 errors for API requests
 app.use((req, res) => {
