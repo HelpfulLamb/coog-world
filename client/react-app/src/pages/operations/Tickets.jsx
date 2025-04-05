@@ -43,10 +43,13 @@ function TicketReport(){
         const fetchTickets = async () => {
             try {
                 const response = await fetch('/api/ticket-type/info');
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
+    
                 const data = await response.json();
+                console.log('Fetched tickets:', data);
+    
                 setTicketInformation(data);
             } catch (error) {
                 setError(error.message);
@@ -54,8 +57,9 @@ function TicketReport(){
                 setLoading(false);
             }
         };
+    
         fetchTickets();
-    }, []);
+    }, []);    
     const handleAddTicket = (newTicket) => {
         setTicketInformation([...ticketInformation, newTicket]);
     };

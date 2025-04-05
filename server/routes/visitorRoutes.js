@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const visitorController = require('../controllers/visitorController.js');
 const express = require('express');
 const visitorRouter = express.Router();
@@ -13,6 +14,8 @@ visitorRouter.get('/:id', visitorController.getUserById);
 // delete users (all or specific)
 visitorRouter.delete('/', visitorController.deleteAllUsers);
 visitorRouter.delete('/:id', visitorController.deleteUserById);
+
+visitorRouter.put('/:id', visitorController.updateVisitor); 
 
 module.exports = {
     visitorRouter

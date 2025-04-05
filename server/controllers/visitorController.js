@@ -1,3 +1,4 @@
+const db = require('../config/db.js');
 const userModel = require('../models/visitorModel.js');
 
 exports.registerUser = async (req, res) => {
@@ -29,7 +30,15 @@ exports.loginUser = async (req, res) => {
         if(user.Password !== password){
             return res.status(401).json({message: 'Invalid Password.'});
         }
-        res.status(200).json({message: 'User Login Successful'});
+        res.status(200).json({
+            id: user.Visitor_ID,
+            first_name: user.First_name,
+            last_name: user.Last_name,
+            email: user.Email,
+            phone: user.Phone,
+            address: user.Address
+        });
+        
     } catch (error) {
         console.error('Error during user login: ', error);
         res.status(500).json({message: 'An error occurred. Please try again.'});
@@ -72,5 +81,36 @@ exports.deleteUserById = async (req, res) => {
         res.status(200).json({ message: 'User deleted successfully.' });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+exports.updateVisitor = async (req, res) => {
+    const visitorId = req.params.id;
+    const { first_name, last_name, email, phone, address } = req.body;
+
+    try {
+        await db.query(
+            `UPDATE visitors 
+             SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ? 
+             WHERE Visitor_ID = ?`,
+            [first_name, last_name, email, phone, address, visitorId]
+        );
+
+        const [updated] = await db.query(
+            'SELECT * FROM visitors WHERE Visitor_ID = ?',
+            [visitorId]
+        );
+
+        res.status(200).json({
+            id: updated[0].Visitor_ID,
+            first_name: updated[0].First_name,
+            last_name: updated[0].Last_name,
+            email: updated[0].Email,
+            phone: updated[0].Phone,
+            address: updated[0].Address
+        });
+        
+    } catch (error) {
+        console.error('Error updating visitor:', error);
+        res.status(500).json({ message: 'Update failed' });
     }
 };

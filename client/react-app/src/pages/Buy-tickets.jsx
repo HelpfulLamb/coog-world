@@ -1,20 +1,74 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function TicketCard({title, price, description1, description2}){
-    return(
-        <>
-            <div className='price-card'>
-                <h3>{title}</h3>
-                <h2>${price}</h2>
-                <ul>
-                    <li>{description1}</li>
-                    <li>{description2}</li>
-                </ul>
-                <button className='fancy'>Purchase</button>
+const user = JSON.parse(localStorage.getItem('user'));
+
+function TicketCard({ title, price, description1, description2, ticketId, userId }) {
+    const [quantity, setQuantity] = useState(1);
+
+    const handlePurchase = async () => {
+        try {
+            if (!userId || !ticketId) {
+                alert('Please login and select a valid ticket');
+                return;
+            }
+
+            const response = await axios.post('/api/ticket-type/purchase', {
+                user_id: userId,
+                ticket_id: ticketId,
+                price: price,
+                quantity: parseInt(quantity)
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.data.success) {
+                alert('Ticket Purchased Successfully!');
+            } else {
+                alert(`Purchase Failed: ${response.data.message}`);
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 
+                                error.message || 
+                                'Purchase failed unexpectedly';
+            alert(`Purchase Failed: ${errorMessage}`);
+        }
+    };
+
+    return (
+        <div className='price-card'>
+            <h3>{title}</h3>
+            <h2>${price}</h2>
+            <ul>
+                <li>{description1}</li>
+                <li>{description2}</li>
+            </ul>
+
+            {/* ✅ Quantity Selector */}
+            <div style={{ marginBottom: '10px' }}>
+                <label>Quantity: </label>
+                <select 
+    value={quantity} 
+    onChange={(e) => setQuantity(e.target.value)} 
+    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}
+>
+    {[...Array(10).keys()].map(num => (
+        <option key={num + 1} value={num + 1}>{num + 1}</option>
+    ))}
+</select>
+
             </div>
-        </>
-    )
+
+            {/* ✅ Optional Total */}
+            <div>
+                <strong>Total: ${ (price * quantity).toFixed(2) }</strong>
+            </div>
+
+            <button className='fancy' onClick={handlePurchase}>Purchase</button>
+        </div>
+    );
 }
 
 function ParkingCard({title, price, description1, description2}){
@@ -84,16 +138,19 @@ function Tickets(){
 
     return(
         <>
-            <h1 className='page-titles'>Our Pricing Plan</h1>
+            <h1 id='tickets-title'>Our Pricing Plan</h1>
             <div className='price-container'>
                 {ticketOptions.slice(0,3).map((ticket) =>(
                     <TicketCard 
-                        key={ticket.id}
-                        title={ticket.ticket_type}
-                        price={ticket.price}
-                        description1={ticket.description1}
-                        description2={ticket.description2}
-                    />
+                    key={ticket.ticket_id} // ✅ Use actual ID field
+                    title={ticket.ticket_type}
+                    price={ticket.price}
+                    description1={ticket.description1}
+                    description2={ticket.description2}
+                    ticketId={ticket.ticket_id} // ✅ Also fixes ticketId undefined
+                    userId={user?.id}
+                  />
+                  
                 ))}
             </div>
             <div className='price-container'>
