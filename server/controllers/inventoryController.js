@@ -1,12 +1,38 @@
 const inventoryModel = require('../models/inventoryModel.js');
 
-exports.createUnit = async (req, res) => {
+exports.createAssignment = async (req, res) => {
+    const {Kiosk_ID, Item_ID, Item_quantity, Restock_level} = req.body;
+    if(!Kiosk_ID || !Item_ID || !Item_quantity || !Restock_level){
+        return res.status(400).json({message: 'All fields are required! Somethings missing.'});
+    }
     try {
-        const {item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by} = req.body;
-        const inventoryId = await inventoryModel.createUnit(item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by);
-        res.status(201).json({id: inventoryId, item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by});
+        const existingAssignment = await inventoryModel.findAssignmentByID(Kiosk_ID, Item_ID);
+        if(existingAssignment){
+            return res.status(400).json({message: 'This item already exists in this kiosks stock. Please add a new item.'});
+        }
+        await inventoryModel.createAssignment({Kiosk_ID, Item_ID, Item_quantity, Restock_level});
+        res.status(201).json({message: 'New Assignment Created Successfully.'});
     } catch (error) {
-        res.status(500).json({message: error.message});
+        console.error('Error adding new assignment: ', error);
+        res.status(500).json({message: 'An error occurred. Please try again.'});
+    }
+};
+
+exports.createItem = async (req, res) => {
+    const {Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = req.body;
+    if(!Item_type || !Item_name || !Item_desc || !Item_shop_price || !Item_supply_price){
+        return res.status(400).json({message: 'All fields are required! Somethings missing.'});
+    }
+    try {
+        const existingItem = await inventoryModel.findItemByName(Item_name);
+        if(existingItem){
+            return res.status(400).json({message: 'This item already exists. Please add a new item.'});
+        }
+        await inventoryModel.createItem({Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price});
+        res.status(201).json({message: 'New Item Added Successfully.'});
+    } catch (error) {
+        console.error('Error adding new item: ', error);
+        res.status(500).json({message: 'An error occurred. Please try again.'});
     }
 };
 
@@ -23,6 +49,15 @@ exports.getInventoryInfo = async (req, res) => {
     try {
         const info = await inventoryModel.getInventoryInfo();
         res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getAllItems = async (req, res) => {
+    try {
+        const items = await inventoryModel.getAllItems();
+        res.status(200).json(items);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

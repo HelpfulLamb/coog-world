@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import AddItem from "../modals/AddItem";
+import AssignItem from "../modals/AssignItem";
 
 function InventoryTable({inventoryInformation, setIsModalOpen}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
@@ -58,8 +58,8 @@ function Inventory(){
         };
         fetchInventory();
     }, []);
-    const handleAddItem = (newItem) => {
-        setInventoryInformation([...inventoryInformation, newItem]);
+    const handleAssignItem = (newAssignment) => {
+        setInventoryInformation([...inventoryInformation, newAssignment]);
     };
     if(loading){
         return <div>Loading...</div>
@@ -72,11 +72,11 @@ function Inventory(){
             <div className="db-btn">
                 <h1>Inventory</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Assign Item</button>
                 </div>
             </div>
             <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} />
-            <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
+            <AssignItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAssignItem={handleAssignItem} />
         </>
     )
 }

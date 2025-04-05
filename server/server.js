@@ -36,14 +36,13 @@ app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
 
 // Serve frontend files
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    });
-}
+app.use(express.static(path.join(__dirname, 'client')));
 
-// Handle 404 errors for API requests
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
+
+
 app.use((req, res) => {
     res.status(404).send('Not Found');
 });
