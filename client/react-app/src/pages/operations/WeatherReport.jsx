@@ -13,7 +13,6 @@ function WeatherTable({weatherInformation}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Weather ID</th>
                         <th>Condition</th>
                         <th>Water Levels</th>
                         <th>Special Alerts</th>
@@ -23,7 +22,6 @@ function WeatherTable({weatherInformation}){
                 <tbody>
                     {weatherInformation.map((weather) => (
                         <tr key={weather.Wtr_ID}>
-                            <td>{weather.Wtr_ID}</td>
                             <td>{weather.Wtr_cond}</td>
                             <td>{weather.Wtr_level}</td>
                             <td>{weather.Special_alerts}</td>

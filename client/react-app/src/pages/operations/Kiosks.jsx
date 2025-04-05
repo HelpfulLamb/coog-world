@@ -15,7 +15,6 @@ function KioskTable({kioskInformation, setIsModalOpen}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Kiosk ID</th>
                         <th>Kiosk Name</th>
                         <th>Kiosk Type</th>
                         <th>Location</th>
@@ -26,7 +25,6 @@ function KioskTable({kioskInformation, setIsModalOpen}){
                 <tbody>
                     {kioskInformation.map((kiosk) => (
                         <tr key={kiosk.Kiosk_ID}>
-                            <td>{kiosk.Kiosk_ID}</td>
                             <td>{kiosk.Kiosk_name}</td>
                             <td>{kiosk.Kiosk_type}</td>
                             <td>{kiosk.area_name}</td>

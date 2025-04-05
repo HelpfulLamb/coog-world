@@ -9,7 +9,6 @@ function InventoryTable({inventoryInformation}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Item ID</th>
                         <th>Product Name</th>
                         <th>Product Type</th>
                         <th>Quantity in Stock</th>
@@ -21,7 +20,6 @@ function InventoryTable({inventoryInformation}){
                 <tbody>
                     {inventoryInformation.map((inventory) => (
                         <tr key={inventory.Inventory_ID}>
-                            <td>{inventory.Item_ID}</td>
                             <td>{inventory.Item_name}</td>
                             <td>{inventory.Item_type}</td>
                             <td>{inventory.Item_quantity}</td>

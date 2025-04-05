@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import AddMaintenance from "../modals/AddMaintenance.jsx";
 
-function MaintenanceTable({maintenanceInformation}){
+function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString();
@@ -17,6 +19,7 @@ function MaintenanceTable({maintenanceInformation}){
                             <th>Date Reported</th>
                             <th>Maintenance Cost</th>
                             <th>Type</th>
+                            <th>Object</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -26,6 +29,7 @@ function MaintenanceTable({maintenanceInformation}){
                                 <td>{formatDate(maintenance.Maintenance_Date)}</td>
                                 <td>${Number(maintenance.Maint_cost).toLocaleString()}</td>
                                 <td>{maintenance.Maint_Type}</td>
+                                <td>{maintenance.Maint_obj}</td>
                                 <td>{maintenance.Maint_Status}</td>
                             </tr>
                         ))}
@@ -34,7 +38,7 @@ function MaintenanceTable({maintenanceInformation}){
             </div>
         )}
         <div>
-            <button className="add-button">Report Maintenance</button>
+            <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
         </div>
         </>
     );
@@ -44,6 +48,8 @@ function Maintenance(){
     const [maintenanceInformation, setMaintenanceInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     useEffect(() => {
         const fetchMaintenance = async () => {
             try {
@@ -61,6 +67,11 @@ function Maintenance(){
         };
         fetchMaintenance();
     }, []);
+
+    const handleAddMaintenance = (newMaintenance) => {
+        setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
+    };
+
     if(loading){
         return <div>Loading...</div>
     }
@@ -70,9 +81,9 @@ function Maintenance(){
     return(
         <>
             <h1>Maintenance Report</h1>
-            <MaintenanceTable maintenanceInformation={maintenanceInformation} />
+            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen}/>
+            <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
         </>
     )
 }
-
 export default Maintenance;

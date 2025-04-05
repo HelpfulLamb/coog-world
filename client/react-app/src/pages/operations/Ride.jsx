@@ -15,7 +15,6 @@ function RideTable({rideInformation, setIsModalOpen}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Ride ID</th>
                         <th>Ride Name</th>
                         <th>Ride Type</th>
                         <th>Last Maintenance</th>
@@ -27,7 +26,6 @@ function RideTable({rideInformation, setIsModalOpen}){
                 <tbody>
                     {rideInformation.map((ride) => (
                         <tr key={ride.Ride_ID}>
-                            <td>{ride.Ride_ID}</td>
                             <td>{ride.Ride_name}</td>
                             <td>{ride.Ride_type}</td>
                             <td>{formatDate(ride.Ride_maint)}</td>

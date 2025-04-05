@@ -15,7 +15,7 @@ exports.getAllTickets = async () => {
 
 exports.getTicketInfo = async () => {
     const [info] = await db.query(
-        'SELECT ticket_id, ticket_type, price FROM ticket_type'
+        'SELECT ticket_type, price FROM ticket_type'
     );
     return info;
 };

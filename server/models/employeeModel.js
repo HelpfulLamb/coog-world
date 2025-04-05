@@ -25,7 +25,7 @@ exports.getEmployeeById = async (id) => {
 
 exports.getEmployeeInfo = async () => {
     const [info] = await db.query(
-        'SELECT e.Emp_ID, e.First_name, e.Last_name, e.Emp_email, s.area_name, o.Occ_name, e.Emp_salary, e.Start_date FROM employees as e, sectors as s, occupation as o WHERE e.Emp_sec = s.area_id and e.Emp_pos = o.Occ_ID and e.Emp_pos < 9 ORDER BY e.Emp_ID');
+        'SELECT e.First_name, e.Last_name, e.Emp_email, s.area_name, o.Occ_name, e.Emp_salary, e.Start_date FROM employees as e, sectors as s, occupation as o WHERE e.Emp_sec = s.area_id and e.Emp_pos = o.Occ_ID and e.Emp_pos < 9 ORDER BY e.Emp_ID');
     return info;
 }
 

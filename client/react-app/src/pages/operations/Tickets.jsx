@@ -9,7 +9,6 @@ function TicketTable({ticketInformation}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Ticket ID</th>
                         <th>Ticket Type</th>
                         <th>Price</th>
                         <th>Monthly Avg</th>
@@ -19,7 +18,6 @@ function TicketTable({ticketInformation}){
                 <tbody>
                     {ticketInformation.map((ticket) => (
                         <tr key={ticket.ticket_id}>
-                            <td>{ticket.ticket_id}</td>
                             <td>{ticket.ticket_type}</td>
                             <td>${ticket.price}</td>
                             <td>N/A</td>
