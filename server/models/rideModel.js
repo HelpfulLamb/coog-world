@@ -26,6 +26,11 @@ exports.getRideInfo = async () => {
     return info;
 };
 
+exports.getRideForCard = async () => {
+    const [ride] = await db.query('SELECT r.Ride_name, r.Ride_type, s.area_name FROM rides as r, sectors as s WHERE r.Ride_loc = s.area_ID');
+    return ride;
+};
+
 exports.getRideById = async (id) => {
     const [ride] = await db.query('SELECT * FROM rides WHERE Ride_ID = ?', [id]);
     return ride[0];

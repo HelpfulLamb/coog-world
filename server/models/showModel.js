@@ -13,6 +13,12 @@ exports.getAllShows = async () => {
     return shows;
 };
 
+exports.getShowForCard = async () => {
+    const [show] = await db.query(
+        'SELECT s.Show_name, s.Show_start, s.Show_date, a.area_name, p.Stage_name FROM shows as s, sectors as a, stages as p WHERE s.Stage_ID = p.Stage_ID and p.area_ID = a.area_ID');
+    return show;
+};
+
 exports.getShowInfo = async () => {
     const [info] = await db.query(
         'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.daily_runs, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');

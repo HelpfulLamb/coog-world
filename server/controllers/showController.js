@@ -19,6 +19,15 @@ exports.getAllShows = async (req, res) => {
     }
 };
 
+exports.getShowForCard = async (req, res) => {
+    try {
+        const show = await showModel.getShowForCard();
+        res.status(200).json(show);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getShowInfo = async (req, res) => {
     try {
         const shows = await showModel.getShowInfo();

@@ -7,6 +7,7 @@ showRouter.post('/create-show', showController.createShow);
 
 // retrieve shows (all or specific)
 showRouter.get('/', showController.getAllShows);
+showRouter.get('/user-view', showController.getShowForCard);
 showRouter.get('/info', showController.getShowInfo);
 showRouter.get('/:id', showController.getShowById);
 

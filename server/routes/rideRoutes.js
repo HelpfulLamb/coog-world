@@ -8,6 +8,7 @@ rideRouter.post('/create-ride', rideController.createRide);
 // retrieve rides (all or specific)
 rideRouter.get('/', rideController.getAllRides);
 rideRouter.get('/info', rideController.getRideInfo);
+rideRouter.get('/user-view', rideController.getRideForCard);
 rideRouter.get('/:id', rideController.getRideById);
 
 // delete rides (all or specific)
