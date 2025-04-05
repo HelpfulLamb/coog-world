@@ -15,11 +15,8 @@
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
-    /* Size and Vertical Scroll */
-    width: 90%;
-    height: auto;
-    max-height: calc(100vh - 4rem);
-    overflow-y: auto;
+    width: 500px;
+    max-width: 90%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
