@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const fs = require('fs')
-dotenv.config({ path: 'C:/Users/bryan/OneDrive/Documents/coog-world/server/config/.env' });
+dotenv.config({ path: './.env' });
 
 
 // create connection to database
@@ -11,9 +11,9 @@ const dbConfig = {
     user: process.env.DB_user,
     password: process.env.DB_password,
     database: process.env.DB_database,
-    ssl:{
-        ca: fs.readFileSync(process.env.SSL_CERT)
-    }
+    //ssl:{
+    //    ca: fs.readFileSync(process.env.SSL_CERT)
+    //}
 };
 
 if (process.env.USE_SSL === 'true') {
