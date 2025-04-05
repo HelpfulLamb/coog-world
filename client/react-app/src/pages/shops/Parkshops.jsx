@@ -10,7 +10,7 @@ function ShopCard({title, description1, description2, location}){
                 <h3>{title}</h3>
                 <p>{description1}</p>
                 <p>{description2}</p>
-                <p>Location: {location}</p>
+                <p>Located in: {location}</p>
             </div>
         </>
     )
@@ -66,7 +66,7 @@ function Parkshops(){
 
     return(
         <>
-            <h1 id='shop-title'>Explore the shops of Coog World!</h1>
+            <h1 className='page-titles'>Explore the shops of Coog World!</h1>
             <div className='shop-container'>
                 {shopOptions.map((shop, index) => (
                     <ShopCard key={index} title={shop.Kiosk_name} description1={shop.description1} description2={shop.description2} location={shop.area_name} />

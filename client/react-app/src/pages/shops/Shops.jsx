@@ -40,7 +40,7 @@ function Shop(){
     ];
     return(
         <>
-            <h1 id='shop-title'>See what stories you can tell in Coog World!</h1>
+            <h1 className='page-titles'>See what stories you can tell in Coog World!</h1>
             <div className='shop-link-container'>
                 {shopOptions.map((shop, index) =>(
                     <ShopCard 
