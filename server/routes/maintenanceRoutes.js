@@ -2,8 +2,8 @@ const maintenanceController = require('../controllers/maintenanceController.js')
 const express = require('express');
 const maintenanceRouter = express.Router();
 
-// create new rides
-maintenanceRouter.post('/', maintenanceController.createMaintenance);
+// create new maintenance report
+maintenanceRouter.post('/create-maintenance', maintenanceController.createMaintenance);
 
 // retrieve rides (all or specific)
 maintenanceRouter.get('/', maintenanceController.getAllMaintenance);

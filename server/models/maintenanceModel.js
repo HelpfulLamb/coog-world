@@ -1,9 +1,9 @@
 const db = require('../config/db.js');
 
-exports.createMaintenance = async (maint_date, cost, repair_date, type, objective, num) => {
+exports.createMaintenance = async (Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object) => {
     const [result] = await db.query(
-        'INSERT INTO maintenance (Maintenance_Date, Repair_Cost, Repair_Date, Maint_cost, Maint_Type, Maint_obj, Maint_num) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [maint_date, cost, repair_date, type, objective, num]
+        'INSERT INTO maintenance (Maintenance_Date, Maint_cost, Maint_Type, Maint_Status, Maint_obj) VALUES (?, ?, ?, ?, ?)',
+        [Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object]
     );
     return result.insertId;
 };
@@ -14,7 +14,7 @@ exports.getAllMaintenance = async () => {
 };
 
 exports.getMaintenanceInfo = async () => {
-    const [info] = await db.query('SELECT Maintenance_Date, Maint_cost, Maint_Type, Maint_Status FROM maintenance');
+    const [info] = await db.query('SELECT Maintenance_Date, Maint_cost, Maint_Type, Maint_Status, Maint_obj FROM maintenance');
     return info;
 };
 

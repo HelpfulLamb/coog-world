@@ -15,7 +15,6 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Employee ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
@@ -28,7 +27,6 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
                 <tbody>
                     {employeeInformation.map((employee) => (
                         <tr key={employee.Emp_ID}>
-                            <td>{employee.Emp_ID}</td>
                             <td>{employee.First_name}</td>
                             <td>{employee.Last_name}</td>
                             <td>{employee.Emp_email}</td>

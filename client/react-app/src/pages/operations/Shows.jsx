@@ -27,7 +27,6 @@ function ShowTable({showInformation, setIsModalOpen}){
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Show ID</th>
                         <th>Show Name</th>
                         <th>Location</th>
                         <th>Duration</th>
@@ -40,7 +39,6 @@ function ShowTable({showInformation, setIsModalOpen}){
                 <tbody>
                     {showInformation.map((show) =>(
                         <tr key={show.Show_ID}>
-                            <td>{show.Show_ID}</td>
                             <td>{show.Show_name}</td>
                             <td>{show.Stage_name}</td>
                             <td>{calculateDuration(show.Show_start, show.Show_end)}</td>

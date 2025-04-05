@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import AddBreakdown from "../modals/AddBreakdown";
+import AddMaintenance from "../modals/AddMaintenance.jsx";
 
 function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
-    if(!maintenanceInformation || !Array.isArray(maintenanceInformation)){
-        return <div>No maintenance data is available.</div>
-    }
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString();
@@ -17,6 +15,7 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                         <th>Date Reported</th>
                         <th>Maintenance Cost</th>
                         <th>Type</th>
+                        <th>Object</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -26,6 +25,7 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                             <td>{formatDate(maintenance.Maintenance_Date)}</td>
                             <td>${Number(maintenance.Maint_cost).toLocaleString()}</td>
                             <td>{maintenance.Maint_Type}</td>
+                                <td>{maintenance.Maint_obj}</td>
                             <td>{maintenance.Maint_Status}</td>
                         </tr>
                     ))}
@@ -43,6 +43,7 @@ function Maintenance(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     useEffect(() => {
         const fetchMaintenance = async () => {
             try {
@@ -60,6 +61,11 @@ function Maintenance(){
         };
         fetchMaintenance();
     }, []);
+
+    const handleAddMaintenance = (newMaintenance) => {
+        setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
+    };
+
     const handleAddBreakdown = (newBreakdown) => {
         setMaintenanceInformation([...maintenanceInformation, newBreakdown]);
     };
@@ -71,11 +77,10 @@ function Maintenance(){
     }
     return(
         <>
-            <h1>Coog World Maintenance</h1>
-            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen} />
-            <AddBreakdown isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddBreakdown={handleAddBreakdown} />
+            <h1>Maintenance Report</h1>
+            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen}/>
+            <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
         </>
     )
 }
-
 export default Maintenance;
