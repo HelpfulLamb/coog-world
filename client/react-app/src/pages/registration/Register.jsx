@@ -23,23 +23,23 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         const { first_name, last_name, email, password, phone, address, confirmPassword } = formData;
-
+    
         // Basic Validation
         if (!first_name || !last_name || !email || !password || !phone || !address || !confirmPassword) {
             setMessage({ error: 'All fields are required.', success: '' });
             return;
         }
-
+    
         if (password !== confirmPassword) {
             setMessage({ error: 'Passwords do not match.', success: '' });
             return;
         }
-
+    
         if (password.length < 6) {
             setMessage({ error: 'Password must be at least 6 characters long.', success: '' });
             return;
         }
-
+    
         try {
             const response = await fetch('/api/users/register', {
                 method: 'POST',
@@ -55,10 +55,17 @@ function Register() {
                     address
                 }),
             });
-
+    
             const data = await response.json();
-            if(response.ok){
-                setMessage({success: 'Account successfully created!', error: ''});
+            if (response.ok) {
+                // ✅ Store user info in localStorage
+                const userData = { first_name, last_name, email, phone, address };
+                localStorage.setItem('user', JSON.stringify(userData));
+    
+                console.log("Stored in localStorage:", localStorage.getItem('user')); // 🔍 Debugging
+    
+                setMessage({ success: 'Account successfully created!', error: '' });
+    
                 setFormData({
                     first_name: '',
                     last_name: '',
@@ -68,21 +75,23 @@ function Register() {
                     address: '',
                     confirmPassword: ''
                 });
-                navigate('/login');
+    
+                // ✅ Redirect to Profile page
+                navigate('/profile');
             } else {
-                setMessage({error: data.message || 'Registration failed.', success: ''});
+                setMessage({ error: data.message || 'Registration failed.', success: '' });
             }
         } catch (error) {
-            setMessage({error: 'An error occurred. Please try again.', success: ''});
+            setMessage({ error: 'An error occurred. Please try again.', success: '' });
         }
-    };
+    };        
 
     return (
         <div className="register-page">
             <div className="form">
-                <h1>Create an Account</h1>
+                <h1 className='register-header'>Create an Account</h1>
                 <form onSubmit={handleRegister}>
-                    {['first_name', 'last_name', 'email', 'password', 'phone', 'address', 'confirmPassword'].map((field, index) => (
+                    {['first_name', 'last_name', 'email', 'phone', 'address', 'password', 'confirmPassword'].map((field, index) => (
                         <div className="field-wrap" key={index}>
                             <input
                                 type={field.includes('password') ? 'password' : 'text'}
@@ -100,7 +109,9 @@ function Register() {
                     ))}
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
-                    <button type="submit" className="button button-block">Register</button>
+                    <div className='register-button'>
+                        <button type="submit">Register</button>
+                    </div>
                 </form>
                 <p className="already-registered">Already have an account? <Link to={'/login'}>Login</Link></p>
             </div>

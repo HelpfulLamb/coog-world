@@ -11,15 +11,12 @@
   background-repeat: no-repeat;
   padding: 0 1rem;
 }
-
-
 #login-title {
   font-family: sans-serif;
   font-size: 2.5rem; /* Keep font size reasonable */
   margin-bottom: 2rem;
   color: #c8102e; 
 }
-
 /* Styling for the login form */
 .login-form {
   display: flex;
@@ -30,8 +27,7 @@
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
 }
-
-input {
+.form-group input {
   padding: 1rem;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -40,12 +36,10 @@ input {
   margin-bottom: 1rem;
   box-sizing: border-box; /* Prevent overflow */
 }
-
-input:focus {
+.form-group input:focus {
   border-color: #c8102e;
   outline: none;
 }
-
 /* Button Styles */
 button {
   margin-top: 1.5rem;
@@ -59,16 +53,43 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 button:hover {
   background-color: #b30826; /* Darker color on hover */
 }
-
 .employee-login {
   background-color: #4a4a4a;
   color: white;
 }
-
 .employee-login:hover {
   background-color: #333;
+}
+.back-button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  background-color: #f0f0f0;
+  color: #c8102e;
+  border: 2px solid #c8102e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  align-self: center;
+}
+.back-button:hover {
+  background-color: #c8102e;
+  color: #fff;
+}
+.login-container p {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #333;
+}
+.login-container p a {
+  color: #c8102e;
+  text-decoration: none;
+  font-weight: 600;
+}
+.login-container p a:hover {
+  text-decoration: underline;
 }

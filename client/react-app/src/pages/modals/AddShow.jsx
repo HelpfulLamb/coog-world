@@ -79,7 +79,7 @@ function AddShow({isOpen, onClose, onAddShow}){
                     {['Show_name', 'Show_start', 'Show_end', 'Perf_num', 'Show_cost'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
-                                {field === 'Perf_num' ? 'Performers' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                {field === 'Perf_num' ? 'Performers' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                             </label>
                             <input 
                             id={field}
@@ -127,8 +127,8 @@ function AddShow({isOpen, onClose, onAddShow}){
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
-                        <button type="submit" className="button button-block">Add Show</button>
-                        <button type="button" onClick={onClose} className="button button-block cancel-button">Cancel</button>
+                        <button type="submit">Add Show</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>

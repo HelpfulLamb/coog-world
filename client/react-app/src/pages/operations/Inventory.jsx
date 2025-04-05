@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import AddItem from "../modals/AddItem";
 
-function InventoryTable({inventoryInformation}){
+function InventoryTable({inventoryInformation, setIsModalOpen}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
         return <div>No inventory data is available.</div>
     }
@@ -30,6 +31,9 @@ function InventoryTable({inventoryInformation}){
                     ))}
                 </tbody>
             </table>
+            <div>
+                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
+            </div>
         </div>
     );
 }
@@ -38,6 +42,7 @@ function Inventory(){
     const [inventoryInformation, setInventoryInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchInventory = async () => {
@@ -56,6 +61,9 @@ function Inventory(){
         };
         fetchInventory();
     }, []);
+    const handleAddItem = (newItem) => {
+        setInventoryInformation([...inventoryInformation, newItem]);
+    };
     if(loading){
         return <div>Loading...</div>
     }
@@ -64,8 +72,9 @@ function Inventory(){
     }
     return(
         <>
-            <h1>Inventory Report</h1>
-            <InventoryTable inventoryInformation={inventoryInformation} />
+            <h1>Inventory</h1>
+            <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} />
+            <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
         </>
     )
 }

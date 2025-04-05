@@ -74,7 +74,7 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                         {['Kiosk_name', 'Kiosk_cost', 'Staff_num'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
-                                    {field === 'Staff_num' ? 'Employees' : field.replace(/_/g, ' ').replace(/([A_Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                    {field === 'Staff_num' ? 'Employees' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
                                 <input 
                                 id={field}
@@ -110,8 +110,8 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
-                        <button type="submit" className="button button-block">Add Kiosk</button>
-                        <button type="button" onClick={onClose} className="button button-block cancel-button">Cancel</button>
+                        <button type="submit">Add Kiosk</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>

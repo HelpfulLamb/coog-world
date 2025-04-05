@@ -1,11 +1,16 @@
 const db = require('../config/db.js');
 
-exports.createTicket = async (type, price) => {
-    const [result] = await db.query(
+exports.findTicketByName = async (ticket_type) => {
+    const [ticket] = await db.query('SELECT t.ticket_type FROM ticket_type as t WHERE t.ticket_type = ?', (ticket_type));
+    return ticket[0];
+};
+
+exports.createTicket = async (ticketData) => {
+    const {ticket_type, price} = ticketData;
+    await db.query(
         'INSERT INTO ticket_type (ticket_type, price) VALUES (?, ?)',
-        [type, price]
+        [ticket_type, price]
     );
-    return result.insertId;
 };
 
 exports.getAllTickets = async () => {

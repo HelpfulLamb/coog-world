@@ -3,7 +3,7 @@ const express = require('express');
 const ticketRouter = express.Router();
 
 // create a new ticket
-ticketRouter.post('/', ticketController.createTicket);
+ticketRouter.post('/create-ticket', ticketController.createTicket);
 
 // retreive ticket (all or specific)
 ticketRouter.get('/', ticketController.getAllTickets);

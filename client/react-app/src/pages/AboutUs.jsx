@@ -66,19 +66,19 @@ function AboutUs() {
                     <div className="contact-card" style={styles.contactCard}>
                         <h3>Customer Support</h3>
                         <p style={styles.phone}>Phone: <a href="tel:832-193-1940" style={styles.link}>832-193-1940</a></p>
-                        <p>Email: <a href="mailto:Coogworld_support@uh.edu" style={styles.link}>Coogworld_support@uh.edu</a></p>
+                        <p>Email: <a href="mailto:Coogworld_support@CoogWorld.org" style={styles.link}>Coogworld_Support@CoogWorld.org</a></p>
                     </div>
                     
                     <div className="contact-card" style={styles.contactCard}>
                         <h3>Park Services</h3>
                         <p style={styles.phone}>Phone: <a href="tel:832-982-8274" style={styles.link}>832-982-8274</a></p>
-                        <p>Email: <a href="mailto:Coogworld_service@uh.edu" style={styles.link}>Coogworld_service@uh.edu</a></p>
+                        <p>Email: <a href="mailto:Coogworld_service@CoogWorld.org" style={styles.link}>Coogworld_service@CoogWorld.org</a></p>
                     </div>
                     
                     <div className="contact-card" style={styles.contactCard}>
                         <h3>Business Inquiries</h3>
                         <p style={styles.phone}>Phone: <a href="tel:832-910-2953" style={styles.link}>832-910-2953</a></p>
-                        <p>Email: <a href="mailto:Coogworld_business@uh.edu" style={styles.link}>Coogworld_business@uh.edu</a></p>
+                        <p>Email: <a href="mailto:Coogworld_business@CoogWorld.org" style={styles.link}>Coogworld_business@CoogWorld.org</a></p>
                     </div>
                 </div>
             </section>

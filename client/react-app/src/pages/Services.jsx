@@ -62,7 +62,7 @@ function Services() {
             
             <section style={styles.section}>
                 <div style={styles.serviceItem}>
-                    <img src={strollerImg} alt="Stroller" style={styles.icon} />
+                    <img src={strollerImg} alt="Stroller" style={styles.icon} draggable="false" />
                     <div style={styles.description}>
                         <h2>Strollers</h2>
                         <p style={styles.rate}>One day: $18</p>
@@ -70,7 +70,7 @@ function Services() {
                 </div>
 
                 <div style={styles.serviceItem}>
-                    <img src={wheelchairImg} alt="Wheelchair" style={styles.icon} />
+                    <img src={wheelchairImg} alt="Wheelchair" style={styles.icon} draggable="false" />
                     <div style={styles.description}>
                         <h2>Wheelchairs</h2>
                         <p style={styles.rate}>One day: $12</p>
@@ -78,7 +78,7 @@ function Services() {
                 </div>
 
                 <div style={styles.serviceItem}>
-                    <img src={lockerImg} alt="Locker" style={styles.icon} />
+                    <img src={lockerImg} alt="Locker" style={styles.icon} draggable="false" />
                     <div style={styles.description}>
                         <h2>Lockers</h2>
                         <p style={styles.rate}>One day: $12, Bi-hourly Rate: $2</p>
