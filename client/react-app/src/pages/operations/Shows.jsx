@@ -26,7 +26,7 @@ function ShowTable({showInformation, setIsModalOpen}){
                 <thead>
                     <tr>
                         <th>Show Name</th>
-                        <th>Location</th>
+                        <th>Stage</th>
                         <th>Duration</th>
                         <th>Total Performers</th>
                         <th>Date Performed</th>
@@ -52,11 +52,33 @@ function ShowTable({showInformation, setIsModalOpen}){
     );
 }
 
+function CollapsibleSection({ title, isOpen, onToggle, children }) {
+    return (
+        <div className="collapsible-section">
+            <div className="section-header">
+                <h3>{title}</h3>
+                <button onClick={onToggle}>
+                    {isOpen ? "▲ Hide" : "▼ Show"}
+                </button>
+            </div>
+            {isOpen && <div className="section-content">{children}</div>}
+        </div>
+    );
+}
+
+
 function Show(){
     const [showInformation, setShowInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filteredShows, setFilteredShows] = useState([]);
+
+    const [showNameFilter, setShowNameFilter] = useState('');
+    const [stageNameFilter, setStageNameFilter] = useState('');
+    const [startDateFilter, setStartDateFilter] = useState('');
+    const [endDateFilter, setEndDateFilter] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
     useEffect(() => {
         const fetchShow = async () => {
@@ -67,6 +89,7 @@ function Show(){
                 }
                 const data = await response.json();
                 setShowInformation(data);
+                setFilteredShows(data);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -76,9 +99,55 @@ function Show(){
         fetchShow();
     }, []);
 
+    useEffect(() => {
+        let filtered = [...showInformation];
+        if(showNameFilter){
+            filtered = filtered.filter(show => show.Show_name.toLowerCase().includes(showNameFilter.toLowerCase()));
+        }
+        if(stageNameFilter){
+            filtered = filtered.filter(show => show.Stage_name.toLowerCase().includes(stageNameFilter.toLowerCase()));
+        }
+        if(startDateFilter){
+            const startDate = new Date(startDateFilter);
+            filtered = filtered.filter(show => new Date(show.Show_date) >= startDate);
+        }
+        if(endDateFilter){
+            const endDate = new Date(endDateFilter);
+            filtered = filtered.filter(show => new Date(show.Show_date) <= endDate);
+        }
+        filtered.sort((a,b) => {
+            switch (sortOption) {
+                case 'nameAsc':
+                    return a.Show_name.localeCompare(b.Show_name);
+                case 'nameDesc':
+                    return b.Show_name.localeCompare(a.Show_name);
+                case 'datePerformed':
+                    return new Date(a.Show_date) - new Date(b.Show_date);
+                case 'dateAdded':
+                    return new Date(a.Show_created) - new Date(b.Show_created);
+                case 'costAsc':
+                    return a.Show_cost - b.Show_cost;
+                case 'costDesc':
+                    return b.Show_cost - a.Show_cost;            
+                default:
+                    return 0;
+            }
+        });
+        setFilteredShows(filtered);
+    }, [showInformation, showNameFilter, stageNameFilter, startDateFilter, endDateFilter, sortOption]);
+
     const handleAddShow = (newShow) => {
         setShowInformation([...showInformation, newShow]);
     };
+
+    const resetFilters = () => {
+        setShowNameFilter('');
+        setStageNameFilter('');
+        setStartDateFilter('');
+        setEndDateFilter('');
+        setSortOption('');
+    };
+
     if(loading){
         return <div>Loading...</div>
     }
@@ -88,13 +157,81 @@ function Show(){
 
     return(
         <>
+            <div className="filter-controls">
+                <h2>Filter Shows</h2>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="showName">Show Name:</label>
+                        <input
+                            type="text"
+                            id="showName"
+                            value={showNameFilter}
+                            onChange={(e) => setShowNameFilter(e.target.value)}
+                            placeholder="Filter by show name"
+                        />
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="stageName">Stage Name:</label>
+                        <input
+                            type="text"
+                            id="stageName"
+                            value={stageNameFilter}
+                            onChange={(e) => setStageNameFilter(e.target.value)}
+                            placeholder="Filter by stage name"
+                        />
+                    </div>
+                </div>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="startDate">From Date:</label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            value={startDateFilter}
+                            onChange={(e) => setStartDateFilter(e.target.value)}
+                        />
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="endDate">To Date:</label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            value={endDateFilter}
+                            onChange={(e) => setEndDateFilter(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <div className="filter-row">
+                    <div className="filter-group select-input">
+                        <label htmlFor="sort">Sort By:</label>
+                        <select
+                            id="sort"
+                            value={sortOption}
+                            onChange={(e) => setSortOption(e.target.value)}
+                        >
+                            <option value="">-- Select a sort method --</option>
+                            <option value="datePerformed">Date Performed (Oldest First)</option>
+                            <option value="nameAsc">Name (A-Z)</option>
+                            <option value="nameDesc">Name (Z-A)</option>
+                            <option value="dateAdded">Date Added (Oldest First)</option>
+                            <option value="costAsc">Cost (Low to High)</option>
+                            <option value="costDesc">Cost (High to Low)</option>
+                        </select>
+                    </div>
+                    <button className="reset-button" onClick={resetFilters}>
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+
             <div className="db-btn">
                 <h1>Coog World Shows</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
                 </div>
             </div>
-            <ShowTable showInformation={showInformation} setIsModalOpen={setIsModalOpen} />
+
+            <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} />
             <AddShow isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddShow={handleAddShow} />
         </>
     )

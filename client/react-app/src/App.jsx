@@ -25,6 +25,7 @@ import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
 import Show from './pages/operations/Shows.jsx';
 import TicketReport from './pages/operations/Tickets.jsx';
+import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
@@ -58,6 +59,7 @@ function App() {
                         <Route path='shows' element={<Show />} />
                         <Route path='kiosks' element={<Kiosk />} />
                         <Route path='ticket-report' element={<TicketReport />} />
+                        <Route path='items' element={<Item />} />
                         <Route path='inventory-report' element={<Inventory />} />
                         <Route path='maintenance-report' element={<Maintenance />} />
                         <Route path='weather-report' element={<Weather />} />

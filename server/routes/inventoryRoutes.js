@@ -4,12 +4,14 @@ const inventoryRouter = express.Router();
 
 /*Inventory Structure*/
 // create new items
-inventoryRouter.post('/', inventoryController.createUnit);
+inventoryRouter.post('/create-assignment', inventoryController.createAssignment);
+inventoryRouter.post('/create-item', inventoryController.createItem);
 
 // retrieve inventory (all or specific)
 inventoryRouter.get('/all', inventoryController.getAllInventory);
 inventoryRouter.get('/info', inventoryController.getInventoryInfo);
 inventoryRouter.get('/merchandise', inventoryController.getAllAvailableItems);
+inventoryRouter.get('/items', inventoryController.getAllItems);
 
 // delete items (all or specific)
 inventoryRouter.delete('/', inventoryController.deleteAllInventory);

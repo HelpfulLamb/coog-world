@@ -12,6 +12,7 @@ const DashboardNav = () => {
                 <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li> {/* will contain info on shops and booths ; sales*/}
                 <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li> {/* create, remove, update show information */}
                 <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li> {/* create, remove, update ticket information ; sales */}
+                <li><Link to={'/employee-dashboard/items'}>Items</Link></li>
                 <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li> {/* will contain info on items and inventory */}
                 <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li> {/* display maintenance report (things needing maintenance, dates of maintenance) */}
                 <li><Link to={'/employee-dashboard/weather-report'}>Weather Report</Link></li> {/* display weather report */}

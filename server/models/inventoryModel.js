@@ -1,11 +1,29 @@
 const db = require('../config/db.js');
 
-exports.createUnit = async (item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by) => {
-    const [result] = await db.query(
-        'INSERT INTO inventory (Item_type, Item_name, Item_quantity, Unit_price, Last_restocked_date, Reorder_level, Inventory_created, Inventory_created_by, Inventory_updated, Inventory_updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [item_type, item_name, item_quantity, unit_price, restocked_last, reorder_level, created_date, created_by, last_updated, updated_by]
+exports.findItemByName = async (name) => {
+    const [item] = await db.query('SELECT * FROM items WHERE Item_name = ?', [name]);
+    return item[0];
+};
+
+exports.findAssignmentByID = async (kiosk, item) => {
+    const [assignment] = await db.query(`SELECT Kiosk_ID, Item_ID FROM inventory WHERE Kiosk_ID = ${kiosk} and Item_ID = ${item}`);
+    return assignment[0];
+};
+
+exports.createAssignment = async (assignmentData) => {
+    const {Kiosk_ID, Item_ID, Item_quantity, Restock_level} = assignmentData;
+    await db.query(
+        'INSERT INTO inventory (Kiosk_ID, Item_ID, Item_quantity, Restock_level) VALUES (?, ?, ?, ?)',
+        [Kiosk_ID, Item_ID, Item_quantity, Restock_level]
     );
-    return result.insertId;
+};
+
+exports.createItem = async (itemData) => {
+    const {Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = itemData;
+    await db.query(
+        'INSERT INTO items (Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price) VALUES (?, ?, ?, ?, ?)',
+        [Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price]
+    );
 };
 
 exports.getAllInventory = async () => {
@@ -20,6 +38,12 @@ exports.getInventoryInfo = async () => {
     return info;
 };
 
+exports.getAllItems = async () => {
+    const [items] = await db.query(
+        'SELECT Item_ID, Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price, Item_created FROM items');
+    return items;
+};
+
 exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };
@@ -30,7 +54,7 @@ exports.deleteUnitById = async (id) => {
 
 exports.getAllAvailableItems = async () => {
     const [merchandise] = await db.query(
-        'SELECT Item_name, Item_shop_price, Item_desc FROM items WHERE Item_type = "shirt"'
+        'SELECT Item_name, Item_shop_price, Item_desc FROM items'
     );
     return merchandise;
 };
