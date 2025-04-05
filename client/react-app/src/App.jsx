@@ -17,6 +17,7 @@ import Login from './pages/registration/Login.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Profile from './pages/registration/Profile.jsx';
 import ParkRides from './pages/View-Rides.jsx';
+import ParkShows from './pages/View-Shows.jsx';
 import Footer from './pages/navigation/Footer.jsx';
 
 import Employee from './pages/operations/Employees.jsx';
@@ -48,6 +49,7 @@ function App() {
                     <Route path='/registration' element={<Register />} />
                     <Route path='/parkshops' element={<Parkshops />} />
                     <Route path='/parkrides' element={<ParkRides />} />
+                    <Route path='/parkshows' element={<ParkShows />} />
                     <Route path='/merch' element={<Merchandise />} />
                     <Route path='/profile' element={<Profile />} />
                     <Route path='/employee-dashboard' element={<Dashboard />}>

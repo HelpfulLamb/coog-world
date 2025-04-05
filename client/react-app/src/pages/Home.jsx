@@ -55,6 +55,12 @@ function Home() {
         </div>
 
         <div style={cardStyle}>
+          <h2>🎭 Shows</h2>
+          <p>Form lasting memories through our spectacular shows.</p>
+          <Link to="/parkshows" className="fancy">View Shows</Link>
+        </div>
+
+        <div style={cardStyle}>
           <h2>🍔 Shops & Perks</h2>
           <p>Enjoy food, games, and exclusive Coog World merchandise throughout the park!</p>
           <Link to="/shop" className="fancy">Browse Shops</Link>

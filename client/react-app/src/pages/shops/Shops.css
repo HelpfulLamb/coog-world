@@ -1,22 +1,46 @@
-.shop-container{
+.shop-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 25px;
+    align-items: flex-start;
     flex-wrap: wrap;
+    gap: 25px;
+    padding: 20px;
 }
 .shop-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
+    flex: 1 1 300px; /* Grow/shrink, base width */
+    max-width: 300px;
     background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 16px 0;
+}
+.shop-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 .shop-card img {
     width: 100%;
-    height: auto;
-    border-radius: 8px;
+    height: 180px;
+    object-fit: cover;
     user-select: none;
+}
+.shop-card h3{
+    margin: 16px 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+.shop-card p{
+    font-size: 14px;
+    color: #666;
+    padding: 0 12px;
+    text-align: center;
+    line-height: 1.4;
 }
 .merch-container{
     display: flex;

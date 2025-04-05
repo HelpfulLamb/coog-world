@@ -38,6 +38,18 @@ exports.getRideInfo = async (req, res) => {
     }
 };
 
+exports.getRideForCard = async (req, res) => {
+    try {
+        const ride = await rideModel.getRideForCard();
+        if(!ride){
+            return res.status(404).json({message: 'Ride information not found.'});
+        }
+        res.status(200).json(ride);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getRideById = async (req, res) => {
     try {
         const ride = await rideModel.getRideById(req.params.id);

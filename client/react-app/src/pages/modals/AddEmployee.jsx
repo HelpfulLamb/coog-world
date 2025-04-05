@@ -109,8 +109,8 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                             <select name="Emp_sec" id="Emp_sec" required value={newEmployee.Emp_sec} onChange={handleInputChange}>
                                 <option value="">-- Select a Location --</option>
                                 <option value="1">Magic Coogs</option>
-                                <option value="2">Highrise Coogs</option>
-                                <option value="3">Splash Central</option>
+                                <option value="2">Splash Central</option>
+                                <option value="3">Highrise Coogs</option>
                                 <option value="4">Lowball City</option>
                             </select>
                         </div>
