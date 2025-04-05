@@ -15,7 +15,7 @@ exports.getAllShows = async () => {
 
 exports.getShowInfo = async () => {
     const [info] = await db.query(
-        'SELECT s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.daily_runs, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');
+        'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.daily_runs, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');
     return info;
 };
 
