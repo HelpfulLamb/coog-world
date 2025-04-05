@@ -1,76 +1,120 @@
 .dashboard-container {
+    --bg-dark: #1f2937;
+    --text-dark: #1e293b;
+    --text-light: #ffffff;
+    --primary-color: #3b82f6;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --border-radius: 0.5rem;
+    --transition-speed: 0.05s;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --sidebar-width: 250px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+}
+.dashboard-header {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.dashboard-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
 }
 .dashboard-content {
     display: flex;
     flex: 1;
 }
 .dashboard-nav {
-    width: 250px;
-    background-color: #f4f4f4;
-    padding: 1rem;
-}
-.dashboard-main {
-    flex: 1;
-    padding: 1rem;
-    overflow: auto;
-}
-.dashboard-header {
-    background-color: #333;
-    color: white;
-    padding: .5rem;
-    text-align: center;
-}
-.logout-button {
-    background-color: #ff4d4d;
-    border-radius: 10px;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-}
-.logout-button:hover {
-    background-color: #ff1a1a;
+    width: var(--sidebar-width);
+    background-color: white;
+    padding: 1rem 0;
+    border-right: 1px solid #e2e8f0;
+    transition: width var(--transition-speed) ease;
+    box-shadow: var(--shadow-sm);
 }
 .dashboard-nav ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
-.dashboard-nav ul li a {
-    text-decoration: none;
-    color: #333;
+.dashboard-nav ul li {
+    margin: 0.25rem 1rem;
 }
-.dashboard-nav ul li button:hover {
-    color: #007bff;
+.dashboard-nav ul li a, 
+.dashboard-nav ul li button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 90%;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-dark);
+    border-radius: var(--border-radius);
+    transition: all var(--transition-speed) ease;
+    border: none;
+    background: transparent;
+    font-size: 0.9375rem;
+    font-weight: 500;
     cursor: pointer;
 }
-.dashboard-nav ul li{
-    width: 200px;
-    padding: 1rem;
-    display: inline-flex;
-    border: 1px solid rgba(180, 175, 175, 0.603);
-    border-radius: 5px;
-    font-family: sans-serif;
-    font-size: 1rem;
-    font-weight: bold;
+.dashboard-nav ul li a:hover, 
+.dashboard-nav ul li button:hover {
+    background-color: #f1f5f9;
+    color: var(--primary-color);
 }
-.add-employee-button {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
+.dashboard-nav ul li a.active {
+    background-color: #eff6ff;
+    color: var(--primary-color);
+}
+.dashboard-nav ul li a svg, 
+.dashboard-nav ul li button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+.dashboard-main {
+    flex: 1;
+    padding: 1.5rem;
+    overflow: auto;
+    background-color: var(--bg-light);
+}
+/* Buttons */
+.logout-button {
+    background-color: var(--danger-color);
+    border-radius: var(--border-radius);
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 0.5rem 0.5rem;
+    width: 150px;
     cursor: pointer;
-    font-size: 16px;
+    font-weight: 500;
+    transition: background-color var(--transition-speed) ease;
+    align-items: center;
 }
-.add-employee-button:hover {
-    background-color: #0056b3;
+.logout-button:hover {
+    background-color: var(--danger-hover);
+}
+/* Card styling for main content */
+.dashboard-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #e2e8f0;
 }
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -80,10 +124,77 @@
 
     .dashboard-nav {
         width: 100%;
-        min-width: 0;
+        padding: 0.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .dashboard-nav ul {
+        display: flex;
+        overflow-x: auto;
+        padding: 0.25rem;
+    }
+
+    .dashboard-nav ul li {
+        flex-shrink: 0;
+        margin: 0.25rem;
     }
 
     .dashboard-main {
-        padding: 1rem 0;
+        padding: 1rem;
+    }
+}
+/* Animation for smoother transitions */
+.dashboard-nav ul li a, 
+.dashboard-nav ul li button,
+.logout-button {
+    transition: all var(--transition-speed) ease;
+}
+
+/* Accessibility improvements */
+.dashboard-nav ul li a:focus, 
+.dashboard-nav ul li button:focus,
+.logout-button:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .dashboard-container {
+        background-color: #0f172a;
+        color: var(--text-light);
+    }
+
+    .dashboard-nav {
+        background-color: #1e293b;
+        border-right-color: #334155;
+    }
+
+    .dashboard-nav ul li a, 
+    .dashboard-nav ul li button {
+        color: #e2e8f0;
+    }
+
+    .dashboard-nav ul li a:hover, 
+    .dashboard-nav ul li button:hover {
+        background-color: #334155;
+        color: white;
+    }
+
+    .dashboard-nav ul li a.active {
+        background-color: #1e40af;
+        color: white;
+    }
+
+    .dashboard-main {
+        background-color: #0f172a;
+    }
+
+    .dashboard-card {
+        background: #1e293b;
+        border-color: #334155;
     }
 }

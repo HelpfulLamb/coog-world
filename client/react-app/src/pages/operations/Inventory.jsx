@@ -31,9 +31,6 @@ function InventoryTable({inventoryInformation, setIsModalOpen}){
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
-            </div>
         </div>
     );
 }
@@ -72,7 +69,12 @@ function Inventory(){
     }
     return(
         <>
-            <h1>Inventory</h1>
+            <div className="db-btn">
+                <h1>Inventory</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
+                </div>
+            </div>
             <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} />
             <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
         </>

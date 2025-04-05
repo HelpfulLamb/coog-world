@@ -10,7 +10,6 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
         return date.toLocaleDateString();
     };
     return(
-        <>
         <div className="table-container">
             <table className="table">
                 <thead>
@@ -39,10 +38,6 @@ function EmployeeTable({employeeInformation, setIsModalOpen}){
                 </tbody>
             </table>
         </div>
-        <div>
-            <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
-        </div>
-        </>
     );
 }
 
@@ -82,7 +77,12 @@ function Employee(){
     }
     return(
         <>
-            <h1>Coog World Employees</h1>
+            <div className="db-btn">
+                <h1>Coog World Employees</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                </div>
+            </div>
             <EmployeeTable employeeInformation={employeeInformation} setIsModalOpen={setIsModalOpen} />
             <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
         </>

@@ -31,9 +31,6 @@ function WeatherTable({weatherInformation, setIsModalOpen}){
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Weather</button>
-            </div>
         </div>
     );
 }
@@ -72,7 +69,12 @@ function Weather(){
     }
     return(
         <>
-            <h1>Weather Report</h1>
+            <div className="db-btn">
+                <h1>Weather Report</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Weather</button>
+                </div>
+            </div>
             <WeatherTable weatherInformation={weatherInformation} setIsModalOpen={setIsModalOpen} />
             <AddWeather isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddWeather={handleAddWeather} />
         </>

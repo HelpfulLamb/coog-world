@@ -31,9 +31,6 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
-            </div>
         </div>
     );
 }
@@ -77,7 +74,12 @@ function Maintenance(){
     }
     return(
         <>
-            <h1>Maintenance Report</h1>
+            <div className="db-btn">
+                <h1>Maintenance Report</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
+                </div>
+            </div>
             <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen}/>
             <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
         </>

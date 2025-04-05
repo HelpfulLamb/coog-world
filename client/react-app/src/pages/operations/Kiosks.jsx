@@ -34,9 +34,6 @@ function KioskTable({kioskInformation, setIsModalOpen}){
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
-            </div>
         </div>
     );
 }
@@ -77,7 +74,12 @@ function Kiosk(){
 
     return(
         <>
-            <h1>Coog World Kiosks</h1>
+            <div className="db-btn">
+                <h1>Coog World Kiosks</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
+                </div>
+            </div>
             <KioskTable kioskInformation={kioskInformation} setIsModalOpen={setIsModalOpen} />
             <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
         </>
