@@ -10,7 +10,6 @@ function ShowTable({showInformation, setIsModalOpen}){
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-
     const calculateDuration = (start, end) => {
         const [startHour, startMinute] = start.split(':').map(Number);
         const [endHour, endMinute] = end.split(':').map(Number);
@@ -21,7 +20,6 @@ function ShowTable({showInformation, setIsModalOpen}){
         const minutes = diffMin % 60;
         return `${hours}h ${minutes}min`;
     };
-
     return(
         <div className="table-container">
             <table className="table">
@@ -31,7 +29,7 @@ function ShowTable({showInformation, setIsModalOpen}){
                         <th>Location</th>
                         <th>Duration</th>
                         <th>Total Performers</th>
-                        <th>Daily Runs</th>
+                        <th>Date Performed</th>
                         <th>Show Cost</th>
                         <th>Date Added</th>
                     </tr>
@@ -43,16 +41,13 @@ function ShowTable({showInformation, setIsModalOpen}){
                             <td>{show.Stage_name}</td>
                             <td>{calculateDuration(show.Show_start, show.Show_end)}</td>
                             <td>{show.Perf_num}</td>
-                            <td>{show.daily_runs}</td>
+                            <td>{formatDate(show.Show_date)}</td>
                             <td>${Number(show.Show_cost).toLocaleString()}</td>
                             <td>{formatDate(show.Show_created)}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div>
-                <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
-            </div>
         </div>
     );
 }
@@ -93,7 +88,12 @@ function Show(){
 
     return(
         <>
-            <h1>Coog World Shows</h1>
+            <div className="db-btn">
+                <h1>Coog World Shows</h1>
+                <div>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
+                </div>
+            </div>
             <ShowTable showInformation={showInformation} setIsModalOpen={setIsModalOpen} />
             <AddShow isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddShow={handleAddShow} />
         </>

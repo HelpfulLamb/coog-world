@@ -2,9 +2,9 @@ const showModel = require('../models/showModel.js');
 
 exports.createShow = async (req, res) => {
     try {
-        const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost} = req.body;
-        const showId = await showModel.createShow({Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost});
-        res.status(201).json({id: showId, Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost});
+        const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost} = req.body;
+        const showId = await showModel.createShow({Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost});
+        res.status(201).json({id: showId, Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

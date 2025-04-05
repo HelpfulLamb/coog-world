@@ -1,10 +1,10 @@
 const db = require('../config/db.js');
 
 exports.createShow = async (userData) => {
-    const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost} = userData;
+    const {Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost} = userData;
     await db.query(
-        'INSERT INTO shows (Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [Show_name, Stage_ID, Show_start, Show_end, Perf_num, daily_runs, Show_cost]
+        'INSERT INTO shows (Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [Show_name, Stage_ID, Show_start, Show_end, Perf_num, Show_date, Show_cost]
     );
 };
 
@@ -21,7 +21,7 @@ exports.getShowForCard = async () => {
 
 exports.getShowInfo = async () => {
     const [info] = await db.query(
-        'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.daily_runs, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');
+        'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_end, s.Perf_num, s.Show_date, l.Stage_name, a.area_name, s.Show_cost, s.Show_created FROM shows as s, stages as l, sectors as a WHERE s.Stage_ID = l.Stage_ID and l.area_ID = a.area_ID');
     return info;
 };
 

@@ -6,9 +6,9 @@ function AddShow({isOpen, onClose, onAddShow}){
         Stage_ID: '',
         Show_start: '',
         Show_end: '',
-        daily_runs: '',
         Perf_num: '',
-        Show_cost: ''
+        Show_cost: '',
+        Show_date: ''
     });
 
     const [message, setMessage] = useState({error: '', success: ''});
@@ -20,12 +20,12 @@ function AddShow({isOpen, onClose, onAddShow}){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!newShow.Show_name || !newShow.Stage_ID || !newShow.Show_start || !newShow.Show_end || !newShow.daily_runs || !newShow.Perf_num || !newShow.Show_cost){
+        if(!newShow.Show_name || !newShow.Stage_ID || !newShow.Show_start || !newShow.Show_end || !newShow.Show_date || !newShow.Perf_num || !newShow.Show_cost){
             setMessage({error: 'All fields required.', success: ''});
             return;
         }
-        if(isNaN(newShow.Perf_num) || isNaN(newShow.daily_runs) || isNaN(newShow.Stage_ID)){
-            setMessage({error: 'Total Performers, daily runnings, and Stage ID of the show MUST be a number.', success: ''});
+        if(isNaN(newShow.Perf_num) || isNaN(newShow.Stage_ID)){
+            setMessage({error: 'Total Performers and Stage ID of the show MUST be a number.', success: ''});
             return;
         }
         try {
@@ -45,9 +45,9 @@ function AddShow({isOpen, onClose, onAddShow}){
                     Stage_ID: '',
                     Show_start: '',
                     Show_end: '',
-                    daily_runs: '',
                     Perf_num: '',
                     Show_cost: '',
+                    Show_date: '',
                 });
                 onAddShow(data.show);
                 setTimeout(() => {onClose(); window.location.href = window.location.href;});
@@ -67,7 +67,7 @@ function AddShow({isOpen, onClose, onAddShow}){
             'Stage_ID': 'Select a stage',
             'Show_start': 'Select a start time',
             'Show_end': 'Select an end time',
-            'daily_runs': 'e.g. 2'
+            'Show_date': 'Select the date of performance'
         };
         return placeholders[field] || '';
     };
@@ -76,14 +76,14 @@ function AddShow({isOpen, onClose, onAddShow}){
             <div className="modal">
                 <h2>Add New Show</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Show_name', 'Show_start', 'Show_end', 'Perf_num', 'Show_cost'].map((field) => (
+                    {['Show_name', 'Show_start', 'Show_end', 'Perf_num', 'Show_cost', 'Show_date'].map((field) => (
                         <div className="modal-input-group" key={field}>
                             <label htmlFor={field}>
                                 {field === 'Perf_num' ? 'Performers' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                             </label>
                             <input 
                             id={field}
-                            type={field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
+                            type={field === 'Show_date' ? 'date' : field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
                             name={field}
                             required
                             autoComplete="off" 
@@ -108,20 +108,6 @@ function AddShow({isOpen, onClose, onAddShow}){
                             <option value="5">The Downtown Drama</option>
                             <option value="6">Crescent Moon Theatre</option>
                             <option value="7">Stage of Wonder</option>
-                        </select>
-                    </div>
-                    <div className="modal-input-group">
-                        <label htmlFor="daily_runs">Daily Runs</label>
-                        <select
-                            id="daily_runs"
-                            name="daily_runs"
-                            required
-                            value={newShow.daily_runs}
-                            onChange={handleInputChange}>
-                            <option value="">---</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
                         </select>
                     </div>
                     {message.error && <p className="error-message">{message.error}</p>}
