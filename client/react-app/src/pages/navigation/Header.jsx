@@ -37,6 +37,7 @@ function Header() {
                     <li><Link to="/tickets" className="nav-link">Tickets</Link></li>
                     <li><Link to="/shop" className="nav-link">Shop</Link></li>
                     <li><Link to="/parkrides" className='nav-link'>Rides</Link></li>
+                    <li><Link to="/parkshows" className='nav-link'>Shows</Link></li>
                     <li><Link to="/about-us" className="nav-link">About Us</Link></li>
                     <li><Link to="/services" className="nav-link">Services</Link></li>
 
