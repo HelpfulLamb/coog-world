@@ -15,7 +15,7 @@ exports.getAllKiosks = async () => {
 
 exports.getKioskInfo = async () => {
     const [info] = await db.query(
-        'SELECT k.Kiosk_name, k.Kiosk_type, k.Kiosk_cost, k.Kiosk_created, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_loc = s.area_ID');
+        'SELECT k.Kiosk_ID, k.Kiosk_name, k.Kiosk_type, k.Kiosk_cost, k.Kiosk_created, s.area_name FROM kiosks as k, sectors as s WHERE k.Kiosk_loc = s.area_ID');
     return info;
 };
 
