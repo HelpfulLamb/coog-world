@@ -21,7 +21,7 @@ exports.getAllRides = async () => {
 
 exports.getRideInfo = async () => {
     const [info] = await db.query(
-        'SELECT Ride_name, Ride_type, Ride_maint, Ride_cost, Ride_staff, Is_operate, Ride_created FROM rides'
+        'SELECT Ride_ID, Ride_name, Ride_type, Ride_maint, Ride_cost, Ride_staff, Is_operate, Ride_created FROM rides'
     );
     return info;
 };
