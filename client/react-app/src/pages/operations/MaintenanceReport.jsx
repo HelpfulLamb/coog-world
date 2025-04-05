@@ -15,7 +15,7 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                         <th>Date Reported</th>
                         <th>Maintenance Cost</th>
                         <th>Type</th>
-                            <th>Object</th>
+                        <th>Object</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -34,9 +34,6 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
             <div>
                 <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
             </div>
-        )}
-        <div>
-            <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
         </div>
     );
 }
@@ -47,7 +44,6 @@ function Maintenance(){
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         const fetchMaintenance = async () => {
             try {
