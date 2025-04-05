@@ -9,10 +9,13 @@ ticketRouter.post('/create-ticket', ticketController.createTicket);
 ticketRouter.get('/', ticketController.getAllTickets);
 ticketRouter.get('/info', ticketController.getTicketInfo);
 ticketRouter.get('/:num', ticketController.getTicketByNum);
+ticketRouter.get('/purchases/:userId', ticketController.getUserTicketPurchases);
 
 // delete ticket (all or specific)
 ticketRouter.delete('/', ticketController.deleteAllTickets);
 ticketRouter.delete('/:num', ticketController.deleteTicketByNum);
+
+ticketRouter.post('/purchase', ticketController.purchaseTicket);
 
 module.exports = {
     ticketRouter

@@ -45,15 +45,22 @@ const Login = () => {
             );
 
             const data = await response.json();
+            console.log("Logged in user data:", data);
             if (response.ok) {
                 setMessage({ success: 'Login Successful!', error: '' });
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userType', role);
+                localStorage.setItem('user', JSON.stringify(data)); // ✅ Saves user data
+            
+                console.log("Saved to localStorage:", localStorage.getItem('user')); // ✅ Add this line here
+            
                 setIsAuthenticated(true); 
-
+            
                 // Redirect based on role
                 navigate(role === 'user' ? '/profile' : '/employee-dashboard');
-            } else {
+            }
+            
+             else {
                 setMessage({ error: data.message || 'Login Failed.', success: '' });
             }
         } catch (error) {
