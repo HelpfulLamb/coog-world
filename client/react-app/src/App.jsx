@@ -36,7 +36,7 @@ function App() {
 
     return (
         <AuthProvider>
-            <div id='root'>
+            <div className="app-container">
                 {!isEmployeeDashboard && <Header />}
                 <Routes>
                     <Route path='/' element={<Home />} />
