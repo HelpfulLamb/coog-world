@@ -17,6 +17,9 @@
     border-radius: 8px;
     width: 500px;
     max-width: 90%;
+    /*Vertical scroll, auto device height*/
+    overflow-y: auto;
+    max-height: 90vh;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

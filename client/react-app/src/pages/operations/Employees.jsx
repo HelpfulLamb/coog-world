@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import AddEmployee from "../modals/AddEmployee.jsx";
+import DeleteEmployee from "../modals/DeleteEmployee.jsx"
 
-function EmployeeTable({employeeInformation, setIsModalOpen}){
+function EmployeeTable({employeeInformation}){
     if (!employeeInformation || employeeInformation.length === 0) {
         return <div>No employee data available.</div>;
     }
@@ -45,7 +46,8 @@ function Employee(){
     const [employeeInformation, setEmployeeInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    //use active modal instead to switch button uses.
+    const [activeModal, setActiveModal] = useState(null); 
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -69,6 +71,12 @@ function Employee(){
         setEmployeeInformation([...employeeInformation, newEmployee]);
     };
 
+    const handleDeleteEmployee = (idToDelete) => {
+        setEmployeeInformation(employeeInformation.filter(
+            (employee) => employee.Emp_ID !== idToDelete
+        ));
+    };
+
     if(loading){
         return <div>Loading...</div>
     }
@@ -80,11 +88,27 @@ function Employee(){
             <div className="db-btn">
                 <h1>Coog World Employees</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                    <button className="add-button" onClick={() => setActiveModal('add')}>Add Employee</button>
+                    <button className="delete-button" onClick={() => setActiveModal('delete')}>Delete</button>
                 </div>
             </div>
-            <EmployeeTable employeeInformation={employeeInformation} setIsModalOpen={setIsModalOpen} />
-            <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
+            <EmployeeTable employeeInformation={employeeInformation}/>
+            {activeModal === 'add' && (
+                <AddEmployee
+                    isOpen={true}
+                    onClose={() => setActiveModal(null)}
+                    onAddEmployee={handleAddEmployee}
+                />
+            )}
+      
+            {activeModal === 'delete' && (
+                <DeleteEmployee
+                    isOpen={true}
+                    onClose={() => setActiveModal(null)}
+                    onDeleteEmployee={handleDeleteEmployee}
+                    employeeInformation={employeeInformation}
+                />
+            )}
         </>
     );
 }
