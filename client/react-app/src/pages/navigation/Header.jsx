@@ -47,7 +47,9 @@ function Header() {
 
                     {isAuthenticated ? (
                         <li>
+
                             <Link onClick={handleLogout} to='/login' className='nav-link logout-button'>Logout</Link>
+
                         </li>
                     ) : (
                         <li><Link to='/login' className='nav-link'>Login</Link></li>

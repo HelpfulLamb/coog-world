@@ -25,6 +25,9 @@ function Profile() {
     const [purchases, setPurchases] = useState([]);
     const [showTickets, setShowTickets] = useState(false);
     const [showPurchases, setShowPurchases] = useState(false);
+    const [rides, setRides] = useState([]);
+    const [showRides, setShowRides] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,6 +49,10 @@ function Profile() {
             const shopRes = await fetch(`/api/shop-purchases/${userId}`);
             const shopData = await shopRes.json();
             setPurchases(shopData.purchases);
+            const rideRes = await fetch(`/api/rides/history/${userId}`);
+            const rideData = await rideRes.json();
+            setRides(rideData.rides);
+
         } catch (err) {
             console.error('Error fetching user-related data:', err);
         }
@@ -163,6 +170,21 @@ function Profile() {
                     </ul>
                 )}
             </div>
+            <div className="ride-history">
+  <button className="toggle-section" onClick={() => setShowRides(!showRides)}>
+    {showRides ? 'Hide Ride History' : 'Your Ride History'}
+  </button>
+  {showRides && (
+    <ul className="profile-list">
+      {rides.map((ride, index) => (
+        <li key={index}>
+          Ride: {ride.Ride_name} | Type: {ride.Ride_type} | Date: {new Date(ride.ride_date).toLocaleString()}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
         </div>
     );
 }

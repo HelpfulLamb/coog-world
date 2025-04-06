@@ -27,9 +27,12 @@ exports.getRideInfo = async () => {
 };
 
 exports.getRideForCard = async () => {
-    const [ride] = await db.query('SELECT r.Ride_name, r.Ride_type, s.area_name FROM rides as r, sectors as s WHERE r.Ride_loc = s.area_ID');
+    const [ride] = await db.query(
+        'SELECT r.Ride_ID, r.Ride_name, r.Ride_type, s.area_name FROM rides AS r JOIN sectors AS s ON r.Ride_loc = s.area_ID'
+    );
     return ride;
 };
+
 
 exports.getRideById = async (id) => {
     const [ride] = await db.query('SELECT * FROM rides WHERE Ride_ID = ?', [id]);
@@ -42,4 +45,15 @@ exports.deleteAllRides = async () => {
 
 exports.deleteRideById = async (id) => {
     await db.query('DELETE FROM rides WHERE Ride_ID = ?', [id]);
+};
+exports.getVisitorRideHistory = async (visitorId) => {
+    const [history] = await db.query(
+        `SELECT vrl.ride_date, r.Ride_name, r.Ride_type 
+         FROM visitor_ride_log vrl
+         JOIN rides r ON vrl.Ride_ID = r.Ride_ID
+         WHERE vrl.Visitor_ID = ?
+         ORDER BY vrl.ride_date DESC`,
+        [visitorId]
+    );
+    return history;
 };
