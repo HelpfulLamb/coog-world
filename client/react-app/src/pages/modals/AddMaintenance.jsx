@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import Select from 'react-select';
 import './Modal.css';
 
 function AddMaintenance({isOpen, onClose, onAddMaintenance}){
@@ -8,25 +9,72 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
             Maintenance_Type: '',
             Maintenance_Status: '',
             Maintenance_Object: '',
+            Maintenance_Object_ID: '',
         });
 
         const [message, setMessage] = useState({error: '', success: ''});
+        const [objectsList, setObjectsList] = useState([]);
+        const [selectedObjectType, setSelectedObjectType] = useState('');
+
+        useEffect(() => {
+            const fetchObjects = async (objectType) => {
+                try {
+                    const response = await fetch(`/api/maintenance/objects/${objectType}`);
+                    const data = await response.json();
+        
+                    if (objectType === 'ride') {
+                        setObjectsList(data.map(item => ({
+                            value: item.Ride_ID, 
+                            label: item.Ride_name, 
+                            type: 'ride' 
+                        })));
+                    } else if (objectType === 'stage') {
+                        setObjectsList(data.map(item => ({
+                            value: item.Stage_ID,
+                            label: item.Stage_name,
+                            type: 'stage'
+                        })));
+                    } else if (objectType === 'kiosk') {
+                        setObjectsList(data.map(item => ({
+                            value: item.Kiosk_ID,
+                            label: item.Kiosk_name,
+                            type: 'kiosk'
+                        })));
+                    }
+                } catch (error) {
+                    console.error('Error fetching objects:', error);
+                    setObjectsList([]);
+                }
+            };
+        
+            if (selectedObjectType) {
+                fetchObjects(selectedObjectType);
+            }
+        }, [selectedObjectType]);
 
         const handleInputChange = (e) => {
             const {name, value} = e.target;
             setNewMaintenance({...newMaintenance, [name]: value});
         };
 
+        const handleObjectChange = (selectedOption) => {
+            setNewMaintenance({
+                ...newMaintenance,
+                Maintenance_Object: selectedOption.type,
+                Maintenance_Object_ID: selectedOption.value
+            });
+        };
+
         const handleSubmit = async (e) => {
             e.preventDefault();
 
             if(!newMaintenance.Maintenance_Date || !newMaintenance.Maintenance_Cost || !newMaintenance.Maintenance_Type || 
-                !newMaintenance.Maintenance_Status || !newMaintenance.Maintenance_Object){
+                !newMaintenance.Maintenance_Status || !newMaintenance.Maintenance_Object || !newMaintenance.Maintenance_Object_ID){
                 setMessage({error: 'All fields are required.', success: ''});
                 return;
             }
             if(isNaN(newMaintenance.Maintenance_Cost)){
-                setMessage({error: 'Must be a number.', success:''});
+                setMessage({error: 'Cost must be a valid number.', success:''});
                 return;
             }
             
@@ -48,9 +96,10 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                         Maintenance_Type: '',
                         Maintenance_Status: '',
                         Maintenance_Object: '',
+                        Maintenance_Object_ID: '',
                     });
                     onAddMaintenance(data.maintenance);
-                    setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                    setTimeout(() => { onClose(); window.location.reload(); }); //setTimeout(() => {onClose(); window.location.href = window.location.href;});
                 } else {
                     setMessage({error: data.message || 'Failed to add maintenance.', success: ''});
                 }
@@ -110,14 +159,31 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                                 </select>
                             </div>
                             <div className="modal-input-group">
-                                <label htmlFor="Maintenance_Object">Status</label>
-                                <select name="Maintenance_Object" id="Maintenance_Object" required value={newMaintenance.Maintenance_Object} onChange={handleInputChange}>
-                                    <option value="">-- What needs maintenance? --</option>
-                                    <option value="1">ride</option>
-                                    <option value="2">stage</option>
-                                    <option value="3">kiosk</option>
+                                <label htmlFor="Maintenance_Object">What needs maintenance?</label>
+                                <select
+                                    name="Maintenance_Object"
+                                    id="Maintenance_Object"
+                                    required
+                                    value={selectedObjectType}
+                                    onChange={(e) => setSelectedObjectType(e.target.value)}
+                                >
+                                    <option value="">-- Select Object Type --</option>
+                                    <option value="ride">Ride</option>
+                                    <option value="stage">Stage</option>
+                                    <option value="kiosk">Kiosk</option>
                                 </select>
                             </div>
+                            {selectedObjectType && objectsList.length > 0 && (
+                                <div className="modal-input-group">
+                                    <label htmlFor="Object_Name">Select Object</label>
+                                    <Select
+                                        options={objectsList}
+                                        onChange={handleObjectChange}
+                                        placeholder="Search and select..."
+                                    />
+                                </div>
+                            )}
+                            {objectsList.length === 0 && selectedObjectType && <p>No objects found for this type.</p>} {/* Display error if no objects are found */}
                         </div>
                         {message.error && <p className="error-message">{message.error}</p>}
                         {message.success && <p className="success-message">{message.success}</p>}

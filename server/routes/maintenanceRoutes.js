@@ -9,6 +9,7 @@ maintenanceRouter.post('/create-maintenance', maintenanceController.createMainte
 maintenanceRouter.get('/', maintenanceController.getAllMaintenance);
 maintenanceRouter.get('/info', maintenanceController.getMaintenanceInfo);
 maintenanceRouter.get('/:id', maintenanceController.getMaintenanceById);
+maintenanceRouter.get('/objects/:objectType', maintenanceController.getObjectsByType);
 
 // delete rides (all or specific)
 maintenanceRouter.delete('/', maintenanceController.deleteAllMaintenance);
