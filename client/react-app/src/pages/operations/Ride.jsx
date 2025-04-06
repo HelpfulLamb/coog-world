@@ -1,8 +1,8 @@
-import AddRide from "../modals/AddRide";
+import AddRide, {UpdateRide} from "../modals/AddRide";
 import './Report.css'
 import { useEffect, useState } from "react";
 
-function RideTable({rideInformation, setIsModalOpen}){
+function RideTable({rideInformation, setIsModalOpen, onEditRide}){
     if(!rideInformation || !Array.isArray(rideInformation)){
         return <div>No ride data is available.</div>
     }
@@ -17,10 +17,12 @@ function RideTable({rideInformation, setIsModalOpen}){
                     <tr>
                         <th>Ride Name</th>
                         <th>Ride Type</th>
+                        <th>Location</th>
                         <th>Last Maintenance</th>
                         <th>Ride Cost</th>
                         <th>Operational Status</th>
                         <th>Date Added</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,10 +30,15 @@ function RideTable({rideInformation, setIsModalOpen}){
                         <tr key={ride.Ride_ID}>
                             <td>{ride.Ride_name}</td>
                             <td>{ride.Ride_type}</td>
+                            <td>{ride.area_name}</td>
                             <td>{formatDate(ride.Ride_maint)}</td>
                             <td>${Number(ride.Ride_cost).toLocaleString()}</td>
                             <td>{ride.Is_operate ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(ride.Ride_created)}</td>
+                            <td>
+                                <button onClick={() => onEditRide(ride)}>Edit</button>
+                                <button>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -45,6 +52,8 @@ function Ride(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedRide, setSelectedRide] = useState(null);
 
     useEffect(() => {
         const fetchRides = async () => {
@@ -67,6 +76,13 @@ function Ride(){
     const handleAddRide = (newRide) => {
         setRideInformation([...rideInformation, newRide]);
     };
+    const handleEditRide = (ride) => {
+        setSelectedRide(ride);
+        setIsEditOpen(true);
+    };
+    const handleUpdateRide = (updatedRide) => {
+        setRideInformation(prev => prev.map(ride => ride.Ride_ID === updatedRide.Ride_ID ? updatedRide : ride));
+    };
     if(loading){
         return <div>Loading...</div>
     }
@@ -82,8 +98,9 @@ function Ride(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
                 </div>
             </div>
-            <RideTable rideInformation={rideInformation} setIsModalOpen={setIsModalOpen} />
+            <RideTable rideInformation={rideInformation} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
+            <UpdateRide isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedRide(null);}} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
         </>
     )
 }

@@ -5,6 +5,9 @@ const rideRouter = express.Router();
 // create new rides
 rideRouter.post('/create-ride', rideController.createRide);
 
+// update existing rides
+rideRouter.put('/:id', rideController.updateRide);
+
 // retrieve rides (all or specific)
 rideRouter.get('/', rideController.getAllRides);
 rideRouter.get('/info', rideController.getRideInfo);
