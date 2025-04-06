@@ -6,12 +6,20 @@ exports.findRideByName = async (name) => {
 }
 
 exports.createRide = async (rideData) => {
-    const {Ride_name, Ride_type, Ride_cost, Ride_staff} = rideData;
+    const {Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff} = rideData;
     const [result] = await db.query(
-        'INSERT INTO rides (Ride_name, Ride_type, Ride_cost, Ride_staff) VALUES (?, ?, ?, ?)',
-        [Ride_name, Ride_type, Ride_cost, Ride_staff]
+        'INSERT INTO rides (Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff) VALUES (?, ?, ?, ?, ?)',
+        [Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff]
     );
     return result.insertId;
+};
+
+exports.updateRide = async (selectedRide) => {
+    const {Ride_ID, Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate} = selectedRide;
+    const [ride] = await db.query(
+        'UPDATE rides SET Ride_name = ?, Ride_type = ?, Ride_loc = ?, Ride_cost = ?, Ride_staff = ?, Is_operate = ? WHERE Ride_ID = ?',
+    [Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate, Ride_ID]);
+    return ride;
 };
 
 exports.getAllRides = async () => {
@@ -21,7 +29,7 @@ exports.getAllRides = async () => {
 
 exports.getRideInfo = async () => {
     const [info] = await db.query(
-        'SELECT Ride_ID, Ride_name, Ride_type, Ride_maint, Ride_cost, Ride_staff, Is_operate, Ride_created FROM rides'
+        'SELECT r.Ride_ID, r.Ride_name, r.Ride_type, r.Ride_maint, r.Ride_cost, r.Ride_staff, r.Is_operate, r.Ride_created, s.area_name FROM rides as r, sectors as s WHERE r.Ride_loc = s.area_ID'
     );
     return info;
 };
