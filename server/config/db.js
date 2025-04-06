@@ -24,6 +24,7 @@ if (process.env.USE_SSL === 'true') {
 
 const db =mysql.createPool(dbConfig);
 
+
 // test database connection
 db.getConnection((err) => {
     if(err) {
