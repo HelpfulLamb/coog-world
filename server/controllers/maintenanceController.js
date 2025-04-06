@@ -2,14 +2,14 @@ const maintenanceModel = require('../models/maintenanceModel.js');
 
 exports.createMaintenance = async (req, res) => {
     try {
-        const { Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object } = req.body;
+        const { Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID} = req.body;
 
         // Validate input fields to ensure no empty values are passed
-        if (!Maintenance_Date || !Maintenance_Cost || !Maintenance_Type || !Maintenance_Status || !Maintenance_Object) {
+        if (!Maintenance_Date || !Maintenance_Cost || !Maintenance_Type || !Maintenance_Status || !Maintenance_Object || !Maintenance_Object_ID) {
             return res.status(400).json({ message: 'All fields are required. Server may be unavailable.' });
         }
 
-        const maintenanceId = await maintenanceModel.createMaintenance(Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object);
+        const maintenanceId = await maintenanceModel.createMaintenance(Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID);
 
         if (!maintenanceId) {
             return res.status(500).json({ message: 'Failed to create maintenance record.' });
@@ -18,6 +18,17 @@ exports.createMaintenance = async (req, res) => {
         res.status(201).json({
             id: Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object
         });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getObjectsByType = async (req, res) => {
+    try {
+        const objectType = req.params.objectType; 
+        const objects = await maintenanceModel.getObjectsByType(objectType);
+
+        res.status(200).json(objects);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
