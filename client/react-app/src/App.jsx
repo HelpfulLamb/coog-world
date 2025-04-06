@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 
@@ -29,6 +29,7 @@ import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
+import AdminHome from './pages/operations/Home.jsx'; // ✅ NEW LINE
 
 function App() {
     const location = useLocation();
@@ -53,7 +54,10 @@ function App() {
                     <Route path='/parkshows' element={<ParkShows />} />
                     <Route path='/merch' element={<Merchandise />} />
                     <Route path='/profile' element={<Profile />} />
+
+                    {/* 👇 ADMIN DASHBOARD ROUTES */}
                     <Route path='/employee-dashboard' element={<Dashboard />}>
+                        <Route index element={<AdminHome />} /> {/* ✅ Admin Home page */}
                         <Route path='employees' element={<Employee />} />
                         <Route path='rides' element={<Ride />} />
                         <Route path='shows' element={<Show />} />
@@ -64,6 +68,7 @@ function App() {
                         <Route path='maintenance-report' element={<Maintenance />} />
                         <Route path='weather-report' element={<Weather />} />
                     </Route>
+
                     <Route path="*" element={<div>404 - Page Not Found</div>} />
                 </Routes>
                 {!isEmployeeDashboard && <Footer />}
