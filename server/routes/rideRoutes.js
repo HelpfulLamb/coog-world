@@ -15,6 +15,8 @@ rideRouter.get('/:id', rideController.getRideById);
 rideRouter.delete('/', rideController.deleteAllRides);
 rideRouter.delete('/:id', rideController.deleteRideById);
 
+rideRouter.post('/log', rideController.logVisitorRide);
+rideRouter.get('/history/:id', rideController.getVisitorRideHistory);
 
 module.exports = {
     rideRouter

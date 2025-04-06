@@ -4,10 +4,12 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import './Login.css';
 
 export const Logout = (navigate) => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userType');
-    navigate('/login');
+    localStorage.removeItem('user');            // ✅ clear saved user object
+    localStorage.removeItem('isAuthenticated'); // ✅ optional flag
+    localStorage.removeItem('userType');        // ✅ optional if you're using it
+    navigate('/login');                         // ✅ redirect to login
 };
+
 
 const Login = () => {
     const { setIsAuthenticated } = useAuth();
