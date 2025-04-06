@@ -41,20 +41,8 @@
   outline: none;
 }
 /* Button Styles */
-button {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  font-size: 1.1rem;
-  color: #fff;
-  background-color: #c8102e;
-  border: none;
-  border-radius: 8px;
-  width: 100%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-button:hover {
-  background-color: #b30826; /* Darker color on hover */
+.role-selection button{
+    width: 100%;
 }
 .employee-login {
   background-color: #4a4a4a;

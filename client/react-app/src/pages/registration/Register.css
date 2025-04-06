@@ -7,7 +7,6 @@
     padding: 2rem;
     font-family: 'Arial', sans-serif;
 }
-
 .form {
     background-color: white;
     padding: 3rem 2.5rem;
@@ -17,19 +16,16 @@
     max-width: 460px;
     animation: fadeIn 0.4s ease-in;
 }
-
 .register-header {
     font-size: 28px;
     margin-bottom: 1.8rem;
     color: #c8102e;
     text-align: center;
 }
-
 .field-wrap {
     position: relative;
     margin-bottom: 1.6rem;
 }
-
 .field-wrap input {
     width: 100%;
     padding: 12px 16px;
@@ -39,7 +35,6 @@
     font-size: 15px;
     box-sizing: border-box;
 }
-
 .field-wrap label {
     position: absolute;
     top: -10px;
@@ -49,7 +44,6 @@
     font-size: 14px;
     color: #c8102e;
 }
-
 .register-button button[type="submit"] {
     background-color: #c8102e;
     color: white;
@@ -62,11 +56,9 @@
     margin-top: 10px;
     transition: background-color 0.2s ease;
 }
-
 .register-button button[type="submit"]:hover {
     background-color: #a50a23;
 }
-
 .error-message,
 .success-message {
     font-size: 14px;
@@ -74,29 +66,24 @@
     padding: 10px;
     border-radius: 6px;
 }
-
 .error-message {
     background-color: #ffe5e5;
     color: #d8000c;
 }
-
 .success-message {
     background-color: #e5ffe5;
     color: #4CAF50;
 }
-
 .already-registered {
     margin-top: 1rem;
     font-size: 14px;
     text-align: center;
 }
-
 .already-registered a {
     color: #c8102e;
     font-weight: bold;
     text-decoration: none;
 }
-
 .already-registered a:hover {
     text-decoration: underline;
 }

@@ -43,6 +43,13 @@ function Kiosk(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filteredKiosks, setFilteredKiosks] = useState([]);
+
+    const [kioskNameFilter, setKioskNameFilter] = useState('');
+    const [kioskTypeFilter, setKioskTypeFilter] = useState('');
+    const [kioskLocationFilter, setKioskLocationFilter] = useState('');
+    const [costRangeFilter, setCostRangeFilter] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
     useEffect(() => {
         const fetchKiosk = async () => {
@@ -62,8 +69,55 @@ function Kiosk(){
         fetchKiosk();
     }, []);
 
+    useEffect(() => {
+        let filtered = [...kioskInformation];
+        const toDateOnly = (date) => {
+            return new Date(date).toISOString().split('T')[0];
+        };
+        if(kioskNameFilter){
+            filtered = filtered.filter(kiosk => kiosk.Kiosk_name.toLowerCase().includes(kioskNameFilter.toLowerCase()));
+        }
+        if(kioskTypeFilter){
+            filtered = filtered.filter(kiosk => kiosk.Kiosk_type.toLowerCase().includes(kioskTypeFilter.toLowerCase()));
+        }
+        if(kioskLocationFilter){
+            filtered = filtered.filter(kiosk => kiosk.area_name.toLowerCase().includes(kioskLocationFilter.toLowerCase()));
+        }
+        if(costRangeFilter){
+            const [min, max] = costRangeFilter.split('-').map(Number);
+            filtered = filtered.filter(kiosk => {
+                const cost = Number(kiosk.Kiosk_cost);
+                return cost >= min && (isNaN(max) || cost <= max);
+            });
+        }
+        filtered.sort((a,b) => {
+            switch (sortOption) {
+                case 'nameAsc':
+                    return a.Kiosk_name.localeCompare(b.Kiosk_name);
+                case 'nameDesc':
+                    return b.Kiosk_name.localeCompare(a.Kiosk_name);
+                case 'type':
+                    return a.Kiosk_type.localeCompare(b.Kiosk_type);
+                case 'costAsc':
+                    return a.Kiosk_cost - b.Kiosk_cost;
+                case 'costDesc':
+                    return b.Kiosk_cost - a.Kiosk_cost;            
+                default:
+                    return 0;
+            }
+        });
+        setFilteredKiosks(filtered);
+    }, [kioskInformation, kioskNameFilter, kioskTypeFilter, kioskLocationFilter, costRangeFilter, sortOption]);
+
     const handleAddKiosk = (newKiosk) => {
         setKioskInformation([...kioskInformation, newKiosk]);
+    };
+    const resetFilters = () => {
+        setKioskNameFilter('');
+        setKioskTypeFilter('');
+        setKioskLocationFilter('');
+        setCostRangeFilter('');
+        setSortOption('');
     };
     if(loading){
         return <div>Loading...</div>
@@ -74,13 +128,83 @@ function Kiosk(){
 
     return(
         <>
+            <div className="filter-controls">
+                <h2>Filter Kiosks</h2>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="kioskName">Kiosk Name:</label>
+                        <input 
+                        type="text"
+                        id="kioskName"
+                        value={kioskNameFilter}
+                        onChange={(e) => setKioskNameFilter(e.target.value)}
+                        placeholder="Filter by kiosk name" />
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="kioskType">Kiosk Type:</label>
+                        <select 
+                        id="kioskType"
+                        value={kioskTypeFilter}
+                        onChange={(e) => setKioskTypeFilter(e.target.value)}>
+                            <option value="">-- Select a Type --</option>
+                            <option value="Merch">Merch</option>
+                            <option value="Food">Food</option>
+                            <option value="Game">Game</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="kioskLocation">Kiosk Location:</label>
+                        <select 
+                        id="kioskLocation"
+                        value={kioskLocationFilter}
+                        onChange={(e) => setKioskLocationFilter(e.target.value)}>
+                            <option value="">-- Select a Location --</option>
+                            <option value="Highrise Coogs">Highrise Coogs</option>
+                            <option value="Magic Coogs">Magic Coogs</option>
+                            <option value="Lowball City">Lowball City</option>
+                            <option value="Splash Central">Splash Central</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="costRange">Cost Range:</label>
+                        <select 
+                        id="costRange"
+                        value={costRangeFilter}
+                        onChange={(e) => setCostRangeFilter(e.target.value)}>
+                            <option value="">-- Select a Cost Range --</option>
+                            <option value="0-100000">$0 - $100,000</option>
+                            <option value="100001-500000">$100,001 - $500,000</option>
+                            <option value="500001-999999">$500,001 - $999,999</option>
+                            <option value="1000000-99999999999">$1,000,000+</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="sort">Sort By:</label>
+                        <select 
+                        id="sort" 
+                        value={sortOption} 
+                        onChange={(e) => setSortOption(e.target.value)}>
+                            <option value="">-- Select a sort method --</option>
+                            <option value="nameAsc">Name (A-Z)</option>
+                            <option value="nameDesc">Name (Z-A)</option>
+                            <option value="type">Type</option>
+                            <option value="costAsc">Cost (Low to High)</option>
+                            <option value="costDesc">Cost (High to Low)</option>
+                        </select>
+                    </div>
+                    <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
+                </div>
+            </div>
+
             <div className="db-btn">
                 <h1>Coog World Kiosks</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
                 </div>
             </div>
-            <KioskTable kioskInformation={kioskInformation} setIsModalOpen={setIsModalOpen} />
+            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} />
             <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
         </>
     )
