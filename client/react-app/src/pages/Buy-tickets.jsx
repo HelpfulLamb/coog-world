@@ -138,7 +138,7 @@ function Tickets(){
 
     return(
         <>
-            <h1 id='tickets-title'>Our Pricing Plan</h1>
+            <h1 className='page-titles'>Our Pricing Plan</h1>
             <div className='price-container'>
                 {ticketOptions.slice(0,3).map((ticket) =>(
                     <TicketCard 

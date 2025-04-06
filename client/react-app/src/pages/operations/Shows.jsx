@@ -52,21 +52,6 @@ function ShowTable({showInformation, setIsModalOpen}){
     );
 }
 
-function CollapsibleSection({ title, isOpen, onToggle, children }) {
-    return (
-        <div className="collapsible-section">
-            <div className="section-header">
-                <h3>{title}</h3>
-                <button onClick={onToggle}>
-                    {isOpen ? "▲ Hide" : "▼ Show"}
-                </button>
-            </div>
-            {isOpen && <div className="section-content">{children}</div>}
-        </div>
-    );
-}
-
-
 function Show(){
     const [showInformation, setShowInformation] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -101,6 +86,9 @@ function Show(){
 
     useEffect(() => {
         let filtered = [...showInformation];
+        const toDateOnly = (date) => {
+            return new Date(date).toISOString().split('T')[0];
+        };
         if(showNameFilter){
             filtered = filtered.filter(show => show.Show_name.toLowerCase().includes(showNameFilter.toLowerCase()));
         }
@@ -108,12 +96,10 @@ function Show(){
             filtered = filtered.filter(show => show.Stage_name.toLowerCase().includes(stageNameFilter.toLowerCase()));
         }
         if(startDateFilter){
-            const startDate = new Date(startDateFilter);
-            filtered = filtered.filter(show => new Date(show.Show_date) >= startDate);
+            filtered = filtered.filter(show => toDateOnly(show.Show_date) >= startDateFilter);
         }
         if(endDateFilter){
-            const endDate = new Date(endDateFilter);
-            filtered = filtered.filter(show => new Date(show.Show_date) <= endDate);
+            filtered = filtered.filter(show => toDateOnly(show.Show_date) <= endDateFilter);
         }
         filtered.sort((a,b) => {
             switch (sortOption) {
@@ -139,7 +125,6 @@ function Show(){
     const handleAddShow = (newShow) => {
         setShowInformation([...showInformation, newShow]);
     };
-
     const resetFilters = () => {
         setShowNameFilter('');
         setStageNameFilter('');
@@ -147,14 +132,12 @@ function Show(){
         setEndDateFilter('');
         setSortOption('');
     };
-
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>Error: {error}</div>
     }
-
     return(
         <>
             <div className="filter-controls">
@@ -167,8 +150,7 @@ function Show(){
                             id="showName"
                             value={showNameFilter}
                             onChange={(e) => setShowNameFilter(e.target.value)}
-                            placeholder="Filter by show name"
-                        />
+                            placeholder="Filter by show name" />
                     </div>
                     <div className="filter-group">
                         <label htmlFor="stageName">Stage Name:</label>
@@ -177,8 +159,7 @@ function Show(){
                             id="stageName"
                             value={stageNameFilter}
                             onChange={(e) => setStageNameFilter(e.target.value)}
-                            placeholder="Filter by stage name"
-                        />
+                            placeholder="Filter by stage name" />
                     </div>
                 </div>
                 <div className="filter-row">

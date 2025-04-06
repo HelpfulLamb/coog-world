@@ -5,7 +5,7 @@ const DashboardHeader = ({handleLogout}) => {
     return(
         <header className="dashboard-header">
             <h1>Coog World Dashboard</h1>
-            <button onClick={handleLogout} className="logout-button">Log Out</button>
+            <button onClick={handleLogout} className="db-logout-button">Log Out</button>
         </header>
     )
 }
