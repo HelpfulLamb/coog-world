@@ -29,6 +29,7 @@ import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
+import Reports from './pages/operations/Reports.jsx'
 
 function App() {
     const location = useLocation();
@@ -63,6 +64,7 @@ function App() {
                         <Route path='inventory-report' element={<Inventory />} />
                         <Route path='maintenance-report' element={<Maintenance />} />
                         <Route path='weather-report' element={<Weather />} />
+                        <Route path='reports' element={<Reports />} />
                     </Route>
                     <Route path="*" element={<div>404 - Page Not Found</div>} />
                 </Routes>
