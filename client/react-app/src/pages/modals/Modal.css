@@ -96,6 +96,17 @@
     background-color: #2980b9;
     transform: translateY(-1px);
 }
+
+/*Delete Buttons*/
+.modal-buttons button.delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+.modal-buttons button.delete-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
 .modal-buttons button[type="button"] {
     background-color: #f8f9fa;
     color: #2c3e50;
@@ -128,3 +139,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     padding: 0.2rem;
 }
+/*Delete Button*/

@@ -89,6 +89,32 @@
 .add-button:active {
     transform: translateY(0);
 }
+
+/*Delete Button*/
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-button:active {
+    transform: translateY(0);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .table-container {
