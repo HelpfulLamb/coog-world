@@ -1,12 +1,12 @@
 import './Shops.css';
 import { useEffect, useState } from 'react';
-import toyImage from '../../images/shirt1.webp';
+import shirtImage from '../../images/shirt1.webp';
 
 function MerchCard({title, price, description}){
     return(
         <>
             <div className='merch-card'>
-                <img src={toyImage} alt="toy image" draggable='false' />
+                <img src={shirtImage} alt="shirt image" draggable='false' />
                 <h3>{title}</h3>
                 <p>${price}</p>
                 <p>{description}</p>

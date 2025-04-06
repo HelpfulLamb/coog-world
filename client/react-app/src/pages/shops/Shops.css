@@ -84,6 +84,7 @@
     transition: all 0.3s ease-in-out;
     user-select: none;
     font-size: 11px;
+    width: 100%;
 }
 .merch-card .fancy:hover{
     background-color: #c8102e;
