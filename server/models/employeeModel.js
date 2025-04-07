@@ -42,5 +42,5 @@ exports.deleteAllEmployees = async () => {
 };
 
 exports.deleteEmployeeById = async (empid) => {
-    await db.query('DELETE FROM employees WHERE Emp_ID IN ?', [empid]);
+    await db.query('DELETE FROM employees WHERE Emp_ID = ?', [empid]);
 };

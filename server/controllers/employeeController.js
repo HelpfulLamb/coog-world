@@ -95,11 +95,11 @@ exports.deleteAllEmployees = async (req, res) => {
 
 exports.deleteEmployeeById = async (req, res) => {
     try {
-        const {empid} = req.body;
-        if(!empid || !Array.isArray(empid)){
-            return res.status(400).json({message: 'Invalid employee IDs provided.'});
-        }
-        await employeeModel.deleteEmployeeById(empid);
+        const {Emp_ID} = req.body;
+        if(!Emp_ID){
+            return res.status(400).json({message: 'Invalid employee ID provided. Check server status.'});
+         }
+        await employeeModel.deleteEmployeeById(Emp_ID);
         res.status(200).json({message: 'Employee deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});

@@ -139,6 +139,7 @@ function Employee(){
         setSalaryRangeFilter('');
         setSortOption('');
     };
+
     if(loading){
         return <div>Loading...</div>
     }
@@ -208,9 +209,11 @@ function Employee(){
             <div className="db-btn">
                 <h1>Coog World Employees</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                    <button className="add-button" onClick={() => setActiveModal('add')}>Add Employee</button>
+                    <button className="delete-button" onClick={() => setActiveModal('delete')}>Delete</button>
                 </div>
             </div>
+
             <EmployeeTable employeeInformation={filteredEmps} setIsModalOpen={setIsModalOpen} onEditEmp={handleEditEmp} />
             <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
             <UpdateEmployee isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedEmp(null);}} empToEdit={selectedEmp} onUpdateEmp={handleUpdateEmp} />

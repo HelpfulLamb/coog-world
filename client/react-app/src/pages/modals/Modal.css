@@ -17,6 +17,9 @@
     border-radius: 8px;
     width: 500px;
     max-width: 90%;
+    /*Vertical scroll, auto device height*/
+    overflow-y: auto;
+    max-height: 90vh;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -94,6 +97,17 @@
     background-color: #2980b9;
     transform: translateY(-1px);
 }
+
+/*Delete Buttons*/
+.modal-buttons button.delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+.modal-buttons button.delete-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+}
+
 .modal-buttons button[type="button"] {
     background-color: #f8f9fa;
     color: #2c3e50;
@@ -126,3 +140,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     padding: 0.2rem;
 }
+/*Delete Button*/
