@@ -26,3 +26,28 @@ exports.getRainoutsPerMonth = async () => {
       throw new Error('Error fetching rainouts data: ' + error.message);
     }
   };
+
+  exports.getTopRidePerMonth = async () => {
+    const query = `
+      SELECT
+        YEAR(ride_date) AS year,
+        MONTH(ride_date) AS month,
+        r.Ride_name
+      FROM visitor_ride_log as v, rides as r
+      WHERE v.Ride_ID = r.Ride_ID
+      GROUP BY YEAR(ride_date), MONTH(ride_date)
+      ORDER BY year, month;
+    `;
+    
+    try {
+      console.log("Executing query:", query); 
+      const [rainouts] = await db.query(query);
+      if (rainouts.length === 0) {
+        throw new Error('No data found for the given criteria');
+      }
+      return rainouts;
+    } catch (error) {
+      console.error("Database query error:", error); 
+      throw new Error('Error fetching monthly ride data: ' + error.message);
+    }
+  };  
