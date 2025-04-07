@@ -24,6 +24,9 @@ function ParkRides() {
   const [rideOptions, setRideOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("All");
+
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,11 +90,36 @@ function ParkRides() {
   return (
     <>
       <h1 className="page-titles">Explore the rides of Coog World</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px', gap: '10px' }}>
+  <label htmlFor="ride-type">Filter by Type: </label>
+  <select
+    id="ride-type"
+    value={filter}
+    onChange={(e) => setFilter(e.target.value)}
+    style={{
+      padding: '6px 12px',
+      fontSize: '16px',
+      borderRadius: '6px',
+      border: '1px solid #ccc'
+    }}
+  >
+    <option value="All">All</option>
+    <option value="Thrill">Thrill</option>
+    <option value="Family">Family</option>
+    <option value="Water">Water</option>
+  </select>
+</div>
+
+
       <div className="ride-container">
-        {rideOptions.map((ride, index) => (
-          <RideCard key={index} ride={ride} onRideClick={handleGetOnRide} />
-        ))}
+      {rideOptions
+  .filter((ride) => filter === "All" || ride.Ride_type === filter)
+  .map((ride, index) => (
+    <RideCard key={index} ride={ride} onRideClick={handleGetOnRide} />
+))}
+
       </div>
+
     </>
   );
 }
