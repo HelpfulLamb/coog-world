@@ -6,13 +6,11 @@ const formatPhoneNumber = (phone) => {
     if (!phone) return '';
     const cleaned = ('' + phone).replace(/\D/g, '');
 
-    // If it's exactly 10 digits, format it
     if (cleaned.length === 10) {
         const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
         if (match) return `(${match[1]}) ${match[2]}-${match[3]}`;
     }
 
-    // If it's 11+ digits (like 8764...), just show as-is for now
     return cleaned;
 };
 
@@ -107,7 +105,7 @@ function Profile() {
 
     return (
         <div className="profile-container">
-            <h1 className="profile-header">User Profile</h1>
+            <h1 className="profile-header">Coog Profile</h1>
             <div className="profile-info">
                 {isEditing ? (
                     <>

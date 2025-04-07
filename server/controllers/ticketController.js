@@ -69,50 +69,56 @@ exports.deleteTicketByNum = async (req, res) => {
 };
 exports.purchaseTicket = async (req, res) => {
     try {
-        // Destructure the necessary fields from the request body
-        let { user_id, ticket_id, quantity, price } = req.body;
-
-        if (!user_id || !ticket_id || !quantity) {
-            return res.status(400).json({ message: 'Missing user_id, ticket_id, or quantity' });
+      let { user_id, ticket_id, quantity, price, total_amount } = req.body;
+  
+      if (!user_id || !ticket_id || !quantity) {
+        return res.status(400).json({ message: 'Missing user_id, ticket_id, or quantity' });
+      }
+  
+      if (!price) {
+        const [ticket] = await db.query(
+          'SELECT price FROM ticket_type WHERE ticket_id = ?',
+          [ticket_id]
+        );
+        if (!ticket || !ticket[0]) {
+          return res.status(404).json({ message: 'Ticket not found' });
         }
-
-        // Step 1: If price is not provided, fetch it from the database
-        if (!price) {
-            const [ticket] = await db.query(
-                'SELECT price FROM ticket_type WHERE ticket_id = ?',
-                [ticket_id]
-            );
-        
-            if (!ticket || !ticket[0]) {
-                return res.status(404).json({ message: 'Ticket not found' });
-            }
-        
-            price = ticket[0].price;
-        }        
-
-        // Step 2: Create a new transaction
-        const [transactionResult] = await db.query(
-            'INSERT INTO transactions (Visitor_ID, transaction_date) VALUES (?, NOW())',
-            [user_id]
-        );
-
-        const transactionId = transactionResult.insertId;
-
-        // Step 3: Insert the ticket purchase with the correct quantity and price
-        await db.query(
-            `INSERT INTO product_purchases 
-            (Transaction_ID, product_id, product_type, quantity_sold, purchase_price) 
-            VALUES (?, ?, 'Ticket', ?, ?)`,
-            [transactionId, ticket_id, quantity, price]
-        );
-
-        // All good, return success message
-        res.status(200).json({ success: true, message: 'Ticket purchase recorded.' });
+        price = ticket[0].price;
+      }
+  
+      const total = total_amount || price * quantity;
+  
+      const [transactionResult] = await db.query(
+        'INSERT INTO transactions (Visitor_ID, transaction_date) VALUES (?, NOW())',
+        [user_id]
+      );
+      const transactionId = transactionResult.insertId;
+  
+      await db.query(
+        `INSERT INTO product_purchases 
+         (Transaction_ID, product_id, product_type, quantity_sold, purchase_price, total_amount) 
+         VALUES (?, ?, 'Ticket', ?, ?, ?)`,
+        [transactionId, ticket_id, quantity, price, total]
+      );
+  
+      // update the total in transactions table
+      await db.query(
+        `UPDATE transactions 
+         SET Total_amount = (
+           SELECT SUM(total_amount) 
+           FROM product_purchases 
+           WHERE Transaction_ID = ?
+         )
+         WHERE Transaction_ID = ?`,
+        [transactionId, transactionId]
+      );
+  
+      res.status(200).json({ success: true, message: 'Ticket purchase recorded.' });
     } catch (err) {
-        console.error('Purchase error:', err);
-        res.status(500).json({ message: 'Purchase failed', error: err.message });
+      console.error('Purchase error:', err);
+      res.status(500).json({ message: 'Purchase failed', error: err.message });
     }
-};
+  };    
 
 exports.getUserTicketPurchases = async (req, res) => {
     const userId = req.params.userId;
