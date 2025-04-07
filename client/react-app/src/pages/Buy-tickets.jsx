@@ -12,7 +12,7 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     const { addToCart } = useCart();
 
     const handleAddToCart = () => {
-        if (!isAuthenticated || !userId || !ticketId) {
+        if (!userId || !ticketId) {
             alert('Please log in to purchase tickets.');
             navigate('/login');
             return;
