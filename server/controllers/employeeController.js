@@ -19,6 +19,21 @@ exports.createEmployee = async (req, res) => {
     }
 };
 
+exports.updateEmployee = async (req, res) => {
+    try {
+        const empID = req.params.id;
+        const updatedData = req.body;
+        const selectedEmp = {...updatedData, Emp_ID: empID};
+        const updatedEmp = await employeeModel.updateEmployee(selectedEmp);
+        if(!updatedEmp){
+            return res.status(404).json({message: 'Employee not found or not updated.'});
+        }
+        res.status(200).json({message: 'Employee updated successfully.', employee: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.loginEmployee = async (req, res) => {
     const {email, password} = req.body;
     try {

@@ -29,17 +29,18 @@
 }
 .modal-input-group {
     margin-bottom: 0.25rem;
+    padding-bottom: 10px;
     display: flex;
     flex-direction: column;
     position: relative;
 }
 .modal-input-group label {
     display: block;
-    margin-bottom: 1em;
     font-weight: 500;
     color: #2c3e50;
     font-size: 0.9rem;
     position: relative;
+    padding-bottom: 5px;
 }
 .modal-input-group input::placeholder {
     color: rgba(255, 255, 255, 0.5); /* Placeholder text visibility */
