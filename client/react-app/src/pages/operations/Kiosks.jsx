@@ -2,7 +2,7 @@ import AddKiosk, {UpdateKiosk} from "../modals/AddKiosk";
 import './Report.css';
 import { useEffect, useState } from "react";
 
-function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk}){
+function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKiosk}){
     if(!kioskInformation || !Array.isArray(kioskInformation)){
         return <div>No kiosk data is available.</div>
     }
@@ -20,7 +20,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk}){
                         <th>Location</th>
                         <th>Cost</th>
                         <th>Date Added</th>
-                        <th>Actions</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,8 +32,8 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk}){
                             <td>${Number(kiosk.Kiosk_cost).toLocaleString()}</td>
                             <td>{formatDate(kiosk.Kiosk_created)}</td>
                             <td>
-                                <button onClick={() => onEditKiosk(kiosk)}>Edit</button>
-                                <button>Delete</button>
+                                <button onClick={() => onEditKiosk(kiosk)} className="action-btn edit-button">Edit</button>
+                                <button onClick={() => onDeleteKiosk(kiosk)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -126,6 +126,29 @@ function Kiosk(){
     const handleUpdateKiosk = (updatedKiosk) => {
         setKioskInformation(prev => prev.map(kiosk => kiosk.Kiosk_ID === updatedKiosk.Kiosk_ID ? updatedKiosk : kiosk));
     };
+    const handleDeleteKiosk = async (kioskID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this kiosk? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/kiosks/delete-selected', {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Kiosk_ID: kioskID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Kiosk deleted successfully!');
+                setKioskInformation(prev => prev.filter(kiosk => kiosk.Kiosk_ID !== kioskID));
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete kiosk.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     const resetFilters = () => {
         setKioskNameFilter('');
         setKioskTypeFilter('');
@@ -192,14 +215,9 @@ function Kiosk(){
                             <option value="1000000-99999999999">$1,000,000+</option>
                         </select>
                     </div>
-                </div>
-                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="sort">Sort By:</label>
-                        <select 
-                        id="sort" 
-                        value={sortOption} 
-                        onChange={(e) => setSortOption(e.target.value)}>
+                        <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                             <option value="">-- Select a sort method --</option>
                             <option value="nameAsc">Name (A-Z)</option>
                             <option value="nameDesc">Name (Z-A)</option>
@@ -208,6 +226,8 @@ function Kiosk(){
                             <option value="costDesc">Cost (High to Low)</option>
                         </select>
                     </div>
+                </div>
+                <div className="filter-row">
                     <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
                 </div>
             </div>
@@ -218,7 +238,7 @@ function Kiosk(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
                 </div>
             </div>
-            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} onEditKiosk={handleEditKiosk}/>
+            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} onEditKiosk={handleEditKiosk} onDeleteKiosk={handleDeleteKiosk} />
             <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
             <UpdateKiosk isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedKiosk(null);}} kioskToEdit={selectedKiosk} onUpdateKiosk={handleUpdateKiosk} />
         </>

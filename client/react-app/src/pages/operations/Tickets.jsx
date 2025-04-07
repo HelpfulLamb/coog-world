@@ -15,6 +15,7 @@ function TicketTable({ticketInformation, setIsModalOpen}){
                             <th>Price</th>
                             <th>Monthly Avg</th>
                             <th>Total Sold</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,6 +25,10 @@ function TicketTable({ticketInformation, setIsModalOpen}){
                                 <td>${ticket.price}</td>
                                 <td>N/A</td>
                                 <td>N/A</td>
+                                <td>
+                                    <button className="action-btn edit-button">Edit</button>
+                                    <button className="action-btn delete-button">Delete</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

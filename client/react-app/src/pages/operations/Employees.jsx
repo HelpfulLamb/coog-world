@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AddEmployee, {UpdateEmployee} from "../modals/AddEmployee.jsx";
 
-function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp}){
+function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDeleteEmp}){
     if (!employeeInformation || !Array.isArray(employeeInformation)) {
         return <div>No employee data is currently available.</div>;
     }
@@ -21,7 +21,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp}){
                         <th>Occupation</th>
                         <th>Salary</th>
                         <th>Start Date</th>
-                        <th>Actions</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,8 +35,8 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp}){
                             <td>${Number(employee.Emp_salary).toLocaleString()}</td>
                             <td>{formatDate(employee.Start_date)}</td>
                             <td>
-                                <button onClick={() => onEditEmp(employee)}>Edit</button>
-                                <button>Delete</button>
+                                <button onClick={() => onEditEmp(employee)} className="action-btn edit-button">Edit</button>
+                                <button onClick={() => onDeleteEmp(employee.Emp_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -131,6 +131,29 @@ function Employee(){
     const handleUpdateEmp = (updatedEmp) => {
         setEmployeeInformation(prev => prev.map(employee => employee.Emp_ID === updatedEmp.Emp_ID ? UpdateEmployee : employee));
     };
+    const handleDelete = async (empID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this employee? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/employees/delete-selected',{
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Emp_ID: empID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Employee deleted successfully!');
+                setEmployeeInformation(prev => prev.filter(emp => emp.Emp_ID !== empID));
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete employee.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     const resetFilters = () => {
         setEmpFirstNameFilter('');
         setEmpLastNameFilter('');
@@ -201,7 +224,7 @@ function Employee(){
                         </select>
                     </div>
                 </div>
-                <div className="fitler-row">
+                <div className="filter-row">
                     <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
                 </div>
             </div>
@@ -209,12 +232,11 @@ function Employee(){
             <div className="db-btn">
                 <h1>Coog World Employees</h1>
                 <div>
-                    <button className="add-button" onClick={() => setActiveModal('add')}>Add Employee</button>
-                    <button className="delete-button" onClick={() => setActiveModal('delete')}>Delete</button>
+                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
                 </div>
             </div>
 
-            <EmployeeTable employeeInformation={filteredEmps} setIsModalOpen={setIsModalOpen} onEditEmp={handleEditEmp} />
+            <EmployeeTable employeeInformation={filteredEmps} setIsModalOpen={setIsModalOpen} onEditEmp={handleEditEmp} onDeleteEmp={handleDelete} />
             <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
             <UpdateEmployee isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedEmp(null);}} empToEdit={selectedEmp} onUpdateEmp={handleUpdateEmp} />
         </>

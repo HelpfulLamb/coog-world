@@ -93,7 +93,11 @@ exports.deleteAllKiosks = async (req, res) => {
 
 exports.deleteKioskById = async (req, res) => {
     try {
-        await kioskModel.deleteKioskById(req.params.id);
+        const {Kiosk_ID} = req.body;
+        if(!Kiosk_ID){
+            return res.status(400).json({message: 'Invalid kiosk ID.'});
+        }
+        await kioskModel.deleteKioskById(Kiosk_ID);
         res.status(200).json({message: 'Kiosk deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});

@@ -51,9 +51,11 @@ exports.deleteAllRides = async () => {
     await db.query('DELETE FROM rides');
 };
 
-exports.deleteRideById = async (id) => {
-    await db.query('DELETE FROM rides WHERE Ride_ID = ?', [id]);
+exports.deleteRideById = async (rideid) => {
+    await db.query('DELETE FROM rides WHERE Ride_ID = ?', [rideid]);
 };
+
+
 exports.getVisitorRideHistory = async (visitorId) => {
     const [history] = await db.query(
         `SELECT vrl.ride_date, r.Ride_name, r.Ride_type 

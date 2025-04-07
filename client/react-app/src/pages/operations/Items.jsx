@@ -15,6 +15,7 @@ function ItemTable({itemInformation, setIsModalOpen}){
                         <th>Description</th>
                         <th>Selling Price</th>
                         <th>Unit Price</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,6 +26,10 @@ function ItemTable({itemInformation, setIsModalOpen}){
                             <td>{item.Item_desc}</td>
                             <td>${item.Item_shop_price}</td>
                             <td>${item.Item_supply_price}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

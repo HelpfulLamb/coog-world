@@ -32,6 +32,7 @@ function ShowTable({showInformation, setIsModalOpen}){
                         <th>Date Performed</th>
                         <th>Show Cost</th>
                         <th>Date Added</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,10 @@ function ShowTable({showInformation, setIsModalOpen}){
                             <td>{formatDate(show.Show_date)}</td>
                             <td>${Number(show.Show_cost).toLocaleString()}</td>
                             <td>{formatDate(show.Show_created)}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
