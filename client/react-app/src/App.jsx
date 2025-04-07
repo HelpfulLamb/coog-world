@@ -30,6 +30,7 @@ import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
+import Reports from './pages/operations/Reports.jsx'
 
 function App() {
     const location = useLocation();

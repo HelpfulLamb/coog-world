@@ -1,8 +1,8 @@
-import AddKiosk from "../modals/AddKiosk";
+import AddKiosk, {UpdateKiosk} from "../modals/AddKiosk";
 import './Report.css';
 import { useEffect, useState } from "react";
 
-function KioskTable({kioskInformation, setIsModalOpen}){
+function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk}){
     if(!kioskInformation || !Array.isArray(kioskInformation)){
         return <div>No kiosk data is available.</div>
     }
@@ -20,6 +20,7 @@ function KioskTable({kioskInformation, setIsModalOpen}){
                         <th>Location</th>
                         <th>Cost</th>
                         <th>Date Added</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,10 @@ function KioskTable({kioskInformation, setIsModalOpen}){
                             <td>{kiosk.area_name}</td>
                             <td>${Number(kiosk.Kiosk_cost).toLocaleString()}</td>
                             <td>{formatDate(kiosk.Kiosk_created)}</td>
+                            <td>
+                                <button onClick={() => onEditKiosk(kiosk)}>Edit</button>
+                                <button>Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -44,6 +49,8 @@ function Kiosk(){
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filteredKiosks, setFilteredKiosks] = useState([]);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedKiosk, setSelectedKiosk] = useState(null);
 
     const [kioskNameFilter, setKioskNameFilter] = useState('');
     const [kioskTypeFilter, setKioskTypeFilter] = useState('');
@@ -111,6 +118,13 @@ function Kiosk(){
 
     const handleAddKiosk = (newKiosk) => {
         setKioskInformation([...kioskInformation, newKiosk]);
+    };
+    const handleEditKiosk = (kiosk) => {
+        setSelectedKiosk(kiosk);
+        setIsEditOpen(true);
+    };
+    const handleUpdateKiosk = (updatedKiosk) => {
+        setKioskInformation(prev => prev.map(kiosk => kiosk.Kiosk_ID === updatedKiosk.Kiosk_ID ? updatedKiosk : kiosk));
     };
     const resetFilters = () => {
         setKioskNameFilter('');
@@ -204,8 +218,9 @@ function Kiosk(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
                 </div>
             </div>
-            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} />
+            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} onEditKiosk={handleEditKiosk}/>
             <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
+            <UpdateKiosk isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedKiosk(null);}} kioskToEdit={selectedKiosk} onUpdateKiosk={handleUpdateKiosk} />
         </>
     )
 }

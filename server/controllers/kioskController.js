@@ -10,6 +10,21 @@ exports.createKiosk = async (req, res) => {
     }
 };
 
+exports.updateKiosk = async (req, res) => {
+    try {
+        const kioskID = req.params.id;
+        const updatedData = req.body;
+        const selectedKiosk = {...updatedData, Kiosk_ID: kioskID};
+        const updatedKiosk = await kioskModel.updateKiosk(selectedKiosk);
+        if(!updatedKiosk){
+            return res.status(404).json({message: 'Kiosk not found or not updated.'});
+        }
+        res.status(200).json({message: 'Kiosk updated successfully.', kiosk: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllKiosks = async (req, res) => {
     try {
         const kiosks = await kioskModel.getAllKiosks();

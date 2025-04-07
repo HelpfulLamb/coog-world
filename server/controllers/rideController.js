@@ -2,8 +2,8 @@ const rideModel = require('../models/rideModel.js');
 const db = require('../config/db.js');
 
 exports.createRide = async (req, res) => {
-    const {Ride_name, Ride_type, Ride_cost, Ride_staff} = req.body;
-    if(!Ride_name || !Ride_type || !Ride_cost || !Ride_staff){
+    const {Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff} = req.body;
+    if(!Ride_name || !Ride_type || !Ride_loc || !Ride_cost || !Ride_staff){
         return res.status(400).json({message: 'All fields are required! Somethings missing.'});
     }
     try {
@@ -11,8 +11,23 @@ exports.createRide = async (req, res) => {
         if(existingRide){
             return res.status(400).json({message: 'A ride with that name already exits. Please try a new name.'});
         }
-        await rideModel.createRide({Ride_name, Ride_type, Ride_cost, Ride_staff});
+        await rideModel.createRide({Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff});
         res.status(201).json({message: 'New ride added successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.updateRide = async (req, res) => {
+    try {
+        const rideID = req.params.id;
+        const updatedData = req.body;
+        const selectedRide = {...updatedData, Ride_ID: rideID};
+        const updatedRide = await rideModel.updateRide(selectedRide);
+        if(!updatedRide){
+            return res.status(404).json({message: 'Ride not found or not updated.'});
+        }
+        res.status(200).json({message: 'Ride updated successfully.', ride: updatedData});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
