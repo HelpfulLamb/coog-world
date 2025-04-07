@@ -8,6 +8,14 @@ exports.createKiosk = async (userData) => {
     );
 };
 
+exports.updateKiosk = async (selectedKiosk) => {
+    const {Kiosk_ID, Kiosk_name, Kiosk_type, Kiosk_operate, Kiosk_loc, Staff_num, Kiosk_cost} = selectedKiosk;
+    const [kiosk] = await db.query(
+        'UPDATE kiosks SET Kiosk_name = ?, Kiosk_type = ?, Kiosk_operate = ?, Kiosk_loc = ?, Staff_num = ?, Kiosk_cost = ? WHERE Kiosk_ID = ?',
+    [Kiosk_name, Kiosk_type, Kiosk_operate, Kiosk_loc, Staff_num, Kiosk_cost, Kiosk_ID]);
+    return kiosk;
+};
+
 exports.getAllKiosks = async () => {
     const [kiosks] = await db.query('SELECT * FROM kiosks');
     return kiosks;

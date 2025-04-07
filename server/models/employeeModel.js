@@ -13,6 +13,14 @@ exports.createEmployee = async (employeeData) => {
     );
 };
 
+exports.updateEmployee = async (selectedEmp) => {
+    const {Emp_ID, First_name, Last_name, Emp_phone, Emp_email, Emp_sec, Emp_pos, Emp_salary, End_date} = selectedEmp;
+    const [emp] = await db.query(
+        'UPDATE employees SET First_name = ?, Last_name = ?, Emp_phone = ?, Emp_email = ?, Emp_sec = ?, Emp_pos = ?, Emp_salary = ?, End_date = ? WHERE Emp_ID = ?',
+    [First_name, Last_name, Emp_phone, Emp_email, Emp_sec, Emp_pos, Emp_salary, End_date, Emp_ID]);
+    return emp;
+};
+
 exports.getAllEmployees = async () => {
     const [employees] = await db.query('SELECT * FROM employees');
     return employees;
