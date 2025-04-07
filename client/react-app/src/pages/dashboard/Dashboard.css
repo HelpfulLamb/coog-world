@@ -92,19 +92,21 @@
     background-color: var(--bg-light);
 }
 /* Buttons */
-.logout-button {
+.db-logout-button {
     background-color: var(--danger-color);
     border-radius: var(--border-radius);
     color: white;
     border: none;
     padding: 0.5rem 0.5rem;
+    margin: 1rem;
     width: 150px;
     cursor: pointer;
     font-weight: 500;
+    font-size: 1.1rem;
     transition: background-color var(--transition-speed) ease;
     align-items: center;
 }
-.logout-button:hover {
+.db-logout-button:hover {
     background-color: var(--danger-hover);
 }
 /* Card styling for main content */

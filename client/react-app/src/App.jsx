@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 
@@ -25,11 +25,9 @@ import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
 import Show from './pages/operations/Shows.jsx';
 import TicketReport from './pages/operations/Tickets.jsx';
-import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
-import AdminHome from './pages/operations/Home.jsx'; // ✅ NEW LINE
 
 function App() {
     const location = useLocation();
@@ -54,21 +52,16 @@ function App() {
                     <Route path='/parkshows' element={<ParkShows />} />
                     <Route path='/merch' element={<Merchandise />} />
                     <Route path='/profile' element={<Profile />} />
-
-                    {/* 👇 ADMIN DASHBOARD ROUTES */}
                     <Route path='/employee-dashboard' element={<Dashboard />}>
-                        <Route index element={<AdminHome />} /> {/* ✅ Admin Home page */}
                         <Route path='employees' element={<Employee />} />
                         <Route path='rides' element={<Ride />} />
                         <Route path='shows' element={<Show />} />
                         <Route path='kiosks' element={<Kiosk />} />
                         <Route path='ticket-report' element={<TicketReport />} />
-                        <Route path='items' element={<Item />} />
                         <Route path='inventory-report' element={<Inventory />} />
                         <Route path='maintenance-report' element={<Maintenance />} />
                         <Route path='weather-report' element={<Weather />} />
                     </Route>
-
                     <Route path="*" element={<div>404 - Page Not Found</div>} />
                 </Routes>
                 {!isEmployeeDashboard && <Footer />}

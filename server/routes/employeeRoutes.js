@@ -6,6 +6,9 @@ const employeeRouter = express.Router();
 employeeRouter.post('/create-employee', employeeController.createEmployee);
 employeeRouter.post('/login', employeeController.loginEmployee);
 
+// update existing employee
+employeeRouter.put('/:id', employeeController.updateEmployee);
+
 // retrieve employees (all or specific)
 employeeRouter.get('/', employeeController.getAllEmployees);
 employeeRouter.get('/info', employeeController.getEmployeeInfo);

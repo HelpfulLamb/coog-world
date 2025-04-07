@@ -16,6 +16,7 @@ const DashboardNav = () => {
                 <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li> {/* will contain info on items and inventory */}
                 <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li> {/* display maintenance report (things needing maintenance, dates of maintenance) */}
                 <li><Link to={'/employee-dashboard/weather-report'}>Weather Report</Link></li> {/* display weather report */}
+                <li><Link to={'/employee-dashboard/reports'}>Reports</Link></li> {/* display query reports */}
             </ul>
         </nav>
     )

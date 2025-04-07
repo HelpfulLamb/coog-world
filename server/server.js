@@ -14,6 +14,7 @@ const { maintenanceRouter } = require('./routes/maintenanceRoutes.js');
 const { weatherRouter } = require('./routes/weatherRoutes.js');
 const { kioskRouter } = require('./routes/kioskRouter.js');
 const shopRoutes = require('./routes/shopRoutes');
+const { reportRoutes } = require('./routes/reportRoutes.js');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/maintenance', maintenanceRouter);
 app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
+app.use('/api/reports', reportRoutes); 
 
 // Serve frontend files
 app.use(express.static(path.join(__dirname, 'client')));

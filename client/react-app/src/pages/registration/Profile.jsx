@@ -6,13 +6,11 @@ const formatPhoneNumber = (phone) => {
     if (!phone) return '';
     const cleaned = ('' + phone).replace(/\D/g, '');
 
-    // If it's exactly 10 digits, format it
     if (cleaned.length === 10) {
         const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
         if (match) return `(${match[1]}) ${match[2]}-${match[3]}`;
     }
 
-    // If it's 11+ digits (like 8764...), just show as-is for now
     return cleaned;
 };
 
@@ -25,6 +23,9 @@ function Profile() {
     const [purchases, setPurchases] = useState([]);
     const [showTickets, setShowTickets] = useState(false);
     const [showPurchases, setShowPurchases] = useState(false);
+    const [rides, setRides] = useState([]);
+    const [showRides, setShowRides] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,6 +47,10 @@ function Profile() {
             const shopRes = await fetch(`/api/shop-purchases/${userId}`);
             const shopData = await shopRes.json();
             setPurchases(shopData.purchases);
+            const rideRes = await fetch(`/api/rides/history/${userId}`);
+            const rideData = await rideRes.json();
+            setRides(rideData.rides);
+
         } catch (err) {
             console.error('Error fetching user-related data:', err);
         }
@@ -100,7 +105,7 @@ function Profile() {
 
     return (
         <div className="profile-container">
-            <h1 className="profile-header">User Profile</h1>
+            <h1 className="profile-header">Coog Profile</h1>
             <div className="profile-info">
                 {isEditing ? (
                     <>
@@ -163,6 +168,21 @@ function Profile() {
                     </ul>
                 )}
             </div>
+            <div className="ride-history">
+  <button className="toggle-section" onClick={() => setShowRides(!showRides)}>
+    {showRides ? 'Hide Ride History' : 'Your Ride History'}
+  </button>
+  {showRides && (
+    <ul className="profile-list">
+      {rides.map((ride, index) => (
+        <li key={index}>
+          Ride: {ride.Ride_name} | Type: {ride.Ride_type} | Date: {new Date(ride.ride_date).toLocaleString()}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
         </div>
     );
 }

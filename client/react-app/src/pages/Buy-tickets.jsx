@@ -1,41 +1,32 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext"; 
+import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
-const user = JSON.parse(localStorage.getItem('user'));
-
-function TicketCard({ title, price, description1, description2, ticketId, userId }) {
+function TicketCard({ title, price, description1, description2, ticketId }) {
+    const { isAuthenticated, user } = useAuth();
+    const userId = user?.id;
+    const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
 
-    const handlePurchase = async () => {
-        try {
-            if (!userId || !ticketId) {
-                alert('Please login and select a valid ticket');
-                return;
-            }
-
-            const response = await axios.post('/api/ticket-type/purchase', {
-                user_id: userId,
-                ticket_id: ticketId,
-                price: price,
-                quantity: parseInt(quantity)
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.data.success) {
-                alert('Ticket Purchased Successfully!');
-            } else {
-                alert(`Purchase Failed: ${response.data.message}`);
-            }
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || 
-                                error.message || 
-                                'Purchase failed unexpectedly';
-            alert(`Purchase Failed: ${errorMessage}`);
+    const handleAddToCart = () => {
+        if (!userId || !ticketId) {
+            alert('Please log in to purchase tickets.');
+            navigate('/login');
+            return;
         }
-    };
+    
+        addToCart({
+            ticketId,
+            title,
+            price,
+            quantity: parseInt(quantity),
+        });
+    
+        alert('✅ Ticket added to cart!');
+    };    
 
     return (
         <div className='price-card'>
@@ -46,33 +37,31 @@ function TicketCard({ title, price, description1, description2, ticketId, userId
                 <li>{description2}</li>
             </ul>
 
-            {/* ✅ Quantity Selector */}
+            {/* Quantity Selector */}
             <div style={{ marginBottom: '10px' }}>
                 <label>Quantity: </label>
-                <select 
-    value={quantity} 
-    onChange={(e) => setQuantity(e.target.value)} 
-    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}
->
-    {[...Array(10).keys()].map(num => (
-        <option key={num + 1} value={num + 1}>{num + 1}</option>
-    ))}
-</select>
-
+                <select
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}
+                >
+                    {[...Array(10).keys()].map(num => (
+                        <option key={num + 1} value={num + 1}>{num + 1}</option>
+                    ))}
+                </select>
             </div>
 
-            {/* ✅ Optional Total */}
             <div>
-                <strong>Total: ${ (price * quantity).toFixed(2) }</strong>
+                <strong>Total: ${(price * quantity).toFixed(2)}</strong>
             </div>
 
-            <button className='fancy' onClick={handlePurchase}>Purchase</button>
+            <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );
 }
 
-function ParkingCard({title, price, description1, description2}){
-    return(
+function ParkingCard({ title, price, description1, description2 }) {
+    return (
         <div className='price-card parking-card'>
             <h3>{title}</h3>
             <h2>+${price}</h2>
@@ -85,7 +74,7 @@ function ParkingCard({title, price, description1, description2}){
     );
 }
 
-function Tickets(){
+function Tickets() {
     const [ticketOptions, setTicketOptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -94,7 +83,7 @@ function Tickets(){
         {
             description1: 'Allows access to the themepark.',
             description2: 'Date-based ticket that requires you to choose a start date.'
-        }, 
+        },
         {
             description1: 'Includes General Admission plus VIP lounge access.',
             description2: 'Date-based ticket with priority access to rides.'
@@ -114,8 +103,8 @@ function Tickets(){
             try {
                 const response = await axios.get('/api/ticket-type');
                 const ticketsWithDesc = response.data.map((ticket, index) => {
-                    if(index < descriptions.length){
-                        return {...ticket, ...descriptions[index]};
+                    if (index < descriptions.length) {
+                        return { ...ticket, ...descriptions[index] };
                     }
                     return ticket;
                 });
@@ -129,28 +118,22 @@ function Tickets(){
         fetchTickets();
     }, []);
 
-    if(loading){
-        return <></>;
-    }
-    if(error){
-        return <div>Error: {error}</div>;
-    }
+    if (loading) return null;
+    if (error) return <div>Error: {error}</div>;
 
-    return(
+    return (
         <>
-            <h1 id='tickets-title'>Our Pricing Plan</h1>
+            <h1 className='page-titles'>Our Pricing Plan</h1>
             <div className='price-container'>
-                {ticketOptions.slice(0,3).map((ticket) =>(
-                    <TicketCard 
-                    key={ticket.ticket_id} // ✅ Use actual ID field
-                    title={ticket.ticket_type}
-                    price={ticket.price}
-                    description1={ticket.description1}
-                    description2={ticket.description2}
-                    ticketId={ticket.ticket_id} // ✅ Also fixes ticketId undefined
-                    userId={user?.id}
-                  />
-                  
+                {ticketOptions.slice(0, 3).map((ticket) => (
+                    <TicketCard
+                        key={ticket.ticket_id}
+                        title={ticket.ticket_type}
+                        price={ticket.price}
+                        description1={ticket.description1}
+                        description2={ticket.description2}
+                        ticketId={ticket.ticket_id}
+                    />
                 ))}
             </div>
             <div className='price-container'>

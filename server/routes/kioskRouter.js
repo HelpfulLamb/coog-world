@@ -7,6 +7,9 @@ const kioskRouter = express.Router();
 // kioskRouter.post('/shop', kioskController.createShop);
 kioskRouter.post('/create-kiosk', kioskController.createKiosk);
 
+// update existing kiosks
+kioskRouter.put('/:id', kioskController.updateKiosk);
+
 // retrieve kiosks (all or specific)
 kioskRouter.get('/', kioskController.getAllKiosks);
 kioskRouter.get('/info', kioskController.getKioskInfo);

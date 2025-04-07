@@ -103,7 +103,7 @@ function Register() {
                                 className={formData[field] ? 'filled' : ''}
                             />
                             <label className={formData[field] ? 'active' : ''}>
-                                {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}<span className="req">*</span>
+                                {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}<span className="req">*</span>
                             </label>
                         </div>
                     ))}
