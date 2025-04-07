@@ -19,8 +19,8 @@ kioskRouter.get('/foods', kioskController.getAllFoodShops);
 kioskRouter.get('/:id', kioskController.getKioskById);
 
 // delete kiosks (all or specific)
-kioskRouter.delete('/', kioskController.deleteAllKiosks);
-kioskRouter.delete('/:id', kioskController.deleteKioskById);
+kioskRouter.delete('/delete-all', kioskController.deleteAllKiosks);
+kioskRouter.delete('/delete-selected', kioskController.deleteKioskById);
 
 
 module.exports = {

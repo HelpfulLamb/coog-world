@@ -16,6 +16,7 @@ function InventoryTable({inventoryInformation, setIsModalOpen}){
                         <th>Cost price per Unit</th>
                         <th>Selling price per Unit</th>
                         <th>Kiosk</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,10 @@ function InventoryTable({inventoryInformation, setIsModalOpen}){
                             <td>${inventory.Item_supply_price}</td>
                             <td>${inventory.Item_shop_price}</td>
                             <td>{inventory.Kiosk_name}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

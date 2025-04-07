@@ -89,7 +89,11 @@ exports.deleteAllRides = async (req, res) => {
 
 exports.deleteRideById = async (req, res) => {
     try {
-        await rideModel.deleteRideById(req.params.id);
+        const {Ride_ID} = req.body;
+        if(!Ride_ID){
+            return res.status(400).json({message: 'Invalid ride ID provided. Check server status.'});
+        }
+        await rideModel.deleteRideById(Ride_ID);
         res.status(200).json({message: 'Ride deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});

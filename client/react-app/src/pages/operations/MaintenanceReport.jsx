@@ -18,6 +18,7 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                         <th>Object</th>
                         <th>Object Name</th>
                         <th>Status</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,8 +28,12 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                             <td>${Number(maintenance.Maint_cost).toLocaleString()}</td>
                             <td>{maintenance.Maint_Type}</td>
                             <td>{maintenance.Maint_obj}</td>
-                                <td>{maintenance.Maint_obj_name}</td>
+                            <td>{maintenance.Maint_obj_name}</td>
                             <td>{maintenance.Maint_Status}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

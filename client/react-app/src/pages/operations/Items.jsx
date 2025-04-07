@@ -15,6 +15,7 @@ function ItemTable({itemInformation, setIsModalOpen}){
                         <th>Description</th>
                         <th>Selling Price</th>
                         <th>Unit Price</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,6 +26,10 @@ function ItemTable({itemInformation, setIsModalOpen}){
                             <td>{item.Item_desc}</td>
                             <td>${item.Item_shop_price}</td>
                             <td>${item.Item_supply_price}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -38,6 +43,11 @@ function Item(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [filteredItems, setFilteredItems] = useState('');
+    const [itemNamefilter, setItemNameFilter] = useState('');
+    const [itemTypeFilter, setItemTypeFilter] = useState('');
+    const [sortOPtion, setSortOption] = useState('');
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -57,8 +67,42 @@ function Item(){
         fetchItems();
     }, []);
 
+    useEffect(() => {
+        let filtered = [...itemInformation];
+        if(itemNamefilter){
+            filtered = filtered.filter(item => item.Item_name.toLowerCase().includes(itemNamefilter.toLowerCase()));
+        }
+        if(itemTypeFilter){
+            filtered = filtered.filter(item => item.Item_type.toLowerCase().includes(itemTypeFilter.toLowerCase()));
+        }
+        filtered.sort((a,b) => {
+            switch (sortOPtion) {
+                case 'nameAsc':
+                    return a.Item_name.localeCompare(b.Item_name);
+                case 'nameDesc':
+                    return b.Item_name.localeCompare(a.Item_name);
+                case 'supplyAsc':
+                    return a.Item_supply_price - b.Item_supply_price;
+                case 'supplyDesc':
+                    return b.Item_supply_price - a.Item_supply_price;
+                case 'sellAsc':
+                    return a.Item_shop_price - b.Item_shop_price;
+                case 'sellDesc':
+                    return b.Item_shop_price - a.Item_shop_price;
+                default:
+                    return 0;
+            }
+        });
+        setFilteredItems(filtered);
+    }, [itemInformation, itemNamefilter, itemTypeFilter, sortOPtion]);
+
     const handleAddItem = (newItem) => {
         setItemInformation([...itemInformation, newItem]);
+    };
+    const resetFilters = () => {
+        setItemNameFilter('');
+        setItemTypeFilter('');
+        setSortOption('');
     };
     if(loading){
         return <div>Loading...</div>
@@ -69,13 +113,51 @@ function Item(){
 
     return(
         <>
+            <div className="filter-controls">
+                <h2>Filter Items</h2>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="itemName">Item Name:</label>
+                        <input type="text" id="itemName" value={itemNamefilter} onChange={(e) => setItemNameFilter(e.target.value)} placeholder="Filter by item name" />
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="itemType">Item Type:</label>
+                        <select id="itemType" value={itemTypeFilter} onChange={(e) => setItemTypeFilter(e.target.value)}>
+                            <option value="">-- Select a Type --</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Toy">Toy</option>
+                            <option value="Souvenirs">Souvenirs</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Food">Food</option>
+                            <option value="Drink">Drink</option>
+                            <option value="Collectible">Collectible</option>
+                            <option value="Prize">Prize</option>
+                            <option value="Seasonal">Seasonal</option>
+                            <option value="Miscellaneous">Miscellaneous</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="sort">Sort By:</label>
+                        <select id="sort" value={sortOPtion} onChange={(e) => setSortOption(e.target.value)}>
+                            <option value="">-- Sort Method --</option>
+                            <option value="nameAsc">Item Name (A-Z)</option>
+                            <option value="nameDesc">Item Name (Z-A)</option>
+                            <option value="supplyAsc">Unit Price (Low to High)</option>
+                            <option value="supplyDesc">Unit Price (High to Low)</option>
+                            <option value="sellAsc">Sell Price (Low to High)</option>
+                            <option value="sellDesc">Sell Price (High to Low)</option>
+                        </select>
+                    </div>
+                    <button onClick={resetFilters} className="reset-button">Reset Filters</button>
+                </div>
+            </div>
             <div className="db-btn">
                 <h1>Coog World Items</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
                 </div>
             </div>
-            <ItemTable itemInformation={itemInformation} setIsModalOpen={setIsModalOpen} />
+            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} />
             <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
         </>
     )
