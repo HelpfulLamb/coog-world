@@ -33,7 +33,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
                             <td>{formatDate(kiosk.Kiosk_created)}</td>
                             <td>
                                 <button onClick={() => onEditKiosk(kiosk)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteKiosk(kiosk)} className="action-btn delete-button">Delete</button>
+                                <button onClick={() => onDeleteKiosk(kiosk.Kiosk_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
