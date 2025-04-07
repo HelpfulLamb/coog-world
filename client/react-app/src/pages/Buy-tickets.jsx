@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext"; 
+import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
 function TicketCard({ title, price, description1, description2, ticketId }) {
@@ -8,38 +9,24 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     const userId = user?.id;
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
 
-    const handlePurchase = async () => {
-        try {
-            if (!isAuthenticated || !userId || !ticketId) {
-                alert('Please log in to purchase tickets.');
-                navigate('/login');
-                return;
-            }
-
-            const response = await axios.post('/api/ticket-type/purchase', {
-                user_id: userId,
-                ticket_id: ticketId,
-                price: price,
-                quantity: parseInt(quantity)
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.data.success) {
-                alert('Ticket Purchased Successfully!');
-            } else {
-                alert(`Purchase Failed: ${response.data.message}`);
-            }
-        } catch (error) {
-            const errorMessage = error.response?.data?.message ||
-                                  error.message ||
-                                  'Purchase failed unexpectedly';
-            alert(`Purchase Failed: ${errorMessage}`);
+    const handleAddToCart = () => {
+        if (!isAuthenticated || !userId || !ticketId) {
+            alert('Please log in to purchase tickets.');
+            navigate('/login');
+            return;
         }
-    };
+    
+        addToCart({
+            ticketId,
+            title,
+            price,
+            quantity: parseInt(quantity),
+        });
+    
+        alert('✅ Ticket added to cart!');
+    };    
 
     return (
         <div className='price-card'>
@@ -68,7 +55,7 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                 <strong>Total: ${(price * quantity).toFixed(2)}</strong>
             </div>
 
-            <button className='fancy' onClick={handlePurchase}>Purchase</button>
+            <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );
 }
