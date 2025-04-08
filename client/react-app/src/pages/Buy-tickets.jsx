@@ -136,7 +136,7 @@ function Tickets() {
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const response = await axios.get('/api/tickets');
+                const response = await axios.get('/api/ticket-type');
                 const ticketsWithDesc = response.data.map((ticket, index) => {
                     if (index < descriptions.length) {
                         return { ...ticket, ...descriptions[index] };
