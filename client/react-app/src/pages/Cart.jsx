@@ -21,7 +21,7 @@ function Cart() {
   
     try {
       for (const item of cartItems) {
-        await axios.post("/api/tickets/purchase", {
+        await axios.post("/api/ticket-type/purchase", {
           user_id: userId,
           ticket_id: item.ticketId,
           price: item.price,
