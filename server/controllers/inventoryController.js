@@ -36,6 +36,21 @@ exports.createItem = async (req, res) => {
     }
 };
 
+exports.updateItem = async (req, res) => {
+    try {
+        const itemID = req.params.id;
+        const updatedData = req.body;
+        const selectedItem = {...updatedData, Item_ID: itemID};
+        const updatedItem = await inventoryModel.updateItem(selectedItem);
+        if(!updatedItem){
+            return res.status(404).json({message: 'Item not found or not updated.'});
+        }
+        res.status(200).json({message: 'Item updated successfully.', item: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllInventory = async (req, res) => {
     try {
         const inv = await inventoryModel.getAllInventory();

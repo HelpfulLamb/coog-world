@@ -7,6 +7,9 @@ const inventoryRouter = express.Router();
 inventoryRouter.post('/create-assignment', inventoryController.createAssignment);
 inventoryRouter.post('/create-item', inventoryController.createItem);
 
+// update existing items and assignments
+inventoryRouter.put('/items/:id', inventoryController.updateItem);
+
 // retrieve inventory (all or specific)
 inventoryRouter.get('/all', inventoryController.getAllInventory);
 inventoryRouter.get('/info', inventoryController.getInventoryInfo);

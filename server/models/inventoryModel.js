@@ -26,6 +26,14 @@ exports.createItem = async (itemData) => {
     );
 };
 
+exports.updateItem = async (selectedItem) => {
+    const {Item_ID, Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = selectedItem;
+    const [item] = await db.query(
+        'UPDATE items SET Item_type = ?, Item_name = ?, Item_desc = ?, Item_shop_price = ?, Item_supply_price = ? WHERE Item_ID = ?', 
+        [Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price, Item_ID]);
+    return item;
+};
+
 exports.getAllInventory = async () => {
     const [inventory] = await db.query('SELECT * FROM inventory');
     return inventory;

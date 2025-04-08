@@ -8,6 +8,14 @@ exports.createShow = async (userData) => {
     );
 };
 
+exports.updateShow = async (selectedShow) => {
+    const {Show_ID, Stage_ID, Show_name, Show_cost, Show_start, Show_end, Show_date, Perf_num} = selectedShow;
+    const [show] = await db.query(
+        'UPDATE shows SET Stage_ID = ?, Show_name = ?, Show_cost = ?, Show_start = ?, Show_end = ?, Show_date = ?, Perf_num = ? WHERE Show_ID = ?', 
+        [Stage_ID, Show_name, Show_cost, Show_start, Show_end, Show_date, Perf_num, Show_ID]);
+    return show;
+};
+
 exports.getAllShows = async () => {
     const [shows] = await db.query('SELECT * FROM shows');
     return shows;

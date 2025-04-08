@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import AddTicket from "../modals/AddTicket";
+import AddTicket, {UpdateTicket} from "../modals/AddTicket";
 
-function TicketTable({ticketInformation, setIsModalOpen, onDeleteTicket}){
+function TicketTable({ticketInformation, setIsModalOpen, onEditTicket, onDeleteTicket}){
     if(!ticketInformation || !Array.isArray(ticketInformation)){
         return <div>No ticket data is available.</div>
     }
@@ -26,7 +26,7 @@ function TicketTable({ticketInformation, setIsModalOpen, onDeleteTicket}){
                                 <td>N/A</td>
                                 <td>N/A</td>
                                 <td>
-                                    <button className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onEditTicket(ticket)} className="action-btn edit-button">Edit</button>
                                     <button onClick={() => onDeleteTicket(ticket.ticket_id)} className="action-btn delete-button">Delete</button>
                                 </td>
                             </tr>
@@ -43,6 +43,9 @@ function TicketReport(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedTicket, setSelectedTicket] = useState(null);
     
     useEffect(() => {
         const fetchTickets = async () => {
@@ -67,6 +70,13 @@ function TicketReport(){
     }, []);    
     const handleAddTicket = (newTicket) => {
         setTicketInformation([...ticketInformation, newTicket]);
+    };
+    const handleEditTicket = (ticket) => {
+        setSelectedTicket(ticket);
+        setIsEditOpen(true);
+    };
+    const handleUpdateTicket = (updatedTicket) => {
+        setTicketInformation(prev => prev.map(ticket => ticket.ticket_id === updatedTicket.ticket_id ? updatedTicket : ticket));
     };
     const handleDeleteTicket = async (ticketID) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this ticket? This action cannot be undone.');
@@ -105,8 +115,9 @@ function TicketReport(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ticket</button>
                 </div>
             </div>
-            <TicketTable ticketInformation={ticketInformation} setIsModalOpen={setIsModalOpen} onDeleteTicket={handleDeleteTicket} />
+            <TicketTable ticketInformation={ticketInformation} setIsModalOpen={setIsModalOpen} onEditTicket={handleEditTicket} onDeleteTicket={handleDeleteTicket} />
             <AddTicket isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddTicket={handleAddTicket} />
+            <UpdateTicket isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedTicket(null);}} ticketToEdit={selectedTicket} onUpdateTicket={handleUpdateTicket} />
         </>
     )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import AddItem from "../modals/AddItem";
+import AddItem, { UpdateItem } from "../modals/AddItem";
 
-function ItemTable({itemInformation, setIsModalOpen, onDeleteItem}){
+function ItemTable({itemInformation, setIsModalOpen, onEditItem, onDeleteItem}){
     if(!itemInformation || !Array.isArray(itemInformation)){
         return <div>No item data is available.</div>
     }
@@ -27,7 +27,7 @@ function ItemTable({itemInformation, setIsModalOpen, onDeleteItem}){
                             <td>${item.Item_shop_price}</td>
                             <td>${item.Item_supply_price}</td>
                             <td>
-                                <button className="action-btn edit-button">Edit</button>
+                                <button onClick={() => onEditItem(item)} className="action-btn edit-button">Edit</button>
                                 <button onClick={() => onDeleteItem(item.Item_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
@@ -43,6 +43,9 @@ function Item(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const [filteredItems, setFilteredItems] = useState('');
     const [itemNamefilter, setItemNameFilter] = useState('');
@@ -98,6 +101,13 @@ function Item(){
 
     const handleAddItem = (newItem) => {
         setItemInformation([...itemInformation, newItem]);
+    };
+    const handleEditItem = (item) => {
+        setSelectedItem(item);
+        setIsEditOpen(true);
+    };
+    const handleUpdateItem = (updatedItem) => {
+        setItemInformation(prev => prev.map(item => item.Item_ID === updatedItem.Item_ID ? updatedItem : item));
     };
     const handleDeleteItem = async (itemID) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this item? This action cannot be undone.');
@@ -180,8 +190,9 @@ function Item(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
                 </div>
             </div>
-            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteItem={handleDeleteItem} />
+            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} onEditItem={handleEditItem} onDeleteItem={handleDeleteItem} />
             <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
+            <UpdateItem isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedItem(null);}} itemToEdit={selectedItem} onUpdateItem={handleUpdateItem} />
         </>
     )
 }
