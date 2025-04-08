@@ -40,7 +40,7 @@ function Profile() {
 
     const fetchData = async (userId) => {
         try {
-            const ticketRes = await fetch(`/api/tickets/purchases/${userId}`);
+            const ticketRes = await fetch(`/api/ticket-type/purchases/${userId}`);
             const ticketData = await ticketRes.json();
             setTickets(ticketData.tickets);
 
