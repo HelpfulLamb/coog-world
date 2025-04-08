@@ -8,6 +8,7 @@ ticketRouter.post('/create-ticket', ticketController.createTicket);
 
 // Retrieve ticket info
 ticketRouter.get('/', ticketController.getAllTickets);
+ticketRouter.get('/info', ticketController.getTicketInfo);
 ticketRouter.get('/:num', ticketController.getTicketByNum);
 ticketRouter.get('/purchases/:userId', ticketController.getUserTicketPurchases);
 
