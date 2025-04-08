@@ -22,7 +22,7 @@ function AddTicket({isOpen, onClose, onAddTicket}){
             return;
         }
         try {
-            const response = await fetch('api/ticket-type/create-ticket', {
+            const response = await fetch('/api/ticket-type/create-ticket', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',

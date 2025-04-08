@@ -59,14 +59,19 @@ exports.deleteAllTickets = async (req, res) => {
     }
 };
 
-exports.deleteTicketByNum = async (req, res) => {
+exports.deleteTicketById = async (req, res) => {
     try {
-        await ticketModel.deleteTicketByNum(req.params.num);
+      const {ticket_id} = req.body;
+      if(!ticket_id){
+        return res.status(400).json({message: 'Invalid ticket id.'});
+      }
+        await ticketModel.deleteTicketById(ticket_id);
         res.status(200).json({message: 'Ticket deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
 };
+
 exports.purchaseTicket = async (req, res) => {
     try {
       let { user_id, ticket_id, quantity, price, total_amount } = req.body;

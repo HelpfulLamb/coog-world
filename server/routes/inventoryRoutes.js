@@ -14,8 +14,9 @@ inventoryRouter.get('/merchandise', inventoryController.getAllAvailableItems);
 inventoryRouter.get('/items', inventoryController.getAllItems);
 
 // delete items (all or specific)
-inventoryRouter.delete('/', inventoryController.deleteAllInventory);
-inventoryRouter.delete('/:id', inventoryController.deleteUnitById);
+inventoryRouter.delete('/delete-all', inventoryController.deleteAllInventory);
+inventoryRouter.delete('/delete-selected', inventoryController.deleteAssignmentById);
+inventoryRouter.delete('/delete-selected-item', inventoryController.deleteItemById);
 
 module.exports = {
     inventoryRouter

@@ -66,6 +66,7 @@ function App() {
                             <Route path='inventory-report' element={<Inventory />} />
                             <Route path='maintenance-report' element={<Maintenance />} />
                             <Route path='weather-report' element={<Weather />} />
+                            <Route path='report' element={<Reports />} />
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />
                     </Routes>

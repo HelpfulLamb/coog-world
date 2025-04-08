@@ -72,10 +72,14 @@ exports.deleteAllInventory = async (req, res) => {
     }
 };
 
-exports.deleteUnitById = async (req, res) => {
+exports.deleteAssignmentById = async (req, res) => {
     try {
-        await inventoryModel.deleteUnitById(req.params.id);
-        res.status(200).json({message: 'Unit deleted successfully.'});
+        const {Inventory_ID} = req.body;
+        if(!Inventory_ID){
+            return res.status(400).json({message: 'Invalid inventory ID provided.'});
+        }
+        await inventoryModel.deleteAssignmentById(Inventory_ID);
+        res.status(200).json({message: 'Item assignment deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -85,6 +89,19 @@ exports.getAllAvailableItems = async (req, res) => {
     try {
         const merch = await inventoryModel.getAllAvailableItems();
         res.status(200).json(merch);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteItemById = async (req, res) => {
+    try {
+        const {Item_ID} = req.body;
+        if(!Item_ID){
+            return res.status(400).json({message: 'Invalid item id.'});
+        }
+        await inventoryModel.deleteItemById(Item_ID);
+        res.status(200).json({message: 'Item deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

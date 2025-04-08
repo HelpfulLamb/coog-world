@@ -12,8 +12,8 @@ showRouter.get('/info', showController.getShowInfo);
 showRouter.get('/:id', showController.getShowById);
 
 // delete shows (all or specific)
-showRouter.delete('/', showController.deleteAllShows);
-showRouter.delete('/:id', showController.deleteShowById);
+showRouter.delete('/delete-all', showController.deleteAllShows);
+showRouter.delete('/delete-selected', showController.deleteShowById);
 
 
 module.exports = {

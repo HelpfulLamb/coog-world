@@ -34,6 +34,6 @@ exports.deleteAllShows = async () => {
     await db.query('DELETE FROM shows');
 };
 
-exports.deleteShowById = async (id) => {
-    await db.query('DELETE FROM shows WHERE Show_ID = ?', [id]);
+exports.deleteShowById = async (showid) => {
+    await db.query('DELETE FROM shows WHERE Show_ID = ?', [showid]);
 };
