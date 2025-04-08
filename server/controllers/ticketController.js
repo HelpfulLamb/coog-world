@@ -24,11 +24,18 @@ exports.getAllTickets = async (req, res) => {
       const tickets = await ticketModel.getAllTickets();
       res.json(tickets);
   } catch (err) {
-      console.error("🔥 Error in getAllTickets:", err); // add this!
       res.status(500).json({ message: err.message });
   }
 };
 
+exports.getTicketInfo = async (req, res) => {
+    try {
+        const info = await ticketModel.getTicketInfo();
+        res.status(200).json(info);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
 
 exports.getTicketByNum = async (req, res) => {
   try {
