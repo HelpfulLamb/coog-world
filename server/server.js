@@ -23,6 +23,7 @@ app.use(cors());
 
 // Mount routers
 app.use('/api/rides', rideRouter);
+app.use('/api/ticket-type', ticketRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/users', visitorRouter);
 app.use('/api/employees', employeeRouter);
