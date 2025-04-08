@@ -16,6 +16,14 @@ exports.createTicket = async (ticketData) => {
     );
 };
 
+exports.updateTicket = async (selectedTicket) => {
+    const {ticket_id, ticket_type, price} = selectedTicket;
+    const [ticket] = await db.query(
+        'UPDATE ticket_type SET ticket_type = ?, price = ? WHERE ticket_id = ?', 
+        [ticket_type, price, ticket_id]);
+    return ticket;
+};
+
 exports.getAllTickets = async () => {
     const [tickets] = await db.query('SELECT * FROM ticket_type');
     return tickets;

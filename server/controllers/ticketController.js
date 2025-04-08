@@ -19,6 +19,21 @@ exports.createTicket = async (req, res) => {
   }
 };
 
+exports.updateTicket = async (req, res) => {
+    try {
+        const ticketID = req.params.id;
+        const updatedData = req.body;
+        const selectedTicket = {...updatedData, ticket_id: ticketID};
+        const updatedTicket = await ticketModel.updateTicket(selectedTicket);
+        if(!updatedTicket){
+            return res.status(404).json({message: 'Ticket not found or not updated.'});
+        }
+        res.status(200).json({message: 'Ticket updated successfully.', ticket: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllTickets = async (req, res) => {
   try {
       const tickets = await ticketModel.getAllTickets();

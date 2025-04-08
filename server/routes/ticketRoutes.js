@@ -6,6 +6,9 @@ const ticketRouter = express.Router();
 // Create a new ticket
 ticketRouter.post('/create-ticket', ticketController.createTicket);
 
+// update existing ticket
+ticketRouter.put('/:id', ticketController.updateTicket);
+
 // Retrieve ticket info
 ticketRouter.get('/', ticketController.getAllTickets);
 ticketRouter.get('/info', ticketController.getTicketInfo);
