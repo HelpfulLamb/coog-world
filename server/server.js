@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const { rideRouter } = require('./routes/rideRoutes.js');
 const { ticketRouter } = require('./routes/ticketRoutes');
