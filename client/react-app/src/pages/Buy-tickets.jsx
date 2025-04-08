@@ -6,27 +6,38 @@ import axios from 'axios';
 
 function TicketCard({ title, price, description1, description2, ticketId }) {
     const { isAuthenticated, user } = useAuth();
-    const userId = user?.id;
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
-
+    
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
+    
     const handleAddToCart = () => {
-        if (!userId || !ticketId) {
-            alert('Please log in to purchase tickets.');
-            navigate('/login');
-            return;
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
+      
+        console.log("👤 User:", user);
+        console.log("🔑 User ID:", userId);
+      
+        if (!userId) {
+          alert('Please log in to purchase tickets.');
+          navigate('/login');
+          return;
         }
-    
+      
         addToCart({
-            ticketId,
-            title,
-            price,
-            quantity: parseInt(quantity),
+          ticketId,
+          title,
+          price,
+          quantity: parseInt(quantity),
         });
-    
+      
         alert('✅ Ticket added to cart!');
-    };    
+      };
+      
+    
+        
 
     return (
         <div className='price-card'>
@@ -60,7 +71,30 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     );
 }
 
-function ParkingCard({ title, price, description1, description2 }) {
+function ParkingCard({ title, price, description1, description2, ticketId }) {
+    const { user } = useAuth();
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
+    const { addToCart } = useCart();
+    const navigate = useNavigate();
+
+    const handleAddParking = () => {
+        if (!userId || !ticketId) {
+            alert("Please log in to add a parking pass.");
+            navigate("/login");
+            return;
+        }
+
+        addToCart({
+            ticketId,
+            title,
+            price,
+            quantity: 1, 
+        });
+
+        alert("✅ Parking pass added to cart!");
+    };
+
     return (
         <div className='price-card parking-card'>
             <h3>{title}</h3>
@@ -69,10 +103,11 @@ function ParkingCard({ title, price, description1, description2 }) {
                 <li>{description1}</li>
                 <li>{description2}</li>
             </ul>
-            <button className='fancy'>Add Parking</button>
+            <button className='fancy' onClick={handleAddParking}>Add Parking</button>
         </div>
     );
 }
+
 
 function Tickets() {
     const [ticketOptions, setTicketOptions] = useState([]);
@@ -101,7 +136,7 @@ function Tickets() {
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const response = await axios.get('/api/ticket-type');
+                const response = await axios.get('/api/tickets');
                 const ticketsWithDesc = response.data.map((ticket, index) => {
                     if (index < descriptions.length) {
                         return { ...ticket, ...descriptions[index] };
@@ -139,11 +174,13 @@ function Tickets() {
             <div className='price-container'>
                 {ticketOptions.length > 3 && (
                     <ParkingCard
-                        title={ticketOptions[3].ticket_type}
-                        price={ticketOptions[3].price}
-                        description1={ticketOptions[3].description1}
-                        description2={ticketOptions[3].description2}
-                    />
+                    title={ticketOptions[3].ticket_type}
+                    price={ticketOptions[3].price}
+                    description1={ticketOptions[3].description1}
+                    description2={ticketOptions[3].description2}
+                    ticketId={ticketOptions[3].ticket_id}
+                />
+                
                 )}
             </div>
         </>

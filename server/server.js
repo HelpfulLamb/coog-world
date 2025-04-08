@@ -1,10 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 
-// Import routers
 const { rideRouter } = require('./routes/rideRoutes.js');
-const { ticketRouter } = require('./routes/ticketRoutes.js');
+const { ticketRouter } = require('./routes/ticketRoutes');
 const { visitorRouter } = require('./routes/visitorRoutes.js');
 const { employeeRouter } = require('./routes/employeeRoutes.js');
 const { serviceRouter } = require('./routes/serviceRoutes.js');
@@ -20,12 +18,13 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
-app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
+app.use(cors());
 
-// Use routers
+// Mount routers
 app.use('/api/rides', rideRouter);
 app.use('/api/ticket-type', ticketRouter);
+app.use('/api/tickets', ticketRouter);
 app.use('/api/users', visitorRouter);
 app.use('/api/employees', employeeRouter);
 app.use('/api/services', serviceRouter);
@@ -35,19 +34,20 @@ app.use('/api/maintenance', maintenanceRouter);
 app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
-app.use('/api/reports', reportRoutes); 
+app.use('/api/reports', reportRoutes);
 
-// Serve frontend files
 app.use(express.static(path.join(__dirname, 'client')));
-
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
 
-
+// 404 fallback (API only)
 app.use((req, res) => {
     res.status(404).send('Not Found');
 });
 
-// Start the server
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+

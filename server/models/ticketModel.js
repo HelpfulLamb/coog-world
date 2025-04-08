@@ -1,7 +1,10 @@
 const db = require('../config/db.js');
 
 exports.findTicketByName = async (ticket_type) => {
-    const [ticket] = await db.query('SELECT t.ticket_type FROM ticket_type as t WHERE t.ticket_type = ?', (ticket_type));
+    const [ticket] = await db.query(
+        'SELECT t.ticket_type FROM ticket_type AS t WHERE t.ticket_type = ?',
+        [ticket_type]
+    );
     return ticket[0];
 };
 
@@ -20,8 +23,7 @@ exports.getAllTickets = async () => {
 
 exports.getTicketInfo = async () => {
     const [info] = await db.query(
-        'SELECT ticket_id, ticket_type, price FROM ticket_type'
-    );
+        'SELECT ticket_id, ticket_type, price FROM ticket_type');
     return info;
 };
 
@@ -35,15 +37,10 @@ exports.deleteAllTickets = async () => {
 };
 
 exports.deleteTicketByNum = async (num) => {
-    await db.query('DELETE FROM ticket_type WHERE ticket_number = ?', [num]);
+    await db.query('DELETE FROM ticket_type WHERE ticket_id = ?', [num]);
 };
 
-exports.getAllTickets = async () => {
-    const [tickets] = await db.query('SELECT * FROM ticket_type');
-    return tickets;
-  };
-  
-  exports.purchaseTicket = async (userId, ticketId, price, quantity) => {
+exports.purchaseTicket = async (userId, ticketId, price, quantity) => {
     const [result] = await db.query(
       `INSERT INTO tickets_purchases 
        (user_id, ticket_id, Tick_quantity_sold, Tick_purchase_price)
@@ -51,4 +48,4 @@ exports.getAllTickets = async () => {
       [userId, ticketId, quantity, price]
     );
     return { id: result.insertId };
-  };
+};
