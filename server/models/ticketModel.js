@@ -8,7 +8,8 @@ exports.findTicketByName = async (ticket_type) => {
     return ticket[0];
 };
 
-exports.createTicket = async ({ ticket_type, price }) => {
+exports.createTicket = async (ticketData) => {
+    const {ticket_type, price} = ticketData;
     await db.query(
         'INSERT INTO ticket_type (ticket_type, price) VALUES (?, ?)',
         [ticket_type, price]
