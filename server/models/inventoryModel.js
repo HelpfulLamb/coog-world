@@ -33,7 +33,7 @@ exports.getAllInventory = async () => {
 
 exports.getInventoryInfo = async () => {
     const [info] = await db.query(
-        'SELECT t.Item_ID, t.Item_name, t.Item_type, t.Item_shop_price, t.Item_supply_price, i.Item_quantity, k.Kiosk_name FROM inventory as i, items as t, kiosks as k WHERE i.Item_ID = t.Item_ID and i.Kiosk_ID = k.Kiosk_ID'
+        'SELECT i.Inventory_ID, t.Item_ID, t.Item_name, t.Item_type, t.Item_shop_price, t.Item_supply_price, i.Item_quantity, k.Kiosk_name FROM inventory as i, items as t, kiosks as k WHERE i.Item_ID = t.Item_ID and i.Kiosk_ID = k.Kiosk_ID'
     );
     return info;
 };
@@ -48,8 +48,8 @@ exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };
 
-exports.deleteUnitById = async (id) => {
-    await db.query('DELETE FROM inventory WHERE InventoryID = ?', [id]);
+exports.deleteAssignmentById = async (invid) => {
+    await db.query('DELETE FROM inventory WHERE Inventory_ID = ?', [invid]);
 };
 
 exports.getAllAvailableItems = async () => {
@@ -57,4 +57,8 @@ exports.getAllAvailableItems = async () => {
         'SELECT Item_name, Item_shop_price, Item_desc FROM items'
     );
     return merchandise;
+};
+
+exports.deleteItemById = async (itemid) => {
+    await db.query('DELETE FROM items WHERE Item_ID = ?', [itemid]);
 };

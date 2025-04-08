@@ -36,16 +36,17 @@ exports.deleteAllTickets = async () => {
     await db.query('DELETE FROM ticket_type');
 };
 
-exports.deleteTicketByNum = async (num) => {
-    await db.query('DELETE FROM ticket_type WHERE ticket_id = ?', [num]);
+exports.deleteTicketById = async (ticketid) => {
+    await db.query('DELETE FROM ticket_type WHERE ticket_id = ?', [ticketid]);
 };
 
 exports.purchaseTicket = async (userId, ticketId, price, quantity) => {
     const [result] = await db.query(
-      `INSERT INTO tickets_purchases 
-       (user_id, ticket_id, Tick_quantity_sold, Tick_purchase_price)
-       VALUES (?, ?, ?, ?)`,
-      [userId, ticketId, quantity, price]
+        `INSERT INTO tickets_purchases 
+        (user_id, ticket_id, Tick_quantity_sold, Tick_purchase_price)
+        VALUES (?, ?, ?, ?)`,
+        [userId, ticketId, quantity, price]
     );
     return { id: result.insertId };
 };
+

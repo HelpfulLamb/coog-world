@@ -60,7 +60,11 @@ exports.deleteAllShows = async (req, res) => {
 
 exports.deleteShowById = async (req, res) => {
     try {
-        await showModel.deleteShowById(req.params.id);
+        const {Show_ID} = req.body;
+        if(!Show_ID){
+            res.status(400).json({message: 'Invalid show ID.'});
+        }
+        await showModel.deleteShowById(Show_ID);
         res.status(200).json({message: 'Show deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AddItem from "../modals/AddItem";
 
-function ItemTable({itemInformation, setIsModalOpen}){
+function ItemTable({itemInformation, setIsModalOpen, onDeleteItem}){
     if(!itemInformation || !Array.isArray(itemInformation)){
         return <div>No item data is available.</div>
     }
@@ -28,7 +28,7 @@ function ItemTable({itemInformation, setIsModalOpen}){
                             <td>${item.Item_supply_price}</td>
                             <td>
                                 <button className="action-btn edit-button">Edit</button>
-                                <button className="action-btn delete-button">Delete</button>
+                                <button onClick={() => onDeleteItem(item.Item_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -99,6 +99,29 @@ function Item(){
     const handleAddItem = (newItem) => {
         setItemInformation([...itemInformation, newItem]);
     };
+    const handleDeleteItem = async (itemID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this item? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/inventory/delete-selected-item', {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Item_ID: itemID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Item deleted successfully!');
+                setItemInformation(prev => prev.filter(item => item.Item_ID !== itemID));
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete item.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     const resetFilters = () => {
         setItemNameFilter('');
         setItemTypeFilter('');
@@ -157,7 +180,7 @@ function Item(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
                 </div>
             </div>
-            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} />
+            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteItem={handleDeleteItem} />
             <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
         </>
     )

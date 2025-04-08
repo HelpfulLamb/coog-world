@@ -13,9 +13,10 @@ ticketRouter.get('/:num', ticketController.getTicketByNum);
 ticketRouter.get('/purchases/:userId', ticketController.getUserTicketPurchases);
 
 
-// Delete ticket(s)
-ticketRouter.delete('/', ticketController.deleteAllTickets);
-ticketRouter.delete('/:num', ticketController.deleteTicketByNum);
+// delete ticket (all or specific)
+ticketRouter.delete('/delete-all', ticketController.deleteAllTickets);
+ticketRouter.delete('/delete-selected', ticketController.deleteTicketById);
+
 
 // Ticket purchase
 ticketRouter.post('/purchase', ticketController.purchaseTicket);

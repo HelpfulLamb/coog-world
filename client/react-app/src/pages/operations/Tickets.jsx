@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddTicket from "../modals/AddTicket";
 
-function TicketTable({ticketInformation, setIsModalOpen}){
+function TicketTable({ticketInformation, setIsModalOpen, onDeleteTicket}){
     if(!ticketInformation || !Array.isArray(ticketInformation)){
         return <div>No ticket data is available.</div>
     }
@@ -27,7 +27,7 @@ function TicketTable({ticketInformation, setIsModalOpen}){
                                 <td>N/A</td>
                                 <td>
                                     <button className="action-btn edit-button">Edit</button>
-                                    <button className="action-btn delete-button">Delete</button>
+                                    <button onClick={() => onDeleteTicket(ticket.ticket_id)} className="action-btn delete-button">Delete</button>
                                 </td>
                             </tr>
                         ))}
@@ -68,6 +68,29 @@ function TicketReport(){
     const handleAddTicket = (newTicket) => {
         setTicketInformation([...ticketInformation, newTicket]);
     };
+    const handleDeleteTicket = async (ticketID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this ticket? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/ticket-type/delete-selected',{
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({ticket_id: ticketID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Ticket deleted successfully!');
+                setTicketInformation(prev => prev.filter(ticket => ticket.ticket_id !== ticketID));
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete ticket.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     if(loading){
         return <div>Loading...</div>
     }
@@ -82,7 +105,7 @@ function TicketReport(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ticket</button>
                 </div>
             </div>
-            <TicketTable ticketInformation={ticketInformation} setIsModalOpen={setIsModalOpen} />
+            <TicketTable ticketInformation={ticketInformation} setIsModalOpen={setIsModalOpen} onDeleteTicket={handleDeleteTicket} />
             <AddTicket isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddTicket={handleAddTicket} />
         </>
     )

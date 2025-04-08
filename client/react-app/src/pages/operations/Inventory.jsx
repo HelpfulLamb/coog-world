@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AssignItem from "../modals/AssignItem";
 
-function InventoryTable({inventoryInformation, setIsModalOpen}){
+function InventoryTable({inventoryInformation, setIsModalOpen, onDeleteInventory}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
         return <div>No inventory data is available.</div>
     }
@@ -30,7 +30,7 @@ function InventoryTable({inventoryInformation, setIsModalOpen}){
                             <td>{inventory.Kiosk_name}</td>
                             <td>
                                 <button className="action-btn edit-button">Edit</button>
-                                <button className="action-btn delete-button">Delete</button>
+                                <button onClick={() => onDeleteInventory(inventory.Inventory_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -66,6 +66,29 @@ function Inventory(){
     const handleAssignItem = (newAssignment) => {
         setInventoryInformation([...inventoryInformation, newAssignment]);
     };
+    const handldeDeleteInventory = async (invID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this assignment? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/inventory/delete-selected',{
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Inventory_ID: invID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Assignment deleted successfully!');
+                setInventoryInformation(prev => prev.filter(inv => inv.Inventory_ID !== invID));
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete item assignment.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     if(loading){
         return <div>Loading...</div>
     }
@@ -80,7 +103,7 @@ function Inventory(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Assign Item</button>
                 </div>
             </div>
-            <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} />
+            <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} />
             <AssignItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAssignItem={handleAssignItem} />
         </>
     )
