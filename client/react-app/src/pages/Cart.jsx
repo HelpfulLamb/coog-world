@@ -10,24 +10,26 @@ function Cart() {
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
-    if (!user || !user.id) {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
+  
+    if (!userId) {
       alert("Please log in to complete checkout.");
       navigate("/login");
       return;
     }
-
+  
     try {
-      // Loop through each cart item and make a POST request
       for (const item of cartItems) {
         await axios.post("/api/ticket-type/purchase", {
-          user_id: user.id,
+          user_id: userId,
           ticket_id: item.ticketId,
           price: item.price,
           quantity: item.quantity,
-          total_amount: item.price * item.quantity // ✅ include this if backend supports it
+          total_amount: item.price * item.quantity
         });
       }
-
+  
       alert("🎉 Checkout complete!");
       clearCart();
       navigate("/profile");
@@ -36,6 +38,7 @@ function Cart() {
       alert("Something went wrong during checkout.");
     }
   };
+  
 
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
