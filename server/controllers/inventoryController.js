@@ -24,7 +24,7 @@ exports.createItem = async (req, res) => {
         return res.status(400).json({message: 'All fields are required! Somethings missing.'});
     }
     try {
-        const existingItem = await inventoryModel.findItemByName(Item_name);
+        const existingItem = await inventoryModel.findItemByName(Item_name, Item_desc);
         if(existingItem){
             return res.status(400).json({message: 'This item already exists. Please add a new item.'});
         }
@@ -33,6 +33,21 @@ exports.createItem = async (req, res) => {
     } catch (error) {
         console.error('Error adding new item: ', error);
         res.status(500).json({message: 'An error occurred. Please try again.'});
+    }
+};
+
+exports.updateItem = async (req, res) => {
+    try {
+        const itemID = req.params.id;
+        const updatedData = req.body;
+        const selectedItem = {...updatedData, Item_ID: itemID};
+        const updatedItem = await inventoryModel.updateItem(selectedItem);
+        if(!updatedItem){
+            return res.status(404).json({message: 'Item not found or not updated.'});
+        }
+        res.status(200).json({message: 'Item updated successfully.', item: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 };
 
@@ -72,10 +87,14 @@ exports.deleteAllInventory = async (req, res) => {
     }
 };
 
-exports.deleteUnitById = async (req, res) => {
+exports.deleteAssignmentById = async (req, res) => {
     try {
-        await inventoryModel.deleteUnitById(req.params.id);
-        res.status(200).json({message: 'Unit deleted successfully.'});
+        const {Inventory_ID} = req.body;
+        if(!Inventory_ID){
+            return res.status(400).json({message: 'Invalid inventory ID provided.'});
+        }
+        await inventoryModel.deleteAssignmentById(Inventory_ID);
+        res.status(200).json({message: 'Item assignment deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
@@ -85,6 +104,19 @@ exports.getAllAvailableItems = async (req, res) => {
     try {
         const merch = await inventoryModel.getAllAvailableItems();
         res.status(200).json(merch);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.deleteItemById = async (req, res) => {
+    try {
+        const {Item_ID} = req.body;
+        if(!Item_ID){
+            return res.status(400).json({message: 'Invalid item id.'});
+        }
+        await inventoryModel.deleteItemById(Item_ID);
+        res.status(200).json({message: 'Item deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

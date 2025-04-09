@@ -1,11 +1,36 @@
 const db = require('../config/db.js');
 
-exports.createMaintenance = async (Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID) => {
+exports.createMaintenance = async (Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object, Maintenance_Object_ID) => {
     const [result] = await db.query(
-        'INSERT INTO maintenance (Maintenance_Date, Maint_cost, Maint_Type, Maint_Status, Maint_obj, Maint_obj_ID) VALUES (?, ?, ?, ?, ?, ?)',
-        [Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID]
+        'INSERT INTO maintenance (Maintenance_Date, Maint_cost, Maint_Type, Maint_obj, Maint_obj_ID) VALUES (?, ?, ?, ?, ?)',
+        [Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object, Maintenance_Object_ID]
     );
     return result.insertId;
+};
+
+exports.updateStatus = async (status) => {
+    const {MaintID, Maint_Status, Maint_obj, Maint_obj_ID} = status;
+    const [report] = await db.query(
+        'UPDATE maintenance SET Maint_Status = ? WHERE MaintID = ?', 
+        [Maint_Status, MaintID]);
+    if(Maint_Status === 'In Progress'){
+        if(Maint_obj === 'ride'){
+            await db.query('UPDATE rides SET Is_operate = 0 WHERE Ride_ID = ?', [Maint_obj_ID]);
+        } else if(Maint_obj === 'kiosk'){
+            await db.query('UPDATE kiosks SET Kiosk_operate = 0 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+        } else if(Maint_obj === 'stage'){
+            await db.query('UPDATE stages SET Is_operate = 0 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+        }
+    } else if(Maint_Status === 'Completed'){
+        if(Maint_obj === 'ride'){
+            await db.query('UPDATE rides SET Is_operate = 1 WHERE Ride_ID = ?', [Maint_obj_ID]);
+        } else if(Maint_obj === 'kiosk'){
+            await db.query('UPDATE kiosks SET Kiosk_operate = 1 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+        } else if(Maint_obj === 'stage'){
+            await db.query('UPDATE stages SET Is_operate = 1 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+        }
+    }
+    return report;
 };
 
 exports.getAllMaintenance = async () => {
@@ -36,6 +61,7 @@ exports.getMaintenanceInfo = async () => {
             m.Maint_Type, 
             m.Maint_Status,
             m.Maint_obj,
+            m.Maint_obj_ID,
             CASE 
                 WHEN m.Maint_obj = 'ride' THEN r.Ride_name 
                 WHEN m.Maint_obj = 'stage' THEN s.Stage_name 

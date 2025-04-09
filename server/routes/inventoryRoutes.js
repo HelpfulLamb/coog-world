@@ -7,6 +7,9 @@ const inventoryRouter = express.Router();
 inventoryRouter.post('/create-assignment', inventoryController.createAssignment);
 inventoryRouter.post('/create-item', inventoryController.createItem);
 
+// update existing items and assignments
+inventoryRouter.put('/items/:id', inventoryController.updateItem);
+
 // retrieve inventory (all or specific)
 inventoryRouter.get('/all', inventoryController.getAllInventory);
 inventoryRouter.get('/info', inventoryController.getInventoryInfo);
@@ -14,8 +17,9 @@ inventoryRouter.get('/merchandise', inventoryController.getAllAvailableItems);
 inventoryRouter.get('/items', inventoryController.getAllItems);
 
 // delete items (all or specific)
-inventoryRouter.delete('/', inventoryController.deleteAllInventory);
-inventoryRouter.delete('/:id', inventoryController.deleteUnitById);
+inventoryRouter.delete('/delete-all', inventoryController.deleteAllInventory);
+inventoryRouter.delete('/delete-selected', inventoryController.deleteAssignmentById);
+inventoryRouter.delete('/delete-selected-item', inventoryController.deleteItemById);
 
 module.exports = {
     inventoryRouter

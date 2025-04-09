@@ -2,8 +2,8 @@ const weatherController = require('../controllers/weatherController.js');
 const express = require('express');
 const weatherRouter = express.Router();
 
-// create new rides
-weatherRouter.post('/', weatherController.createWeather);
+// create new weather
+weatherRouter.post('/create-weather', weatherController.createWeather);
 
 // retrieve rides (all or specific)
 weatherRouter.get('/', weatherController.getAllWeather);

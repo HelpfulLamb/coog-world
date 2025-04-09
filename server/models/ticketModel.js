@@ -1,7 +1,10 @@
 const db = require('../config/db.js');
 
 exports.findTicketByName = async (ticket_type) => {
-    const [ticket] = await db.query('SELECT t.ticket_type FROM ticket_type as t WHERE t.ticket_type = ?', (ticket_type));
+    const [ticket] = await db.query(
+        'SELECT t.ticket_type FROM ticket_type AS t WHERE t.ticket_type = ?',
+        [ticket_type]
+    );
     return ticket[0];
 };
 
@@ -13,6 +16,14 @@ exports.createTicket = async (ticketData) => {
     );
 };
 
+exports.updateTicket = async (selectedTicket) => {
+    const {ticket_id, ticket_type, price} = selectedTicket;
+    const [ticket] = await db.query(
+        'UPDATE ticket_type SET ticket_type = ?, price = ? WHERE ticket_id = ?', 
+        [ticket_type, price, ticket_id]);
+    return ticket;
+};
+
 exports.getAllTickets = async () => {
     const [tickets] = await db.query('SELECT * FROM ticket_type');
     return tickets;
@@ -20,8 +31,7 @@ exports.getAllTickets = async () => {
 
 exports.getTicketInfo = async () => {
     const [info] = await db.query(
-        'SELECT ticket_id, ticket_type, price FROM ticket_type'
-    );
+        'SELECT ticket_id, ticket_type, price FROM ticket_type');
     return info;
 };
 
@@ -34,21 +44,17 @@ exports.deleteAllTickets = async () => {
     await db.query('DELETE FROM ticket_type');
 };
 
-exports.deleteTicketByNum = async (num) => {
-    await db.query('DELETE FROM ticket_type WHERE ticket_number = ?', [num]);
+exports.deleteTicketById = async (ticketid) => {
+    await db.query('DELETE FROM ticket_type WHERE ticket_id = ?', [ticketid]);
 };
 
-exports.getAllTickets = async () => {
-    const [tickets] = await db.query('SELECT * FROM ticket_type');
-    return tickets;
-  };
-  
-  exports.purchaseTicket = async (userId, ticketId, price, quantity) => {
+exports.purchaseTicket = async (userId, ticketId, price, quantity) => {
     const [result] = await db.query(
-      `INSERT INTO tickets_purchases 
-       (user_id, ticket_id, Tick_quantity_sold, Tick_purchase_price)
-       VALUES (?, ?, ?, ?)`,
-      [userId, ticketId, quantity, price]
+        `INSERT INTO tickets_purchases 
+        (user_id, ticket_id, Tick_quantity_sold, Tick_purchase_price)
+        VALUES (?, ?, ?, ?)`,
+        [userId, ticketId, quantity, price]
     );
     return { id: result.insertId };
-  };
+};
+

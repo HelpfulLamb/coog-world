@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import AddWeather from "../modals/AddWeather";
+import AddWeather from "../modals/AddWeather.jsx";
 
 function WeatherTable({weatherInformation, setIsModalOpen}){
     if(!weatherInformation || !Array.isArray(weatherInformation)){
@@ -18,6 +18,7 @@ function WeatherTable({weatherInformation, setIsModalOpen}){
                         <th>Water Levels</th>
                         <th>Special Alerts</th>
                         <th>Date Recorded</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,10 @@ function WeatherTable({weatherInformation, setIsModalOpen}){
                             <td>{weather.Wtr_level}</td>
                             <td>{weather.Special_alerts}</td>
                             <td>{formatDate(weather.Wtr_created)}</td>
+                            <td>
+                                <button className="action-btn edit-button">Edit</button>
+                                <button className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

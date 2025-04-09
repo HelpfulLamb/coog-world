@@ -1,7 +1,7 @@
 const db = require('../config/db.js');
 
-exports.findItemByName = async (name) => {
-    const [item] = await db.query('SELECT * FROM items WHERE Item_name = ?', [name]);
+exports.findItemByName = async (name, desc) => {
+    const [item] = await db.query('SELECT * FROM items WHERE Item_name = ? and Item_desc = ?', [name, desc]);
     return item[0];
 };
 
@@ -26,6 +26,14 @@ exports.createItem = async (itemData) => {
     );
 };
 
+exports.updateItem = async (selectedItem) => {
+    const {Item_ID, Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = selectedItem;
+    const [item] = await db.query(
+        'UPDATE items SET Item_type = ?, Item_name = ?, Item_desc = ?, Item_shop_price = ?, Item_supply_price = ? WHERE Item_ID = ?', 
+        [Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price, Item_ID]);
+    return item;
+};
+
 exports.getAllInventory = async () => {
     const [inventory] = await db.query('SELECT * FROM inventory');
     return inventory;
@@ -33,7 +41,7 @@ exports.getAllInventory = async () => {
 
 exports.getInventoryInfo = async () => {
     const [info] = await db.query(
-        'SELECT t.Item_ID, t.Item_name, t.Item_type, t.Item_shop_price, t.Item_supply_price, i.Item_quantity, k.Kiosk_name FROM inventory as i, items as t, kiosks as k WHERE i.Item_ID = t.Item_ID and i.Kiosk_ID = k.Kiosk_ID'
+        'SELECT i.Inventory_ID, t.Item_ID, t.Item_name, t.Item_type, t.Item_shop_price, t.Item_supply_price, i.Item_quantity, k.Kiosk_name FROM inventory as i, items as t, kiosks as k WHERE i.Item_ID = t.Item_ID and i.Kiosk_ID = k.Kiosk_ID'
     );
     return info;
 };
@@ -48,8 +56,8 @@ exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };
 
-exports.deleteUnitById = async (id) => {
-    await db.query('DELETE FROM inventory WHERE InventoryID = ?', [id]);
+exports.deleteAssignmentById = async (invid) => {
+    await db.query('DELETE FROM inventory WHERE Inventory_ID = ?', [invid]);
 };
 
 exports.getAllAvailableItems = async () => {
@@ -57,4 +65,8 @@ exports.getAllAvailableItems = async () => {
         'SELECT Item_name, Item_shop_price, Item_desc FROM items'
     );
     return merchandise;
+};
+
+exports.deleteItemById = async (itemid) => {
+    await db.query('DELETE FROM items WHERE Item_ID = ?', [itemid]);
 };

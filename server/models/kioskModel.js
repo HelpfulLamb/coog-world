@@ -52,6 +52,6 @@ exports.deleteAllKiosks = async () => {
     await db.query('DELETE FROM kiosks');
 };
 
-exports.deleteKioskById = async (id) => {
-    await db.query('DELETE FROM kiosks WHERE Kiosk_ID = ?', [id]);
+exports.deleteKioskById = async (kioskid) => {
+    await db.query('DELETE FROM kiosks WHERE Kiosk_ID = ?', [kioskid]);
 };

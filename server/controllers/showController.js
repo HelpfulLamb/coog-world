@@ -10,6 +10,21 @@ exports.createShow = async (req, res) => {
     }
 };
 
+exports.updateShow = async (req, res) => {
+    try {
+        const showID = req.params.id;
+        const updatedData = req.body;
+        const selectedShow = {...updatedData, Show_ID: showID};
+        const updatedShow = await showModel.updateShow(selectedShow);
+        if(!updatedShow){
+            return res.status(404).json({message: 'Show not found or not updated.'});
+        }
+        res.status(200).json({message: 'Show updated successfully.', show: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllShows = async (req, res) => {
     try {
         const shows = await showModel.getAllShows();
@@ -60,7 +75,11 @@ exports.deleteAllShows = async (req, res) => {
 
 exports.deleteShowById = async (req, res) => {
     try {
-        await showModel.deleteShowById(req.params.id);
+        const {Show_ID} = req.body;
+        if(!Show_ID){
+            res.status(400).json({message: 'Invalid show ID.'});
+        }
+        await showModel.deleteShowById(Show_ID);
         res.status(200).json({message: 'Show deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});

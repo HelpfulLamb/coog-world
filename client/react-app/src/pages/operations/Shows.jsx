@@ -1,8 +1,8 @@
-import AddShow from "../modals/AddShow";
+import AddShow, {UpdateShow} from "../modals/AddShow";
 import './Report.css';
 import { useState, useEffect } from "react";
 
-function ShowTable({showInformation, setIsModalOpen}){
+function ShowTable({showInformation, setIsModalOpen, onEditShow, onDeleteShow}){
     if(!showInformation || !Array.isArray(showInformation)){
         return <div>No show data is available.</div>
     }
@@ -32,6 +32,7 @@ function ShowTable({showInformation, setIsModalOpen}){
                         <th>Date Performed</th>
                         <th>Show Cost</th>
                         <th>Date Added</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,10 @@ function ShowTable({showInformation, setIsModalOpen}){
                             <td>{formatDate(show.Show_date)}</td>
                             <td>${Number(show.Show_cost).toLocaleString()}</td>
                             <td>{formatDate(show.Show_created)}</td>
+                            <td>
+                                <button onClick={() => onEditShow(show)} className="action-btn edit-button">Edit</button>
+                                <button onClick={() => onDeleteShow(show.Show_ID)} className="action-btn delete-button">Delete</button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -57,7 +62,11 @@ function Show(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [filteredShows, setFilteredShows] = useState([]);
+
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedShow, setSelectedShow] = useState(null);
 
     const [showNameFilter, setShowNameFilter] = useState('');
     const [stageNameFilter, setStageNameFilter] = useState('');
@@ -125,6 +134,36 @@ function Show(){
     const handleAddShow = (newShow) => {
         setShowInformation([...showInformation, newShow]);
     };
+    const handleEditShow = (show) => {
+        setSelectedShow(show);
+        setIsEditOpen(true);
+    };
+    const handleUpdateShow = (updatedShow) => {
+        setShowInformation(prev => prev.map(show => show.Show_ID === updatedShow.Show_ID ? updatedShow : show));
+    };
+    const handleDeleteShow = async (showID) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this show? This action cannot be undone.');
+        if(!confirmDelete) return;
+        try {
+            const response = await fetch('/api/shows/delete-selected', {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Show_ID: showID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert('Show deleted successfully!');
+                setShowInformation(prev => prev.filter(show => show.Show_ID !== showID));
+                setTimeout(() => {window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to delete show.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
+    };
     const resetFilters = () => {
         setShowNameFilter('');
         setStageNameFilter('');
@@ -164,7 +203,7 @@ function Show(){
                 </div>
                 <div className="filter-row">
                     <div className="filter-group">
-                        <label htmlFor="startDate">From Date:</label>
+                        <label htmlFor="startDate">Performance From Date:</label>
                         <input
                             type="date"
                             id="startDate"
@@ -173,7 +212,7 @@ function Show(){
                         />
                     </div>
                     <div className="filter-group">
-                        <label htmlFor="endDate">To Date:</label>
+                        <label htmlFor="endDate">Performance To Date:</label>
                         <input
                             type="date"
                             id="endDate"
@@ -212,8 +251,9 @@ function Show(){
                 </div>
             </div>
 
-            <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} />
+            <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} onEditShow={handleEditShow} onDeleteShow={handleDeleteShow} />
             <AddShow isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddShow={handleAddShow} />
+            <UpdateShow isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedShow(null);}} showToEdit={selectedShow} onUpdateShow={handleUpdateShow} />
         </>
     )
 }
