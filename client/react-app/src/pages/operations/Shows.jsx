@@ -255,7 +255,6 @@ function Show(){
             </div>
 
             <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} onEditShow={handleEditShow} onDeleteShow={handleDeleteShow} />
-            <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} onEditShow={handleEditShow} onDeleteShow={handleDeleteShow} />
             <AddShow isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddShow={handleAddShow} />
             <UpdateShow isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedShow(null);}} showToEdit={selectedShow} onUpdateShow={handleUpdateShow} />
         </>
