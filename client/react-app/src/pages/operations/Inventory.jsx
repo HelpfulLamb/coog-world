@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AssignItem, UpdateAssignment } from "../modals/AddItem";
+import { AssignItem } from "../modals/AddItem";
 
 function InventoryTable({inventoryInformation, setIsModalOpen, restockItem, onDeleteInventory}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
