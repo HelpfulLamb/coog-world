@@ -140,6 +140,18 @@ function AddShow({isOpen, onClose, onAddShow}){
             setMessage({error: 'Total Performers and Stage ID of the show MUST be a number.', success: ''});
             return;
         }
+        /*Check if date is before 2025*/
+        const showDate = new Date(newShow.Show_date);
+        if(showDate.getFullYear() < 2025){
+            setMessage({ error: 'Show date must be in 2025 or later.', success: '' });
+        return;
+        }
+        /*Check if date is before 2025*/
+        const showDate = new Date(newShow.Show_date);
+        if(showDate.getFullYear() < 2025){
+            setMessage({ error: 'Show date must be in 2025 or later.', success: '' });
+        return;
+        }
         try {
             const response = await fetch('/api/shows/create-show', {
                 method: 'POST',

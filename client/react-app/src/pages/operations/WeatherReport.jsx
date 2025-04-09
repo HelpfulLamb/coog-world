@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import AddWeather from "../modals/AddWeather";
+import AddWeather from "../modals/AddWeather.jsx";
 
 function WeatherTable({weatherInformation, setIsModalOpen}){
     if(!weatherInformation || !Array.isArray(weatherInformation)){
