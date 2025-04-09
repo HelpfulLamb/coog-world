@@ -48,6 +48,7 @@
     align-items: center;
     gap: 25px;
     flex-wrap: wrap;
+    margin-bottom: 1rem;
 }
 .merch-card {
     border: 1px solid #ccc;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import AssignItem from "../modals/AssignItem";
+import { AssignItem } from "../modals/AddItem";
 
-function InventoryTable({inventoryInformation, setIsModalOpen, onDeleteInventory}){
+function InventoryTable({inventoryInformation, setIsModalOpen, restockItem, onDeleteInventory}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
         return <div>No inventory data is available.</div>
     }
@@ -29,7 +29,7 @@ function InventoryTable({inventoryInformation, setIsModalOpen, onDeleteInventory
                             <td>${inventory.Item_shop_price}</td>
                             <td>{inventory.Kiosk_name}</td>
                             <td>
-                                <button className="action-btn edit-button">Edit</button>
+                                <button onClick={() => restockItem(inventory)} className="action-btn edit-button">Restock</button>
                                 <button onClick={() => onDeleteInventory(inventory.Inventory_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
@@ -45,6 +45,16 @@ function Inventory(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [filteredItems, setFilteredItems] = useState([]);
+    const [itemNameFilter, setItemNameFilter] = useState('');
+    const [itemTypeFilter, setItemTypeFilter] = useState('');
+    const [itemLocationFilter, setItemLocationFilter] = useState('');
+    const [quantityRangeFilter, setQuantityRangeFilter] = useState('');
+    const [sortOption, setSortOption] = useState('');
+
+    const [items, setItems] = useState([]);
+    const [kiosks, setKiosks] = useState([]);
 
     useEffect(() => {
         const fetchInventory = async () => {
@@ -63,6 +73,61 @@ function Inventory(){
         };
         fetchInventory();
     }, []);
+
+    useEffect(() => {
+        let filtered = [...inventoryInformation];
+        if(itemNameFilter){
+            filtered = filtered.filter(inv => inv.Item_name.toLowerCase().includes(itemNameFilter.toLowerCase()));
+        }
+        if(itemTypeFilter){
+            filtered = filtered.filter(inv => inv.Item_type.toLowerCase().includes(itemTypeFilter.toLowerCase()));
+        }
+        if(itemLocationFilter){
+            filtered = filtered.filter(inv => inv.Kiosk_name.toLowerCase().includes(itemLocationFilter.toLowerCase()));
+        }
+        if(quantityRangeFilter){
+            const [min, max] = quantityRangeFilter.split('-').map(Number);
+            filtered = filtered.filter(inv => {
+                const stock = Number(inv.Item_quantity);
+                return stock >= min && (isNaN(max) || stock <= max);
+            });
+        }
+        filtered.sort((a,b) => {
+            switch (sortOption) {
+                case 'iNameAsc':
+                    return a.Item_name.localeCompare(b.Item_name);
+                case 'iNameDesc':
+                    return b.Item_name.localeCompare(a.Item_name);
+                case 'kNameAsc':
+                    return a.Kiosk_name.localeCompare(b.Kiosk_name);
+                case 'kNameDesc':
+                    return b.Kiosk_name.localeCompare(a.Kiosk_name);
+                case 'quantAsc':
+                    return a.Item_quantity - b.Item_quantity;
+                case 'quantDesc':
+                    return b.Item_quantity - a.Item_quantity;            
+                default:
+                    return 0;
+            }
+        });
+        setFilteredItems(filtered);
+    }, [inventoryInformation, itemNameFilter, itemTypeFilter, itemLocationFilter, quantityRangeFilter, sortOption]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [itemRes, kioskRes] = await Promise.all([fetch('/api/inventory/items'), fetch('/api/kiosks')]);
+                const itemsData = await itemRes.json();
+                const kioskData = await kioskRes.json();
+                setItems(itemsData);
+                setKiosks(kioskData);
+            } catch (error) {
+                setMessage({ error: 'Failed to load items or kiosks.', success: '' });
+            }
+        }
+        fetchData();
+    }, []);
+
     const handleAssignItem = (newAssignment) => {
         setInventoryInformation([...inventoryInformation, newAssignment]);
     };
@@ -89,6 +154,13 @@ function Inventory(){
             alert('An error occurred. Please try again.');
         }
     };
+    const resetFilters = () => {
+        setItemNameFilter('');
+        setItemTypeFilter('');
+        setItemLocationFilter('');
+        setQuantityRangeFilter('');
+        setSortOption('');
+    };
     if(loading){
         return <div>Loading...</div>
     }
@@ -97,13 +169,67 @@ function Inventory(){
     }
     return(
         <>
+            <div className="filter-controls">
+                <h2>Filter Inventory</h2>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="Item_name">Item Name:</label>
+                        <select name="Item_name" id="Item_name" value={itemNameFilter} onChange={(e) => setItemNameFilter(e.target.value)}>
+                            <option value="">-- Select an Item --</option>
+                            {items.map(item => (
+                                <option key={item.Item_ID} value={item.Item_name}>{item.Item_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="Kiosk_name">Kiosk:</label>
+                        <select name="Kiosk_name" id="Kiosk_name" value={itemLocationFilter} onChange={(e) => setItemLocationFilter(e.target.value)}>
+                            <option value="">-- Select a Kiosk --</option>
+                            {kiosks.map(kiosk => (
+                                <option key={kiosk.Kiosk_ID} value={kiosk.Kiosk_name}>{kiosk.Kiosk_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="Item_type">Type:</label>
+                        <select id="Item_type" value={itemTypeFilter} onChange={(e) => setItemTypeFilter(e.target.value)}>
+                            <option value="">-- Product Type --</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Toy">Toy</option>
+                            <option value="Souvenirs">Souvenirs</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Food">Food</option>
+                            <option value="Drink">Drink</option>
+                            <option value="Collectible">Collectible</option>
+                            <option value="Prize">Prize</option>
+                            <option value="Seasonal">Seasonal</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="sort">Sort By:</label>
+                        <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                            <option value="">-- Sort Method --</option>
+                            <option value="iNameAsc">Item Name (A-Z)</option>
+                            <option value="iNameDesc">Item Name (Z-A)</option>
+                            <option value="kNameAsc">Kiosk Name (A-Z)</option>
+                            <option value="kNameDesc">Kiosk Name (Z-A)</option>
+                            <option value="quantAsc">Stock (Low to High)</option>
+                            <option value="quantDesc">Stock (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="filter-row">
+                    <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
+                </div>
+            </div>
+
             <div className="db-btn">
                 <h1>Inventory</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Assign Item</button>
                 </div>
             </div>
-            <InventoryTable inventoryInformation={inventoryInformation} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} />
+            <InventoryTable inventoryInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} />
             <AssignItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAssignItem={handleAssignItem} />
         </>
     )

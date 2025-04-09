@@ -24,7 +24,7 @@ exports.createItem = async (req, res) => {
         return res.status(400).json({message: 'All fields are required! Somethings missing.'});
     }
     try {
-        const existingItem = await inventoryModel.findItemByName(Item_name);
+        const existingItem = await inventoryModel.findItemByName(Item_name, Item_desc);
         if(existingItem){
             return res.status(400).json({message: 'This item already exists. Please add a new item.'});
         }
