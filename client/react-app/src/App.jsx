@@ -26,6 +26,7 @@ import ParkShows from './pages/View-Shows.jsx';
 // Employee Dashboard & Operations
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import AdminHome from './pages/operations/Home.jsx';
+import Revenue from './pages/operations/Revenue.jsx';
 import Employee from './pages/operations/Employees.jsx';
 import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
@@ -35,6 +36,7 @@ import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
+import Reports from './pages/operations/Reports.jsx';
 
 function App() {
   const location = useLocation();
@@ -64,6 +66,7 @@ function App() {
             {/* Employee Dashboard */}
             <Route path='/employee-dashboard' element={<Dashboard />}>
               <Route index element={<AdminHome />} />  {/* 👈 This line is what you need */}
+              <Route path='revenue-report' element={<Revenue />} />
               <Route path='employees' element={<Employee />} />
               <Route path='rides' element={<Ride />} />
               <Route path='shows' element={<Show />} />
@@ -73,6 +76,7 @@ function App() {
               <Route path='inventory-report' element={<Inventory />} />
               <Route path='maintenance-report' element={<Maintenance />} />
               <Route path='weather-report' element={<Weather />} />
+              <Route path='reports' element = {<Reports />}/>
             </Route>
 
             <Route path="*" element={<div>404 - Page Not Found</div>} />

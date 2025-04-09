@@ -1,7 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { GenerateReportButton, RevenueReport } from './Reports.jsx';
 
 const Home = () => {
+  const [revenue, setRevenue] = useState('Loading...');
+  const [ticketCount, setTicketCount] = useState('Loading...');
+  const [visitorCount, setVisitorCount] = useState('Loading...');
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    const fetchRevenue = async () => {
+      try {
+        const response = await axios.get('/api/reports/revenue-summary');
+        console.log("📊 Revenue Summary Response:", response.data);
+
+        // Format total revenue nicely
+        const formattedRevenue = `$${Number(response.data.totalRevenue).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+
+        setRevenue(formattedRevenue);
+        setTicketCount(response.data.totalTicketsSold ?? 'N/A');
+        setVisitorCount(response.data.totalVisitors ?? 'N/A');
+        setLastUpdated(new Date().toLocaleTimeString());
+      } catch (error) {
+        console.error("Error fetching revenue:", error);
+        setRevenue('Error loading data');
+        setTicketCount('Error');
+        setVisitorCount('Error');
+      }
+    };
+
+    fetchRevenue();
+  }, []);
+
   const cardStyle = {
     backgroundColor: 'white',
     borderRadius: '12px',
@@ -22,7 +56,9 @@ const Home = () => {
   const valueStyle = {
     color: '#c8102e',
     fontSize: '1.4rem',
-    marginTop: '0.5rem'
+    fontWeight: 'bold',
+    marginTop: '0.5rem',
+    textAlign: 'center'
   };
 
   const quickButtonStyle = {
@@ -48,15 +84,26 @@ const Home = () => {
       <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
         <div style={cardStyle}>
           💰 Total Revenue
-          <div style={valueStyle}>$12,750</div>
+          <div style={valueStyle}>{revenue}</div>
+          <Link
+            to="/employee-dashboard/revenue-report"
+            style={{ fontSize: '0.9rem', marginTop: '0.5rem', textDecoration: 'underline', color: '#444' }}
+          >
+            Click to view full report
+          </Link>
+          {lastUpdated && (
+            <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.3rem' }}>
+              Last updated at {lastUpdated}
+            </div>
+          )}
         </div>
         <div style={cardStyle}>
           🎟️ Tickets Sold Today
-          <div style={valueStyle}>1,204</div>
+          <div style={valueStyle}>{ticketCount}</div>
         </div>
         <div style={cardStyle}>
           📈 Daily Visitors
-          <div style={valueStyle}>3,458</div>
+          <div style={valueStyle}>{visitorCount}</div>
         </div>
       </div>
 
