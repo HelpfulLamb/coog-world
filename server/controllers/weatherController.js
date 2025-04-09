@@ -1,10 +1,11 @@
 const weatherModel = require('../models/weatherModel.js');
 
 exports.createWeather = async (req, res) => {
+    console.log('Received data:', req.body);
     try {
-        const {date_recorded, condition, rainout_num, rainout_date, precipitation, temperature, air_quality, uv_index, alerts} = req.body;
-        const weatherId = await weatherModel.createWeather(date_recorded, condition, rainout_num, rainout_date, precipitation, temperature, air_quality, uv_index, alerts);
-        res.status(201).json({id: weatherId, date_recorded, condition, rainout_num, rainout_date, precipitation, temperature, air_quality, uv_index, alerts});
+        const {Wtr_cond, Wtr_level, Special_alerts, Is_park_closed} = req.body;
+        const Wtr_ID = await weatherModel.createWeather({ Wtr_cond, Wtr_level, Special_alerts, Is_park_closed });
+        res.status(201).json({id: Wtr_ID, Wtr_cond, Wtr_level, Special_alerts, Is_park_closed});
     } catch (error) {
         res.status(500).json({message: error.message});
     }

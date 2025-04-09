@@ -5,7 +5,7 @@ const showRouter = express.Router();
 // create new shows
 showRouter.post('/create-show', showController.createShow);
 
-// update existing shows
+// update existing show
 showRouter.put('/:id', showController.updateShow);
 
 // retrieve shows (all or specific)

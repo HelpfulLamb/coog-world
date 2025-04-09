@@ -1,13 +1,13 @@
 const db = require('../config/db.js');
 
-exports.createWeather = async (date_recorded, condition, rainout_num, rainout_date, precipitation, temperature, air_quality, uv_index, alerts) => {
+exports.createWeather = async (userData) => {
+    const {Wtr_cond, Wtr_level, Special_alerts, Is_park_closed} = userData;
     const [result] = await db.query(
-        'INSERT INTO weather (Date_recorded, Wtr_cond, Num_rnout, Rnout_date, Precp_level, Wtr_temp, Air_qual, UV_ind, Special_alerts) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [date_recorded, condition, rainout_num, rainout_date, precipitation, temperature, air_quality, uv_index, alerts]
+        'INSERT INTO weather (Wtr_cond, Wtr_level, Special_alerts, Is_park_closed) VALUES (?, ?, ?, ?)',
+        [Wtr_cond, Wtr_level, Special_alerts, Is_park_closed]
     );
     return result.insertId;
 };
-
 exports.getAllWeather = async () => {
     const [weathers] = await db.query('SELECT * FROM weather');
     return weathers;

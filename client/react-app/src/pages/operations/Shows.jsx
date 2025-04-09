@@ -1,4 +1,5 @@
 import AddShow, {UpdateShow} from "../modals/AddShow";
+import AddShow, {UpdateShow} from "../modals/AddShow";
 import './Report.css';
 import { useState, useEffect } from "react";
 
@@ -62,6 +63,9 @@ function Show(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [selectedShow, setSelectedShow] = useState(null);
+
     const [filteredShows, setFilteredShows] = useState([]);
 
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -155,7 +159,7 @@ function Show(){
             if(response.ok){
                 alert('Show deleted successfully!');
                 setShowInformation(prev => prev.filter(show => show.Show_ID !== showID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                setTimeout(() => {window.location.href = window.location.href;});
             } else {
                 alert(data.message || 'Failed to delete show.');
             }
@@ -202,7 +206,7 @@ function Show(){
                 </div>
                 <div className="filter-row">
                     <div className="filter-group">
-                        <label htmlFor="startDate">From Date:</label>
+                        <label htmlFor="startDate">Performance From Date:</label>
                         <input
                             type="date"
                             id="startDate"
@@ -211,7 +215,7 @@ function Show(){
                         />
                     </div>
                     <div className="filter-group">
-                        <label htmlFor="endDate">To Date:</label>
+                        <label htmlFor="endDate">Performance To Date:</label>
                         <input
                             type="date"
                             id="endDate"
