@@ -106,12 +106,6 @@ export function UpdateItem({isOpen, onClose, itemToEdit, onUpdateItem}){
     );
 }
 
-export function UpdateAssignment({isOpen, onClose, assignmentToEdit, onUpdateAssignment}){
-    return(
-        <div></div>
-    );
-}
-
 export function AssignItem({isOpen, onClose, onAssignItem}){
     const [newAssignment, setNewAssignment] = useState({
         Kiosk_ID: '',
