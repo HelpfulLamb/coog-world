@@ -2,24 +2,39 @@ const maintenanceModel = require('../models/maintenanceModel.js');
 
 exports.createMaintenance = async (req, res) => {
     try {
-        const { Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID} = req.body;
+        const { Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object, Maintenance_Object_ID} = req.body;
 
         // Validate input fields to ensure no empty values are passed
-        if (!Maintenance_Date || !Maintenance_Cost || !Maintenance_Type || !Maintenance_Status || !Maintenance_Object || !Maintenance_Object_ID) {
+        if (!Maintenance_Date || !Maintenance_Cost || !Maintenance_Type || !Maintenance_Object || !Maintenance_Object_ID) {
             return res.status(400).json({ message: 'All fields are required. Server may be unavailable.' });
         }
 
-        const maintenanceId = await maintenanceModel.createMaintenance(Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object, Maintenance_Object_ID);
+        const maintenanceId = await maintenanceModel.createMaintenance(Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object, Maintenance_Object_ID);
 
         if (!maintenanceId) {
             return res.status(500).json({ message: 'Failed to create maintenance record.' });
         }
 
         res.status(201).json({
-            id: Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Status, Maintenance_Object
+            id: Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+exports.updateStatus = async (req, res) => {
+    try {
+        const maintID = req.params.id;
+        const updatedData = req.body;
+        const selectedMaint = {...updatedData, MaintID: maintID};
+        const updatedMaint = await maintenanceModel.updateStatus(selectedMaint);
+        if(!updatedMaint){
+            return res.status(404).json({message: 'Maintenance not found or not updated.'});
+        }
+        res.status(200).json({message: 'Status updated successfully.', maintenance: updatedData});
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 };
 

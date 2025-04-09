@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 
 export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
-    };
     const [formData, setFormData] = useState({
         Stage_ID: '',
         Show_name: '',
@@ -83,7 +79,8 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                                 autoComplete="off"
                                 value={formData[field]}
                                 onChange={handleInputChange}
-                                placeholder={getPlaceholders(field)} />
+                                placeholder={getPlaceholders(field)}
+                                min={field === 'Show_date' ? new Date().toISOString().split('T')[0] : undefined} />
                             </div>
                         ))}
                         <div className="modal-input-group">
@@ -139,18 +136,6 @@ function AddShow({isOpen, onClose, onAddShow}){
         if(isNaN(newShow.Perf_num) || isNaN(newShow.Stage_ID)){
             setMessage({error: 'Total Performers and Stage ID of the show MUST be a number.', success: ''});
             return;
-        }
-        /*Check if date is before 2025*/
-        const showDate = new Date(newShow.Show_date);
-        if(showDate.getFullYear() < 2025){
-            setMessage({ error: 'Show date must be in 2025 or later.', success: '' });
-        return;
-        }
-        /*Check if date is before 2025*/
-        const showDate = new Date(newShow.Show_date);
-        if(showDate.getFullYear() < 2025){
-            setMessage({ error: 'Show date must be in 2025 or later.', success: '' });
-        return;
         }
         try {
             const response = await fetch('/api/shows/create-show', {
@@ -213,7 +198,8 @@ function AddShow({isOpen, onClose, onAddShow}){
                             autoComplete="off" 
                             value={newShow[field]}
                             onChange={handleInputChange}
-                            placeholder={getPlaceholders(field)} />
+                            placeholder={getPlaceholders(field)}
+                            min={field === 'Show_date' ? new Date().toISOString().split('T')[0] : undefined} />
                         </div>
                     ))}
                     <div className="modal-input-group">

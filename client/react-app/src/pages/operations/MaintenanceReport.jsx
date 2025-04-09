@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AddMaintenance from "../modals/AddMaintenance.jsx";
 
-function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
+function MaintenanceTable({maintenanceInformation, setIsModalOpen, onStatusChange}){
     
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -31,9 +31,13 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen}){
                             <td>{maintenance.Maint_obj_name}</td>
                             <td>{maintenance.Maint_Status}</td>
                             <td>
-                                <button className="action-btn edit-button">Edit</button>
-                                <button className="action-btn delete-button">Delete</button>
-                            </td>
+                                {maintenance.Maint_Status !== 'Completed' && (
+                                    <>
+                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'In Progress', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn edit-button">In Progess</button>
+                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'Completed', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn delete-button">Complete</button>
+                                    </>
+                                )}
+                             </td>
                         </tr>
                     ))}
                 </tbody>
@@ -65,13 +69,31 @@ function Maintenance(){
         };
         fetchMaintenance();
     }, []);
-
     const handleAddMaintenance = (newMaintenance) => {
         setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
     };
-
-    const handleAddBreakdown = (newBreakdown) => {
-        setMaintenanceInformation([...maintenanceInformation, newBreakdown]);
+    const handleStatusUpdate = async (MaintID, Maint_Status, Maint_obj, Maint_obj_ID) => {
+        const confirmStatus = window.confirm(`Mark this status as '${Maint_Status}'?`);
+        if(!confirmStatus) return;
+        try {
+            const response = await fetch(`/api/maintenance/status/${MaintID}`,{
+                method: 'PUT',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({Maint_Status, Maint_obj, Maint_obj_ID}),
+            });
+            const data = await response.json();
+            if(response.ok){
+                alert(`Maintenance status has been marked as '${Maint_Status}'!`);
+                setMaintenanceInformation(prev => prev.filter(maint => maint.MaintID !== MaintID));
+                setTimeout(() => {window.location.href = window.location.href;});
+            } else {
+                alert(data.message || 'Failed to update maintenance status.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please try again.');
+        }
     };
     if(loading){
         return <div>Loading...</div>
@@ -87,7 +109,7 @@ function Maintenance(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
                 </div>
             </div>
-            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen}/>
+            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen} onStatusChange={handleStatusUpdate} />
             <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
         </>
     )

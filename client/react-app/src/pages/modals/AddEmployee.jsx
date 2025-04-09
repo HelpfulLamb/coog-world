@@ -223,7 +223,7 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                                 value={newEmployee[field]}
                                 onChange={handleInputChange}
                                 placeholder={getPlaceholders(field)}
-                                />
+                                min={field === 'Start_date' ? new Date().toISOString().split('T')[0] : undefined} />
                             </div>
                         ))}
                         <div className="modal-input-group">

@@ -1,5 +1,4 @@
 import AddShow, {UpdateShow} from "../modals/AddShow";
-import AddShow, {UpdateShow} from "../modals/AddShow";
 import './Report.css';
 import { useState, useEffect } from "react";
 
@@ -63,8 +62,6 @@ function Show(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [selectedShow, setSelectedShow] = useState(null);
 
     const [filteredShows, setFilteredShows] = useState([]);
 

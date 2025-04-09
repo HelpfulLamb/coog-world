@@ -7,15 +7,12 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
             Maintenance_Date: '',
             Maintenance_Cost: '',
             Maintenance_Type: '',
-            Maintenance_Status: '',
             Maintenance_Object: '',
             Maintenance_Object_ID: '',
         });
-
         const [message, setMessage] = useState({error: '', success: ''});
         const [objectsList, setObjectsList] = useState([]);
         const [selectedObjectType, setSelectedObjectType] = useState('');
-
         useEffect(() => {
             const fetchObjects = async (objectType) => {
                 try {
@@ -46,17 +43,14 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                     setObjectsList([]);
                 }
             };
-        
             if (selectedObjectType) {
                 fetchObjects(selectedObjectType);
             }
         }, [selectedObjectType]);
-
         const handleInputChange = (e) => {
             const {name, value} = e.target;
             setNewMaintenance({...newMaintenance, [name]: value});
         };
-
         const handleObjectChange = (selectedOption) => {
             setNewMaintenance({
                 ...newMaintenance,
@@ -64,12 +58,10 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                 Maintenance_Object_ID: selectedOption.value
             });
         };
-
         const handleSubmit = async (e) => {
             e.preventDefault();
-
             if(!newMaintenance.Maintenance_Date || !newMaintenance.Maintenance_Cost || !newMaintenance.Maintenance_Type || 
-                !newMaintenance.Maintenance_Status || !newMaintenance.Maintenance_Object || !newMaintenance.Maintenance_Object_ID){
+                 !newMaintenance.Maintenance_Object || !newMaintenance.Maintenance_Object_ID){
                 setMessage({error: 'All fields are required.', success: ''});
                 return;
             }
@@ -77,7 +69,6 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                 setMessage({error: 'Cost must be a valid number.', success:''});
                 return;
             }
-            
             try {
                 const response = await fetch('/api/maintenance/create-maintenance', {
                     method: 'POST',
@@ -94,7 +85,6 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                         Maintenance_Date: '',
                         Maintenance_Cost: '',
                         Maintenance_Type: '',
-                        Maintenance_Status: '',
                         Maintenance_Object: '',
                         Maintenance_Object_ID: '',
                     });
@@ -107,9 +97,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                 setMessage({error: 'An error occurred. Please try again.', success: ''});
             }
         };
-
         if(!isOpen) return null;
-
         const getPlaceholders = (field) => {
             const placeholders = {
                 'Maintenance_Date': 'e.g. 2025-04-04',
@@ -117,7 +105,6 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
             };
             return placeholders[field] || '';
         };
-
         return(
             <div className="modal-overlay">
                 <div className="modal">
@@ -138,7 +125,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                                     value={newMaintenance[field]}
                                     onChange={handleInputChange}
                                     placeholder={getPlaceholders(field)}
-                                    />
+                                    min={field === 'Maintenance_Date' ? new Date().toISOString().split('T')[0] : undefined} />
                                 </div>
                             ))}
                             <div className="modal-input-group">
@@ -147,15 +134,6 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                                     <option value="">-- Select a Type --</option>
                                     <option value="1">Routine</option>
                                     <option value="2">Emergency</option>
-                                </select>
-                            </div>
-                            <div className="modal-input-group">
-                                <label htmlFor="Maintenance_Status">Status</label>
-                                <select name="Maintenance_Status" id="Maintenance_Status" required value={newMaintenance.Maintenance_Status} onChange={handleInputChange}>
-                                    <option value="">-- Select an Status --</option>
-                                    <option value="1">In Progress</option>
-                                    <option value="2">Completed</option>
-                                    <option value="3">Pending</option>
                                 </select>
                             </div>
                             <div className="modal-input-group">
