@@ -1,7 +1,7 @@
 const db = require('../config/db.js');
 
-exports.findItemByName = async (name) => {
-    const [item] = await db.query('SELECT * FROM items WHERE Item_name = ?', [name]);
+exports.findItemByName = async (name, desc) => {
+    const [item] = await db.query('SELECT * FROM items WHERE Item_name = ? and Item_desc = ?', [name, desc]);
     return item[0];
 };
 
