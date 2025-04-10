@@ -63,21 +63,20 @@ function Ride(){
     const [rideStatusFilter, setRideStatusFilter] = useState('');
     const [sortOption, setSortOption] = useState('');
 
+    const fetchRides = async () => {
+        try {
+            const response = await fetch('/api/rides/info');
+            if(!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            const data = await response.json();
+            setRideInformation(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchRides = async () => {
-            try {
-                const response = await fetch('/api/rides/info');
-                if(!response.ok){
-                    throw new Error(`HTTP Error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                setRideInformation(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchRides();
     }, []);
 
@@ -147,7 +146,7 @@ function Ride(){
             if(response.ok){
                 alert('Ride deleted Successfully');
                 setRideInformation(prev => prev.filter(ride => ride.Ride_ID !== rideID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                fetchRides();
             } else {
                 alert(data.message || 'Failed to delete ride.');
             }

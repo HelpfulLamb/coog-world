@@ -6,7 +6,7 @@ function MerchCard({title, price, description}){
     return(
         <>
             <div className='merch-card'>
-                <img src={shirtImage} alt="shirt image" draggable='false' />
+                <img src={shirtImage} alt="merchandise image" draggable='false' />
                 <h3>{title}</h3>
                 <p>${price}</p>
                 <p>{description}</p>
