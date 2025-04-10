@@ -2,6 +2,7 @@ const inventoryController = require('../controllers/inventoryController.js');
 const express = require('express');
 const inventoryRouter = express.Router();
 
+
 /*Inventory Structure*/
 // create new items
 inventoryRouter.post('/create-assignment', inventoryController.createAssignment);
@@ -20,6 +21,8 @@ inventoryRouter.get('/items', inventoryController.getAllItems);
 inventoryRouter.delete('/delete-all', inventoryController.deleteAllInventory);
 inventoryRouter.delete('/delete-selected', inventoryController.deleteAssignmentById);
 inventoryRouter.delete('/delete-selected-item', inventoryController.deleteItemById);
+
+inventoryRouter.post('/purchase', inventoryController.purchaseMerch);
 
 module.exports = {
     inventoryRouter
