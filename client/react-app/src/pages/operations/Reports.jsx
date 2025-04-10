@@ -96,5 +96,18 @@ const RevenueReport = () => {
     </div>
   );
 };
-
+const Reports = () => {
+  return(
+    <div style={{padding: '2rem'}}>
+      <h1>📈 Reports Dashboard</h1>
+      <section style={{marginTop: '2rem'}}>
+        <GenerateReportButton />
+      </section>
+      <section style={{marginTop: '2rem'}}>
+        <RevenueReport />
+      </section>
+    </div>
+  );
+}
 export { GenerateReportButton, RevenueReport };
+export default Reports;
