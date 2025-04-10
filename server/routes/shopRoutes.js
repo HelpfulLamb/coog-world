@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const shopController = require('../controllers/shopController');
 
-router.get('/:userId', shopController.getUserShopPurchases);
+// ✅ Use the correct controller function from inventoryController
+const { getVisitorPurchases } = require('../controllers/inventoryController');
+
+router.get('/:visitorId', getVisitorPurchases);  // <- visitorId is the param you use in Profile.jsx
 
 module.exports = router;

@@ -62,6 +62,8 @@ function Profile() {
     
             const shopRes = await fetch(`/api/shop-purchases/${userId}`);
             const shopData = await shopRes.json();
+            console.log("🧾 Shop Purchases:", shopData.purchases);
+            console.log("🧾 Full Shop Purchases Payload:", shopData.purchases);
             setPurchases(shopData.purchases);
     
             const rideRes = await fetch(`/api/rides/history/${userId}`);
@@ -202,12 +204,19 @@ function Profile() {
                 </button>
                 {showPurchases && (
                     <ul className="profile-list">
-                        {purchases.map((purchase, index) => (
-                            <li key={index}>
-                                Item: {purchase.item} | Price: ${purchase.price} | Date: {new Date(purchase.date).toLocaleDateString()}
-                            </li>
-                        ))}
-                    </ul>
+                    {purchases.map((purchase, index) => {
+  console.log("Purchase object", purchase); // ⬅️ Add this
+  return (
+    <li key={index}>
+  Item: <strong>{purchase.item}</strong> | 
+  Quantity: <strong>{purchase.quantity}</strong> |
+  Price: ${parseFloat(purchase.total_price).toFixed(2)} |
+  Date: {new Date(purchase.date).toLocaleDateString()}
+</li>
+  );
+})}
+
+                  </ul>                  
                 )}
             </div>
             <div className="ride-history">
