@@ -1,4 +1,5 @@
 const inventoryModel = require('../models/inventoryModel.js');
+const db = require('../config/db');
 
 exports.createAssignment = async (req, res) => {
     const {Kiosk_ID, Item_ID, Item_quantity, Restock_level} = req.body;
@@ -119,5 +120,30 @@ exports.deleteItemById = async (req, res) => {
         res.status(200).json({message: 'Item deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
+    }
+};
+exports.purchaseMerch = async (req, res) => {
+    const { user_id, item_id, price, quantity, total_amount, product_type } = req.body;
+
+    try {
+        // 1. Create new transaction
+        const [transaction] = await db.query(
+            `INSERT INTO transactions (Visitor_ID, total_amount) VALUES (?, ?)`,
+            [user_id, total_amount]
+        );
+        const transactionId = transaction.insertId;
+
+        // 2. Log product purchase
+        await db.query(`
+            INSERT INTO product_purchases 
+            (Transaction_ID, product_id, product_type, purchase_price, quantity_sold, quantity, total_amount) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [transactionId, item_id, product_type, price, quantity, quantity, total_amount]
+        );
+
+        res.status(200).json({ message: 'Merchandise purchase successful!' });
+    } catch (err) {
+        console.error('Error processing merch purchase:', err);
+        res.status(500).json({ message: 'Error processing purchase.' });
     }
 };

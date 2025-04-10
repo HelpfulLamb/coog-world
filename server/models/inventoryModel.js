@@ -62,10 +62,11 @@ exports.deleteAssignmentById = async (invid) => {
 
 exports.getAllAvailableItems = async () => {
     const [merchandise] = await db.query(
-        'SELECT Item_name, Item_shop_price, Item_desc FROM items'
+        'SELECT Item_ID, Item_name, Item_shop_price, Item_desc FROM items'
     );
     return merchandise;
 };
+
 
 exports.deleteItemById = async (itemid) => {
     await db.query('DELETE FROM items WHERE Item_ID = ?', [itemid]);

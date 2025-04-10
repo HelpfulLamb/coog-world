@@ -15,7 +15,7 @@ exports.getUserShopPurchases = async (req, res) => {
             JOIN items i ON inv.Item_ID = i.Item_ID
             WHERE pp.Transaction_ID IN (
                 SELECT Transaction_ID FROM transactions WHERE Visitor_ID = ?
-            ) AND pp.product_type = 'Shop'
+            ) AND pp.product_type = 'Merchandise'
             ORDER BY pp.purchase_created DESC
         `, [userId]);        
 

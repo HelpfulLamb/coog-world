@@ -1,0 +1,28 @@
+
+.cart-container {
+    padding: 2rem;
+  }
+  
+  .cart-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .cart-list li {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  .fancy {
+    background-color: #c8102e;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .fancy:hover {
+    background-color: #a10c22;
+  }  
