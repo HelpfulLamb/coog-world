@@ -28,7 +28,7 @@ exports.loginUser = async (req, res) => {
             return res.status(404).json({message: 'User not found.'});
         }
         if(user.Password !== password){
-            return res.status(401).json({message: 'Invalid Password.'});
+            return res.status(401).json({message: 'Incorrect Password.'});
         }
         res.status(200).json({
             id: user.Visitor_ID,
