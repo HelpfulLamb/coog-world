@@ -4,7 +4,7 @@ import shirtImage from '../../images/shirt1.webp';
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
-function MerchCard({ title, price, description, itemId }) {
+function MerchCard({ title, price, description, itemId, quantity }) {
     const { addToCart } = useCart();
     const { user } = useAuth();
 
@@ -36,7 +36,22 @@ function MerchCard({ title, price, description, itemId }) {
             <h3>{title}</h3>
             <p>${price}</p>
             <p>{description}</p>
-            <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
+            {quantity === 0 ? (
+                <p style={{ color: 'red', fontWeight: 'bold' }}>Out of Stock</p>
+            ) : (
+                <button
+  className='fancy'
+  onClick={handleAddToCart}
+  disabled={quantity === 0}
+  style={{
+    backgroundColor: quantity === 0 ? '#ccc' : '',
+    cursor: quantity === 0 ? 'not-allowed' : 'pointer'
+  }}
+>
+  {quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+</button>
+
+            )}
         </div>
     );
 }
@@ -74,12 +89,14 @@ function Merchandise() {
             <div className='merch-container'>
                 {merchOptions.map((merch, index) => (
                     <MerchCard
-                    key={index}
+                    key={merch.Inventory_ID}
                     title={merch.Item_name}
                     price={merch.Item_shop_price}
                     description={merch.Item_desc}
-                    itemId={merch.Item_ID}  
-                  />
+                    itemId={merch.Inventory_ID}
+                    quantity={merch.Item_quantity}
+                  />                  
+                  
                 ))}
             </div>
         </>

@@ -8,36 +8,35 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     const { isAuthenticated, user } = useAuth();
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
+    const [visitDate, setVisitDate] = useState('');
     const { addToCart } = useCart();
     
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
-    
+
     const handleAddToCart = () => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
-      
-        console.log("👤 User:", user);
-        console.log("🔑 User ID:", userId);
-      
         if (!userId) {
-          alert('Please log in to purchase tickets.');
-          navigate('/login');
-          return;
+            alert('Please log in to purchase tickets.');
+            navigate('/login');
+            return;
         }
-      
+
+        if (!visitDate) {
+            alert('Please select a visit date.');
+            return;
+        }
+
         addToCart({
-          ticketId,
-          title,
-          price,
-          quantity: parseInt(quantity),
+            type: 'ticket',
+            ticketId,
+            title,
+            price,
+            quantity: parseInt(quantity),
+            visitDate, // ✅ required for checkout + analytics
         });
-      
+
         alert('✅ Ticket added to cart!');
-      };
-      
-    
-        
+    };
 
     return (
         <div className='price-card'>
@@ -48,7 +47,6 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                 <li>{description2}</li>
             </ul>
 
-            {/* Quantity Selector */}
             <div style={{ marginBottom: '10px' }}>
                 <label>Quantity: </label>
                 <select
@@ -62,10 +60,19 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                 </select>
             </div>
 
-            <div>
-                <strong>Total: ${(price * quantity).toFixed(2)}</strong>
+            {/* ✅ Visit Date Input */}
+            <div style={{ marginBottom: '10px' }}>
+                <label>Visit Date: </label>
+                <input
+                    type="date"
+                    value={visitDate}
+                    onChange={(e) => setVisitDate(e.target.value)}
+                    style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
+                    required
+                />
             </div>
 
+            <div><strong>Total: ${(price * quantity).toFixed(2)}</strong></div>
             <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );

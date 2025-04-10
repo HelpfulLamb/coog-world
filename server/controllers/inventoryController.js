@@ -140,10 +140,19 @@ exports.purchaseMerch = async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [transactionId, item_id, product_type, price, quantity, quantity, total_amount]
         );
+        // Deduct quantity from inventory
+await db.query(
+  `UPDATE inventory
+   SET Item_quantity = Item_quantity - ?
+   WHERE Inventory_ID = ?`,
+  [quantity, item_id]
+);
+
 
         res.status(200).json({ message: 'Merchandise purchase successful!' });
     } catch (err) {
         console.error('Error processing merch purchase:', err);
         res.status(500).json({ message: 'Error processing purchase.' });
     }
+    
 };
