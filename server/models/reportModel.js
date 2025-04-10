@@ -35,22 +35,25 @@ exports.getRainoutsPerMonth = async () => {
 };*/
 
 exports.getRevenueSummary = async () => {
-  const query = `
-    SELECT 
-      SUM(CASE WHEN product_type = 'Ticket' THEN total_amount ELSE 0 END) AS ticketRevenue,
-      SUM(CASE WHEN product_type = 'Merchandise' THEN total_amount ELSE 0 END) AS merchRevenue,
-      SUM(total_amount) AS totalRevenue
-    FROM product_purchases;
-  `;
-
-  try {
-    const [results] = await db.query(query);
-    if (!results || results.length === 0) {
-      throw new Error('No revenue data found');
+    const query = `
+        SELECT 
+        SUM(CASE WHEN product_type = 'Ticket' THEN total_amount ELSE 0 END) AS ticketRevenue,
+        SUM(CASE WHEN product_type = 'Merchandise' THEN total_amount ELSE 0 END) AS merchRevenue,
+        SUM(total_amount) AS totalRevenue
+        FROM product_purchases;
+    `;
+    try {
+        const [results] = await db.query(query);
+        if (!results || results.length === 0) {
+        throw new Error('No revenue data found');
+        }
+        return results;
+    } catch {
+        throw new Error('Error fetching revenue summary: ' + error.message);
     }
-  };
+};
 
-  exports.getTopRidePerMonth = async () => {
+exports.getTopRidePerMonth = async () => {
     const query = `
       SELECT
         YEAR(ride_date) AS year,
@@ -61,7 +64,6 @@ exports.getRevenueSummary = async () => {
       GROUP BY YEAR(ride_date), MONTH(ride_date)
       ORDER BY year, month;
     `;
-    
     try {
       console.log("Executing query:", query); 
       const [rainouts] = await db.query(query);
@@ -73,4 +75,4 @@ exports.getRevenueSummary = async () => {
       console.error("Database query error:", error); 
       throw new Error('Error fetching monthly ride data: ' + error.message);
     }
-  };  
+};  
