@@ -23,6 +23,7 @@ inventoryRouter.delete('/delete-selected', inventoryController.deleteAssignmentB
 inventoryRouter.delete('/delete-selected-item', inventoryController.deleteItemById);
 
 inventoryRouter.post('/purchase', inventoryController.purchaseMerch);
+inventoryRouter.get('/shop-purchases/:visitorId', inventoryController.getVisitorPurchases);
 
 module.exports = {
     inventoryRouter

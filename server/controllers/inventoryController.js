@@ -156,3 +156,29 @@ await db.query(
     }
     
 };
+
+exports.getVisitorPurchases = async (req, res) => {
+    const visitorId = req.params.visitorId;
+  
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+          it.Item_name AS item,
+          pp.quantity AS quantity,                  -- ✅ Correct field name
+          pp.purchase_price AS unit_price,         -- Optional rename
+          pp.total_amount AS total_price,          -- ✅ More useful to show
+          pp.purchase_created AS date
+        FROM product_purchases pp
+        JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+        JOIN inventory i ON pp.product_id = i.Inventory_ID
+        JOIN items it ON i.Item_ID = it.Item_ID
+        WHERE t.Visitor_ID = ?
+        ORDER BY pp.purchase_created DESC
+      `, [visitorId]);
+  
+      res.status(200).json({ purchases: rows });
+    } catch (err) {
+      console.error("Error fetching shop purchases:", err);
+      res.status(500).json({ message: "Failed to fetch shop purchases" });
+    }
+  };  
