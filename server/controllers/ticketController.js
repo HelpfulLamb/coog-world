@@ -115,11 +115,11 @@ exports.purchaseTicket = async (req, res) => {
       const transactionId = transactionResult.insertId;
 
       await db.query(
-          `INSERT INTO product_purchases 
-           (Transaction_ID, product_id, product_type, quantity_sold, purchase_price, total_amount) 
-           VALUES (?, ?, 'Ticket', ?, ?, ?)`,
-          [transactionId, ticket_id, quantity, price, total]
-      );
+        `INSERT INTO product_purchases 
+         (Transaction_ID, product_id, product_type, quantity_sold, purchase_price, total_amount, visit_date) 
+         VALUES (?, ?, 'Ticket', ?, ?, ?, ?)`,
+        [transactionId, ticket_id, quantity, price, total, req.body.visit_date]
+    );    
 
       await db.query(
           `UPDATE transactions 
@@ -144,9 +144,9 @@ exports.getUserTicketPurchases = async (req, res) => {
   try {
       const [purchases] = await db.query(`
           SELECT 
-              tt.ticket_type AS type,
-              pp.quantity_sold AS quantity,
-              pp.purchase_created AS date
+  tt.ticket_type AS type,
+  pp.quantity_sold AS quantity,
+  pp.visit_date AS date
           FROM product_purchases pp
           JOIN ticket_type tt ON pp.product_id = tt.ticket_id
           JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
