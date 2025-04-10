@@ -123,13 +123,18 @@ exports.deleteItemById = async (req, res) => {
     }
 };
 exports.purchaseMerch = async (req, res) => {
-    const { user_id, item_id, price, quantity, total_amount, product_type } = req.body;
+    const { user_id, item_id, price, quantity, total_amount, product_type, payment_method, card_info } = req.body;
 
     try {
+        // ⛔ Prevent "pay at store" for merchandise
+        if (product_type === 'Merchandise' && payment_method === 'pay_at_store') {
+            return res.status(400).json({ message: 'Merchandise cannot be paid at store.' });
+        }
+
         // 1. Create new transaction
         const [transaction] = await db.query(
-            `INSERT INTO transactions (Visitor_ID, total_amount) VALUES (?, ?)`,
-            [user_id, total_amount]
+            `INSERT INTO transactions (Visitor_ID, total_amount, payment_method) VALUES (?, ?, ?)`,
+            [user_id, total_amount, payment_method]
         );
         const transactionId = transaction.insertId;
 
@@ -140,21 +145,20 @@ exports.purchaseMerch = async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [transactionId, item_id, product_type, price, quantity, quantity, total_amount]
         );
-        // Deduct quantity from inventory
-await db.query(
-  `UPDATE inventory
-   SET Item_quantity = Item_quantity - ?
-   WHERE Inventory_ID = ?`,
-  [quantity, item_id]
-);
 
+        // 3. Deduct quantity from inventory
+        await db.query(
+            `UPDATE inventory
+             SET Item_quantity = Item_quantity - ?
+             WHERE Inventory_ID = ?`,
+            [quantity, item_id]
+        );
 
         res.status(200).json({ message: 'Merchandise purchase successful!' });
     } catch (err) {
         console.error('Error processing merch purchase:', err);
         res.status(500).json({ message: 'Error processing purchase.' });
     }
-    
 };
 
 exports.getVisitorPurchases = async (req, res) => {

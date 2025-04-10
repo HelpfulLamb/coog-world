@@ -1,11 +1,134 @@
 .cart-container {
+    max-width: 800px;
+    margin: 2rem auto;
     padding: 2rem;
-}
-.cart-list {
-    list-style-type: none;
-    padding: 0;
-}
-.cart-list li {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-}
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #c4242d;
+  }
+  
+  .empty-cart {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+  }
+  
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .cart-item {
+    background-color: #fefefe;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+  
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .cart-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .cart-visit-date {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+    color: #555;
+  }
+  
+  .cart-details {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .quantity-select {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+  
+  .remove-btn {
+    background: transparent;
+    border: none;
+    color: red;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  
+  .cart-footer {
+    margin-top: 2rem;
+    text-align: right;
+  }
+  
+  .cart-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem; /* 👈 This adds space between the buttons */
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  
+  
+  .checkout-btn,
+  .clear-btn {
+    padding: 0.6rem 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .checkout-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .clear-btn {
+    background-color: #f44336;
+    color: white;
+  }  
+  .payment-section {
+    margin-top: 2rem;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .payment-section label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .payment-section select,
+  .payment-section input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .card-form {
+    margin-top: 1rem;
+  }
+  
