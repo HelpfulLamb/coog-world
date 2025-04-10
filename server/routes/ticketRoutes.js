@@ -1,4 +1,3 @@
-
 const ticketController = require('../controllers/ticketController.js');
 const express = require('express');
 const ticketRouter = express.Router();

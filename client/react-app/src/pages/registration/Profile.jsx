@@ -19,7 +19,8 @@ function Profile() {
     const [user, setUser] = useState(null);
     const [formData, setFormData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
-    const [tickets, setTickets] = useState([]);
+    const [upcomingTickets, setUpcomingTickets] = useState([]);
+    const [pastTickets, setPastTickets] = useState([]);
     const [purchases, setPurchases] = useState([]);
     const [showTickets, setShowTickets] = useState(false);
     const [showPurchases, setShowPurchases] = useState(false);
@@ -42,19 +43,35 @@ function Profile() {
         try {
             const ticketRes = await fetch(`/api/ticket-type/purchases/${userId}`);
             const ticketData = await ticketRes.json();
-            setTickets(ticketData.tickets);
-
+            
+            const today = new Date().setHours(0, 0, 0, 0);
+            const upcoming = [];
+            const past = [];
+    
+            ticketData.tickets.forEach(ticket => {
+                const visitDate = new Date(ticket.date).setHours(0, 0, 0, 0);
+                if (visitDate >= today) {
+                    upcoming.push(ticket);
+                } else {
+                    past.push(ticket);
+                }
+            });
+    
+            setUpcomingTickets(upcoming);
+            setPastTickets(past);
+    
             const shopRes = await fetch(`/api/shop-purchases/${userId}`);
             const shopData = await shopRes.json();
             setPurchases(shopData.purchases);
+    
             const rideRes = await fetch(`/api/rides/history/${userId}`);
             const rideData = await rideRes.json();
             setRides(rideData.rides);
-
+    
         } catch (err) {
             console.error('Error fetching user-related data:', err);
         }
-    };
+    };    
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -140,19 +157,44 @@ function Profile() {
             </div>
 
             <div className="tickets">
-                <button className="toggle-section" onClick={() => setShowTickets(!showTickets)}>
-                    {showTickets ? 'Hide Tickets' : 'Your Tickets'}
-                </button>
-                {showTickets && (
-                    <ul className="profile-list">
-                        {tickets.map((ticket, index) => (
-                            <li key={index}>
-                                Ticket Type: {ticket.type} | Quantity: {ticket.quantity} | Date: {new Date(ticket.date).toLocaleDateString()}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+  <button className="toggle-section" onClick={() => setShowTickets(!showTickets)}>
+    {showTickets ? 'Hide Tickets' : 'Your Tickets'}
+  </button>
+
+  {showTickets && (
+    <>
+      <h3>📅 Upcoming Visits</h3>
+      <ul className="profile-list">
+        {upcomingTickets.length > 0 ? (
+          upcomingTickets.map((ticket, index) => (
+            <li key={`upcoming-${index}`}>
+              <strong>Ticket Type:</strong> {ticket.type} |{" "}
+              <strong>Quantity:</strong> {ticket.quantity} |{" "}
+              <strong>Visit Date:</strong> {new Date(ticket.date).toLocaleDateString()}
+            </li>
+          ))
+        ) : (
+          <p>No upcoming visits.</p>
+        )}
+      </ul>
+
+      <h3>📜 Past Visits</h3>
+      <ul className="profile-list">
+        {pastTickets.length > 0 ? (
+          pastTickets.map((ticket, index) => (
+            <li key={`past-${index}`}>
+              <strong>Ticket Type:</strong> {ticket.type} |{" "}
+              <strong>Quantity:</strong> {ticket.quantity} |{" "}
+              <strong>Visit Date:</strong> {new Date(ticket.date).toLocaleDateString()}
+            </li>
+          ))
+        ) : (
+          <p>No past visits.</p>
+        )}
+      </ul>
+    </>
+  )}
+</div>
 
             <div className="shop-purchases">
                 <button className="toggle-section" onClick={() => setShowPurchases(!showPurchases)}>
