@@ -97,4 +97,4 @@ const RevenueReport = () => {
   );
 };
 
-export default { GenerateReportButton, RevenueReport };
+export { GenerateReportButton, RevenueReport };
