@@ -1,7 +1,7 @@
 const db = require('../config/db.js');
 
 exports.findEmployeeByEmail = async (email) => {
-    const [employee] = await db.query('SELECT * FROM employees WHERE Emp_email = ?', [email]);
+    const [employee] = await db.query('SELECT e.*, o.Occ_name FROM employees as e, occupation as o WHERE Emp_email = ? and o.Occ_ID = e.Emp_pos', [email]);
     return employee[0];
 };
 

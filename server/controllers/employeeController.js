@@ -44,7 +44,7 @@ exports.loginEmployee = async (req, res) => {
         if(employee.Emp_password !== password){
             return res.status(401).json({message: 'Invalid Password.'});
         }
-        res.status(200).json({message: 'Employee Login Successful'});
+        res.status(200).json({id: employee.Emp_ID, fname: employee.First_name, lname: employee.Last_name, email: employee.Emp_email, role: employee.Occ_name,});
     } catch (error) {
         console.error('Error during employee login: ', error);
         res.status(500).json({message: 'An error occurred. Please try again.'});
