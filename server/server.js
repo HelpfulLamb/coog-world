@@ -18,6 +18,11 @@ const { reportRoutes } = require('./routes/reportRoutes.js');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+app.use((req, res, next) => {
+    console.log("Incoming request to:", req.url);
+    next();
+});
+
 // Middleware
 app.use(express.json());
 app.use(cors());
@@ -35,6 +40,9 @@ app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
 app.use('/api/reports', reportRoutes);
+
+
+// Serve frontend files
 
 app.use(express.static(path.join(__dirname, 'client')));
 app.get('*', (req, res) => {
