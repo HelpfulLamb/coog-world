@@ -61,11 +61,22 @@ exports.deleteAssignmentById = async (invid) => {
 };
 
 exports.getAllAvailableItems = async () => {
-    const [merchandise] = await db.query(
-        'SELECT Item_ID, Item_name, Item_shop_price, Item_desc FROM items'
-    );
-    return merchandise;
-};
+    const [items] = await db.query(`
+      SELECT 
+        i.Inventory_ID,
+        it.Item_ID,
+        it.Item_name,
+        it.Item_desc,
+        it.Item_shop_price,
+        i.Item_quantity
+      FROM 
+        inventory i
+      JOIN 
+        items it ON i.Item_ID = it.Item_ID
+    `);
+    return items;
+  };
+  
 
 
 exports.deleteItemById = async (itemid) => {

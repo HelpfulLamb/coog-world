@@ -13,7 +13,7 @@ function RideCard({ ride, onRideClick }) {
         <p>Located in: {ride.area_name}</p>
         <p>{ride.Ride_type} Ride</p>
         <button className="fancy" onClick={() => onRideClick(ride.Ride_ID)}>
-          🎢 Get on Ride
+          🎢 Add to my Trip
         </button>
       </div>
     );
