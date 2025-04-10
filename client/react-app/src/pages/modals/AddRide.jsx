@@ -103,14 +103,6 @@ export function UpdateRide({isOpen, onClose, rideToEdit, onUpdateRide}){
                                 <option value="4">Lowball City</option>
                             </select>
                         </div>
-                        <div className="modal-input-group">
-                            <label htmlFor="Is_operate">Status</label>
-                            <select name="Is_operate" id="Is_operate" required value={formData.Is_operate} onChange={handleInputChange}>
-                                <option value="">-- Ride Status --</option>
-                                <option value="0">Under Maintenance</option>
-                                <option value="1">Operational</option>
-                            </select>
-                        </div>
                     </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}

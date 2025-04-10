@@ -1,10 +1,14 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
-import { CartProvider } from './context/CartContext.jsx'; // ✅ ADD THIS
+import { CartProvider } from './context/CartContext.jsx'; // ✅ Added this
 
+// Navigation Components
 import Header from './pages/navigation/Header.jsx';
+import Footer from './pages/navigation/Footer.jsx';
+
+// Public Pages
 import Home from './pages/Home.jsx';
 import About from './pages/AboutUs.jsx';
 import Tickets from './pages/Buy-tickets.jsx';
@@ -15,12 +19,14 @@ import Parkshops from './pages/shops/Parkshops.jsx';
 import Merchandise from './pages/shops/Merchandise.jsx';
 import Register from './pages/registration/Register.jsx';
 import Login from './pages/registration/Login.jsx';
-import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Profile from './pages/registration/Profile.jsx';
 import ParkRides from './pages/View-Rides.jsx';
 import ParkShows from './pages/View-Shows.jsx';
-import Footer from './pages/navigation/Footer.jsx';
 
+// Employee Dashboard & Operations
+import Dashboard from './pages/dashboard/Dashboard.jsx';
+import AdminHome from './pages/operations/Home.jsx';
+import Revenue from './pages/operations/Revenue.jsx';
 import Employee from './pages/operations/Employees.jsx';
 import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
@@ -30,11 +36,11 @@ import Item from './pages/operations/Items.jsx';
 import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
-import Reports from './pages/operations/Reports.jsx'
+import Reports from './pages/operations/Reports.jsx';
 
 function App() {
-    const location = useLocation();
-    const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
+  const location = useLocation();
+  const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
 
     return (
         <AuthProvider>
