@@ -42,12 +42,12 @@ function App() {
   const location = useLocation();
   const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
 
-    return (
-        <AuthProvider>
+  return (
+    <AuthProvider>
             <CartProvider> {/* ✅ wrap inside AuthProvider */}
                 <div className="app-container">
-                    {!isEmployeeDashboard && <Header />}
-                    <Routes>
+          {!isEmployeeDashboard && <Header />}
+          <Routes>
                         <Route path='/' element={<Home />} />
                         <Route path='/home' element={<Home />} />
                         <Route path='/about-us' element={<About />} />
@@ -62,27 +62,27 @@ function App() {
                         <Route path='/parkshows' element={<ParkShows />} />
                         <Route path='/merch' element={<Merchandise />} />
                         <Route path='/profile' element={<Profile />} />
-                        <Route path='/employee-dashboard' element={<Dashboard />}>
+            <Route path='/employee-dashboard' element={<Dashboard />}>
               <Route index element={<AdminHome />} />  {/* 👈 This line is what you need */}
               <Route path='revenue-report' element={<Revenue />} />
-                            <Route path='employees' element={<Employee />} />
-                            <Route path='rides' element={<Ride />} />
-                            <Route path='shows' element={<Show />} />
-                            <Route path='kiosks' element={<Kiosk />} />
-                            <Route path='ticket-report' element={<TicketReport />} />
-                            <Route path='items' element={<Item />} />
-                            <Route path='inventory-report' element={<Inventory />} />
-                            <Route path='maintenance-report' element={<Maintenance />} />
-                            <Route path='weather-report' element={<Weather />} />
-                            <Route path='report' element={<Reports />} />
-                        </Route>
-                        <Route path="*" element={<div>404 - Page Not Found</div>} />
-                    </Routes>
-                    {!isEmployeeDashboard && <Footer />}
-                </div>
-            </CartProvider>
-        </AuthProvider>
-    );
+              <Route path='employees' element={<Employee />} />
+              <Route path='rides' element={<Ride />} />
+              <Route path='shows' element={<Show />} />
+              <Route path='kiosks' element={<Kiosk />} />
+              <Route path='ticket-report' element={<TicketReport />} />
+              <Route path='items' element={<Item />} />
+              <Route path='inventory-report' element={<Inventory />} />
+              <Route path='maintenance-report' element={<Maintenance />} />
+              <Route path='weather-report' element={<Weather />} />
+              <Route path='report' element={<Reports />} />
+            </Route>
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
+          </Routes>
+          {!isEmployeeDashboard && <Footer />}
+        </div>
+      </CartProvider>
+    </AuthProvider>
+  );
 }
 
 export default App;
