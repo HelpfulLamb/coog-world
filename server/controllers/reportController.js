@@ -4,16 +4,18 @@ const { Parser } = require('json2csv');
 exports.getRainoutsReport = async (req, res) => {
   try {
     const data = await reportModel.getRainoutsPerMonth();
-    if (req.query.format === 'csv') {
-      const parser = new Parser();
-      const csv = parser.parse(data);
 
-      res.header('Content-Type', 'text/csv');
-      res.attachment('rainouts_report.csv');
-      return res.status(200).send(csv); 
-    }
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching rainout data:", error);
+    return res.status(500).json({ message: 'Server error: ' + error.message });
+  }
+};
 
-    return res.status(400).json({ message: 'Invalid format specified. Use "csv".' });
+exports.getRainoutRows = async (req, res) => {
+  try {
+    const data = await reportModel.getRainoutRows();
+    return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message });
   }
