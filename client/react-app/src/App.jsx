@@ -48,20 +48,20 @@ function App() {
                 <div className="app-container">
           {!isEmployeeDashboard && <Header />}
           <Routes>
-                        <Route path='/' element={<Home />} />
-                        <Route path='/home' element={<Home />} />
-                        <Route path='/about-us' element={<About />} />
-                        <Route path='/tickets' element={<Tickets />} />
-                        <Route path='/services' element={<Services />} />
-                        <Route path='/cart' element={<Cart />} />
-                        <Route path='/shop' element={<Shop />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/registration' element={<Register />} />
-                        <Route path='/parkshops' element={<Parkshops />} />
-                        <Route path='/parkrides' element={<ParkRides />} />
-                        <Route path='/parkshows' element={<ParkShows />} />
-                        <Route path='/merch' element={<Merchandise />} />
-                        <Route path='/profile' element={<Profile />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/about-us' element={<About />} />
+          <Route path='/tickets' element={<Tickets />} />
+          <Route path='/services' element={<Services />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/shop' element={<Shop />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/registration' element={<Register />} />
+          <Route path='/parkshops' element={<Parkshops />} />
+          <Route path='/parkrides' element={<ParkRides />} />
+          <Route path='/parkshows' element={<ParkShows />} />
+          <Route path='/merch' element={<Merchandise />} />
+          <Route path='/profile' element={<Profile />} />
             <Route path='/employee-dashboard' element={<Dashboard />}>
               <Route index element={<AdminHome />} />  {/* 👈 This line is what you need */}
               <Route path='revenue-report' element={<Revenue />} />
