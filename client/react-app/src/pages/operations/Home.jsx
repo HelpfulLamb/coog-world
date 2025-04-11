@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { GenerateReportButton, RevenueReport } from './Reports.jsx';
+import { RevenueReport } from './Reports.jsx';
 
 const Home = () => {
   const [revenue, setRevenue] = useState('Loading...');
