@@ -5,10 +5,11 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
     const [newWeather, setNewWeather] = useState({
         Wtr_cond: '',
         Wtr_level: '',
-        Special_alerts: '',
+        Special_alerts: '', // Start with empty value
         Is_park_closed: ''
     });
     const [message, setMessage] = useState({ error: '', success: '' });
+    const [showSpecialAlerts, setShowSpecialAlerts] = useState(false); // State to toggle special alerts input visibility
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -17,6 +18,11 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // If no Special Alerts entered, set to "No Special Alerts"
+        if (!newWeather.Special_alerts) {
+            newWeather.Special_alerts = "No Special Alerts";
+        }
+        
         if (!newWeather.Wtr_cond || !newWeather.Wtr_level || !newWeather.Is_park_closed) {
             setMessage({ error: 'All fields are required.', success: '' });
             return;
@@ -35,7 +41,7 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
                 setNewWeather({
                     Wtr_cond: '',
                     Wtr_level: '',
-                    Special_alerts: '',
+                    Special_alerts: '', // Reset to empty value after submit
                     Is_park_closed: '',
                 });
                 onAddWeather(data.weather);
@@ -65,23 +71,6 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
             <div className="modal">
                 <h2>Add New Weather</h2>
                 <form onSubmit={handleSubmit}>
-                    {['Special_alerts'].map((field) => (
-                        <div className="modal-input-group" key={field}>
-                            <label htmlFor={field}>
-                                {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
-                            </label>
-                            <input
-                                id={field}
-                                type="text"
-                                name={field}
-                                required
-                                autoComplete="off"
-                                value={newWeather[field]}
-                                onChange={handleInputChange}
-                                placeholder={getPlaceholders(field)}
-                            />
-                        </div>
-                    ))}
                     <div className="modal-input-group">
                         <label htmlFor="Wtr_cond">Weather Condition</label>
                         <select name="Wtr_cond" id="Wtr_cond" required value={newWeather.Wtr_cond} onChange={handleInputChange}>
@@ -111,6 +100,40 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
                             <option value="0">No</option>
                         </select>
                     </div>
+
+                    {/* Button to toggle the visibility of Special Alerts */}
+                    <div className="modal-input-group" style={{ marginBottom: '10px' }}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                // Reset Special Alerts when the field becomes visible
+                                if (!showSpecialAlerts) {
+                                    setNewWeather({ ...newWeather, Special_alerts: '' });
+                                }
+                                setShowSpecialAlerts(!showSpecialAlerts);
+                            }}
+                            className="toggle-button"
+                        >
+                            {showSpecialAlerts ? "Remove Special Alert" : "Add Special Alert"}
+                        </button>
+                    </div>
+
+                    {/* Special Alerts Input - Appears only if the button is clicked */}
+                    {showSpecialAlerts && (
+                        <div className="modal-input-group">
+                            <label htmlFor="Special_alerts">Special Alerts</label>
+                            <input
+                                id="Special_alerts"
+                                type="text"
+                                name="Special_alerts"
+                                autoComplete="off"
+                                value={newWeather.Special_alerts}
+                                onChange={handleInputChange}
+                                placeholder={getPlaceholders("Special_alerts")}
+                            />
+                        </div>
+                    )}
+
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
                     <div className="modal-buttons">
