@@ -122,19 +122,19 @@ exports.deleteItemById = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
-exports.purchaseMerch = async (req, res) => {
-    const { user_id, item_id, price, quantity, total_amount, product_type, payment_method, card_info } = req.body;
 
+exports.purchaseMerch = async (req, res) => {
+    const { user_id, item_id, price, quantity, quantity_sold, total_amount, product_type, payment_method} = req.body;
+    console.log('Incoming purchase body: ', req.body);
     try {
-        // ⛔ Prevent "pay at store" for merchandise
         if (product_type === 'Merchandise' && payment_method === 'pay_at_store') {
             return res.status(400).json({ message: 'Merchandise cannot be paid at store.' });
         }
 
         // 1. Create new transaction
         const [transaction] = await db.query(
-            `INSERT INTO transactions (Visitor_ID, total_amount, payment_method) VALUES (?, ?, ?)`,
-            [user_id, total_amount, payment_method]
+            `INSERT INTO transactions (Visitor_ID, Total_amount) VALUES (?, ?)`,
+            [user_id, total_amount]
         );
         const transactionId = transaction.insertId;
 
@@ -143,7 +143,7 @@ exports.purchaseMerch = async (req, res) => {
             INSERT INTO product_purchases 
             (Transaction_ID, product_id, product_type, purchase_price, quantity_sold, quantity, total_amount) 
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [transactionId, item_id, product_type, price, quantity, quantity, total_amount]
+            [transactionId, item_id, product_type, price, quantity_sold, quantity, total_amount]
         );
 
         // 3. Deduct quantity from inventory
@@ -151,13 +151,12 @@ exports.purchaseMerch = async (req, res) => {
             `UPDATE inventory
              SET Item_quantity = Item_quantity - ?
              WHERE Inventory_ID = ?`,
-            [quantity, item_id]
+            [quantity_sold, item_id]
         );
-
         res.status(200).json({ message: 'Merchandise purchase successful!' });
     } catch (err) {
-        console.error('Error processing merch purchase:', err);
-        res.status(500).json({ message: 'Error processing purchase.' });
+        console.error('Error processing merch purchase:', err.message, err.stack);
+        res.status(500).json({ message: 'Error processing purchase.', error: err.message });
     }
 };
 
@@ -168,9 +167,9 @@ exports.getVisitorPurchases = async (req, res) => {
       const [rows] = await db.query(`
         SELECT 
           it.Item_name AS item,
-          pp.quantity AS quantity,                  -- ✅ Correct field name
-          pp.purchase_price AS unit_price,         -- Optional rename
-          pp.total_amount AS total_price,          -- ✅ More useful to show
+          pp.quantity AS quantity,                  
+          pp.purchase_price AS unit_price,         
+          pp.total_amount AS total_price,          
           pp.purchase_created AS date
         FROM product_purchases pp
         JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID

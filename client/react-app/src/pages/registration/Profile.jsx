@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 import './Profile.css';
 
 const formatPhoneNumber = (phone) => {
@@ -23,6 +24,8 @@ function Profile() {
     const [showPurchases, setShowPurchases] = useState(false);
     const [rides, setRides] = useState([]);
     const [showRides, setShowRides] = useState(false);
+
+    const {cartItems} = useCart();
 
     const navigate = useNavigate();
 
@@ -162,6 +165,11 @@ function Profile() {
                                         <span className="detail-value">{user.address || 'Not provided'}</span>
                                     </div>
                                 </div>
+                                <div>
+                                    <ul>
+                                        <li><Link to="/cart" className="nav-link">View Your Cart ({cartItems.length})</Link></li>
+                                    </ul>
+                                </div>
                             </div>
                         )}
                     </section>
@@ -180,7 +188,10 @@ function Profile() {
                                         <div className="ticket-list">
                                             {upcomingTickets.map((ticket, index) => (
                                                 <div key={`upcoming-${index}`} className="ticket-item">
-                                                    <div className="ticket-type">{ticket.type}</div>
+                                                    <div className="ticket-type purchase-header">
+                                                        <span>{ticket.type}</span>
+                                                        <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+                                                    </div>
                                                     <div className="ticket-meta">
                                                         <span>Qty: {ticket.quantity}</span>
                                                         <span>Date: {new Date(ticket.date).toLocaleDateString()}</span>
@@ -198,7 +209,10 @@ function Profile() {
                                         <div className="ticket-list past-tickets">
                                             {pastTickets.map((ticket, index) => (
                                                 <div key={`past-${index}`} className="ticket-item">
-                                                    <div className="ticket-type">{ticket.type}</div>
+                                                    <div className="ticket-type purchase-header">
+                                                        <span>{ticket.type}</span>
+                                                        <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+                                                    </div>
                                                     <div className="ticket-meta">
                                                         <span>Qty: {ticket.quantity}</span>
                                                         <span>Date: {new Date(ticket.date).toLocaleDateString()}</span>
