@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import AddMaintenance from "../modals/AddMaintenance.jsx";
 
-function MaintenanceTable({maintenanceInformation, setIsModalOpen, onStatusChange}){
-    
+function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChange }) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    return(
+
+    return (
         <div className="table-container">
             <table className="table">
                 <thead>
@@ -33,7 +33,7 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen, onStatusChang
                             <td>
                                 {maintenance.Maint_Status !== 'Completed' && (
                                     <>
-                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'In Progress', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn edit-button">In Progess</button>
+                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'In Progress', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn edit-button">In Progress</button>
                                         <button onClick={() => onStatusChange(maintenance.MaintID, 'Completed', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn delete-button">Complete</button>
                                     </>
                                 )}
@@ -46,17 +46,28 @@ function MaintenanceTable({maintenanceInformation, setIsModalOpen, onStatusChang
     );
 }
 
-function Maintenance(){
+function Maintenance() {
     const [maintenanceInformation, setMaintenanceInformation] = useState([]);
+    const [filteredMaintenance, setFilteredMaintenance] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Filter state
+    const [costMinFilter, setCostMinFilter] = useState('');
+    const [costMaxFilter, setCostMaxFilter] = useState('');
+    const [typeFilter, setTypeFilter] = useState('');
+    const [objectFilter, setObjectFilter] = useState('');
+    const [objectNameFilter, setObjectNameFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [dateFromFilter, setDateFromFilter] = useState('');
+    const [dateToFilter, setDateToFilter] = useState('');
 
     useEffect(() => {
         const fetchMaintenance = async () => {
             try {
                 const response = await fetch('/api/maintenance/info');
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const data = await response.json();
@@ -69,25 +80,69 @@ function Maintenance(){
         };
         fetchMaintenance();
     }, []);
+
+    useEffect(() => {
+        let filtered = [...maintenanceInformation];
+
+        // Filter by cost
+        if (costMinFilter) {
+            filtered = filtered.filter(maintenance => parseFloat(maintenance.Maint_cost) >= parseFloat(costMinFilter));
+        }
+        if (costMaxFilter) {
+            filtered = filtered.filter(maintenance => parseFloat(maintenance.Maint_cost) <= parseFloat(costMaxFilter));
+        }
+
+        // Filter by type
+        if (typeFilter) {
+            filtered = filtered.filter(maintenance => maintenance.Maint_Type === typeFilter);
+        }
+
+        // Filter by object
+        if (objectFilter) {
+            filtered = filtered.filter(maintenance => maintenance.Maint_obj === objectFilter);
+        }
+
+        // Filter by object name
+        if (objectNameFilter) {
+            filtered = filtered.filter(maintenance => maintenance.Maint_obj_name.toLowerCase().includes(objectNameFilter.toLowerCase()));
+        }
+
+        // Filter by status
+        if (statusFilter) {
+            filtered = filtered.filter(maintenance => maintenance.Maint_Status === statusFilter);
+        }
+
+        // Filter by date range
+        if (dateFromFilter) {
+            filtered = filtered.filter(maintenance => new Date(maintenance.Maintenance_Date) >= new Date(dateFromFilter));
+        }
+        if (dateToFilter) {
+            filtered = filtered.filter(maintenance => new Date(maintenance.Maintenance_Date) <= new Date(dateToFilter));
+        }
+
+        setFilteredMaintenance(filtered);
+    }, [maintenanceInformation, costMinFilter, costMaxFilter, typeFilter, objectFilter, objectNameFilter, statusFilter, dateFromFilter, dateToFilter]);
+
     const handleAddMaintenance = (newMaintenance) => {
         setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
     };
+
     const handleStatusUpdate = async (MaintID, Maint_Status, Maint_obj, Maint_obj_ID) => {
         const confirmStatus = window.confirm(`Mark this status as '${Maint_Status}'?`);
-        if(!confirmStatus) return;
+        if (!confirmStatus) return;
         try {
-            const response = await fetch(`/api/maintenance/status/${MaintID}`,{
+            const response = await fetch(`/api/maintenance/status/${MaintID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({Maint_Status, Maint_obj, Maint_obj_ID}),
+                body: JSON.stringify({ Maint_Status, Maint_obj, Maint_obj_ID }),
             });
             const data = await response.json();
-            if(response.ok){
+            if (response.ok) {
                 alert(`Maintenance status has been marked as '${Maint_Status}'!`);
-                setMaintenanceInformation(prev => prev.filter(maint => maint.MaintID !== MaintID));
-                setTimeout(() => {window.location.href = window.location.href;});
+                setMaintenanceInformation((prev) => prev.filter((maint) => maint.MaintID !== MaintID));
+                setTimeout(() => { window.location.href = window.location.href; });
             } else {
                 alert(data.message || 'Failed to update maintenance status.');
             }
@@ -95,23 +150,146 @@ function Maintenance(){
             alert('An error occurred. Please try again.');
         }
     };
-    if(loading){
-        return <div>Loading...</div>
+
+    const resetFilters = () => {
+        setCostMinFilter('');
+        setCostMaxFilter('');
+        setTypeFilter('');
+        setObjectFilter('');
+        setObjectNameFilter('');
+        setStatusFilter('');
+        setDateFromFilter('');
+        setDateToFilter('');
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
     }
-    if(error){
-        return <div>Error: {error}</div>
+    if (error) {
+        return <div>Error: {error}</div>;
     }
-    return(
+
+    return (
         <>
+            <div className="filter-controls">
+                <h2>Filter Maintenance</h2>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="costMin">Min Cost:</label>
+                        <input
+                            type="number"
+                            id="costMin"
+                            value={costMinFilter}
+                            onChange={(e) => setCostMinFilter(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="costMax">Max Cost:</label>
+                        <input
+                            type="number"
+                            id="costMax"
+                            value={costMaxFilter}
+                            onChange={(e) => setCostMaxFilter(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="type">Type:</label>
+                        <select
+                            id="type"
+                            value={typeFilter}
+                            onChange={(e) => setTypeFilter(e.target.value)}
+                        >
+                            <option value="">-- Select Type --</option>
+                            <option value="Routine">Routine</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="object">Object:</label>
+                        <select
+                            id="object"
+                            value={objectFilter}
+                            onChange={(e) => setObjectFilter(e.target.value)}
+                        >
+                            <option value="">-- Select Object --</option>
+                            <option value="ride">Ride</option>
+                            <option value="stage">Stage</option>
+                            <option value="kiosk">Kiosk</option>
+                        </select>
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="objectName">Object Name:</label>
+                        <input
+                            type="text"
+                            id="objectName"
+                            value={objectNameFilter}
+                            onChange={(e) => setObjectNameFilter(e.target.value)}
+                            placeholder="Enter object name"
+                        />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="">-- Select Status --</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="dateFrom">From Date:</label>
+                        <input
+                            type="date"
+                            id="dateFrom"
+                            value={dateFromFilter}
+                            onChange={(e) => setDateFromFilter(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="dateTo">To Date:</label>
+                        <input
+                            type="date"
+                            id="dateTo"
+                            value={dateToFilter}
+                            onChange={(e) => setDateToFilter(e.target.value)}
+                        />
+                    </div>
+                    <button onClick={resetFilters} className="reset-button">Reset Filters</button>
+                </div>
+            </div>
+
             <div className="db-btn">
                 <h1>Maintenance Report</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
                 </div>
             </div>
-            <MaintenanceTable maintenanceInformation={maintenanceInformation} setIsModalOpen={setIsModalOpen} onStatusChange={handleStatusUpdate} />
-            <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
+
+            <MaintenanceTable
+                maintenanceInformation={filteredMaintenance}
+                setIsModalOpen={setIsModalOpen}
+                onStatusChange={handleStatusUpdate}
+            />
+            <AddMaintenance
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onAddMaintenance={handleAddMaintenance}
+            />
         </>
-    )
+    );
 }
+
 export default Maintenance;
