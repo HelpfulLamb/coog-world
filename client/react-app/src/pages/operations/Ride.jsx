@@ -1,6 +1,165 @@
 import AddRide, {UpdateRide} from "../modals/AddRide";
 import './Report.css'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
+function RideFrequencyReport() {
+    const [selectedMonth, setSelectedMonth] = useState("");
+    const [rideFrequencyData, setRideFrequencyData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOption, setSortOption] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+
+    const months = [
+        { value: 1, label: "January" },
+        { value: 2, label: "February" },
+        { value: 3, label: "March" },
+        { value: 4, label: "April" },
+        { value: 5, label: "May" },
+        { value: 6, label: "June" },
+        { value: 7, label: "July" },
+        { value: 8, label: "August" },
+        { value: 9, label: "September" },
+        { value: 10, label: "October" },
+        { value: 11, label: "November" },
+        { value: 12, label: "December" }
+    ];
+
+    // Fetch ride frequency data based on the selected month
+    const fetchRideFrequencyData = async (month) => {
+        if (!month) return;
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/rides/ride-stats?month=${month}`);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            const data = await response.json();
+            setRideFrequencyData(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Handle dropdown change
+    const handleMonthChange = (event) => {
+        const month = event.target.value;
+        setSelectedMonth(month);
+        fetchRideFrequencyData(month);
+    };
+
+    useEffect(() => {
+        let filtered = [...rideFrequencyData];
+
+        // Filter by search term
+        if (searchTerm) {
+            filtered = filtered.filter(ride =>
+                ride.top_rider.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        // Sort the data
+        switch (sortOption) {
+            case 'nameAsc':
+                filtered.sort((a, b) => a.ride_name.localeCompare(b.ride_name));
+                break;
+            case 'nameDesc':
+                filtered.sort((a, b) => b.ride_name.localeCompare(a.ride_name));
+                break;
+            case 'timesRiddenAsc':
+                filtered.sort((a, b) => a.total_rides - b.total_rides);
+                break;
+            case 'timesRiddenDesc':
+                filtered.sort((a, b) => b.total_rides - a.total_rides);
+                break;
+            case 'topRiderCountAsc':
+                filtered.sort((a, b) => a.top_rides - b.top_rides);
+                break;
+            case 'topRiderCountDesc':
+                filtered.sort((a, b) => b.top_rides - a.top_rides);
+                break;
+            default:
+                break;
+        }
+
+        setFilteredData(filtered);
+    }, [rideFrequencyData, searchTerm, sortOption]);
+
+    return (
+        <div className="ride-frequency-report">
+            <h2>Ride Frequency Report</h2>
+
+            <div className="filter-controls">
+                <div className="filter-group">
+                    <label htmlFor="month">Select Month:</label>
+                    <select id="month" value={selectedMonth} onChange={handleMonthChange}>
+                        <option value="">-- Select a Month --</option>
+                        {months.map((month) => (
+                            <option key={month.value} value={`2025-${String(month.value).padStart(2, '0')}`}>
+                                {month.label} 2025
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="filter-group">
+                    <label htmlFor="searchTerm">Search Top Rider Name:</label>
+                    <input
+                        type="text"
+                        id="searchTerm"
+                        placeholder="Search by ride name"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                <div className="filter-group">
+                    <label htmlFor="sortOption">Sort By:</label>
+                    <select id="sortOption" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                        <option value="">-- Select Sorting --</option>
+                        <option value="nameAsc">Ride Name (A-Z)</option>
+                        <option value="nameDesc">Ride Name (Z-A)</option>
+                        <option value="timesRiddenDesc">Times Ridden (High to Low)</option>
+                        <option value="topRiderCountDesc">Top Rider's Count (High to Low)</option>
+                    </select>
+                </div>
+            </div>
+
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
+
+            {!loading && !error && filteredData.length > 0 && (
+                <div className="table-container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Ride Name</th>
+                                <th>Times Ridden</th>
+                                <th>Top Rider</th>
+                                <th>Top Rider's Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredData.map((ride, index) => (
+                                <tr key={index}>
+                                    <td>{ride.ride_name}</td>
+                                    <td>{ride.total_rides}</td>
+                                    <td>{ride.top_rider}</td>
+                                    <td>{ride.top_rides}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {!loading && !error && rideFrequencyData.length === 0 && selectedMonth && (
+                <p>No data available for the selected month.</p>
+            )}
+        </div>
+    );
+}
 
 function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
     if(!rideInformation || !Array.isArray(rideInformation)){
@@ -237,6 +396,7 @@ function Ride(){
             <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
             <UpdateRide isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedRide(null);}} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
+            <RideFrequencyReport setIsModalOpen={setIsModalOpen}/>
         </>
     )
 }
