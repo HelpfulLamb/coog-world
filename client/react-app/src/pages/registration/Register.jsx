@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import {FaEye, FaEyeSlash} from 'react-icons/fa';
 import './Register.css';
 
 function Register() {
@@ -8,38 +9,52 @@ function Register() {
         first_name: '',
         last_name: '',
         email: '',
-        password: '',
         phone: '',
-        address: '',
-        confirmPassword: ''
+        password: '',
+        confirmPassword: '',
+        street: '',
+        city: '',
+        state: '',
+        zipCode: ''
     });
     const [message, setMessage] = useState({ error: '', success: '' });
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
+        if(name === 'phone'){
+            const digits = value.replace(/\D/g, '');
+            let formatted = digits;
+            if (digits.length >= 4 && digits.length <= 6) {
+                formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+            } else if (digits.length > 6) {
+                formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)} - ${digits.slice(6, 10)}`;
+            }
+            setFormData({...formData, [name]: formatted});
+            return;
+        }
         setFormData({ ...formData, [name]: value });
     };
-
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
     const handleRegister = async (e) => {
         e.preventDefault();
-        const { first_name, last_name, email, password, phone, address, confirmPassword } = formData;
-    
-        // Basic Validation
-        if (!first_name || !last_name || !email || !password || !phone || !address || !confirmPassword) {
+        const {first_name, last_name, email, phone, password, confirmPassword, street, city, state, zipCode} = formData;
+        if (!first_name || !last_name || !email || !password || !phone || !confirmPassword || !street || !city || !state || !zipCode) {
             setMessage({ error: 'All fields are required.', success: '' });
             return;
         }
-    
-        if (password !== confirmPassword) {
-            setMessage({ error: 'Passwords do not match.', success: '' });
-            return;
-        }
-    
         if (password.length < 6) {
             setMessage({ error: 'Password must be at least 6 characters long.', success: '' });
             return;
         }
-    
+        if (password !== confirmPassword) {
+            setMessage({ error: 'Passwords do not match.', success: '' });
+            return;
+        }
+        const rawphone = formData.phone.replace(/\D/g, '');
+        const fullAddress = `${street},${city},${state},${zipCode}`;
         try {
             const response = await fetch('/api/users/register', {
                 method: 'POST',
@@ -50,70 +65,113 @@ function Register() {
                     first_name,
                     last_name,
                     email,
+                    phone: rawphone,
                     password,
-                    phone,
-                    address
+                    confirmPassword,
+                    address: fullAddress
                 }),
             });
-    
             const data = await response.json();
-            if (response.ok) {
-                // ✅ Store user info in localStorage
-                const userData = { first_name, last_name, email, phone, address };
-                localStorage.setItem('user', JSON.stringify(userData));
-    
-                console.log("Stored in localStorage:", localStorage.getItem('user')); // 🔍 Debugging
-    
+            if (response.ok) {    
                 setMessage({ success: 'Account successfully created!', error: '' });
-    
                 setFormData({
                     first_name: '',
                     last_name: '',
                     email: '',
-                    password: '',
                     phone: '',
-                    address: '',
-                    confirmPassword: ''
+                    password: '',
+                    confirmPassword: '',
+                    street: '',
+                    city: '',
+                    state: '',
+                    zipCode: ''
                 });
-    
-                // ✅ Redirect to Profile page
-                navigate('/profile');
+                navigate('/login');
             } else {
                 setMessage({ error: data.message || 'Registration failed.', success: '' });
             }
         } catch (error) {
             setMessage({ error: 'An error occurred. Please try again.', success: '' });
         }
-    };        
-
+    };
+    const states = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
     return (
         <div className="register-page">
             <div className="form">
-                <h1 className='register-header'>Create an Account</h1>
+                <h1 className="register-header">Create an Account</h1>
                 <form onSubmit={handleRegister}>
-                    {['first_name', 'last_name', 'email', 'phone', 'address', 'password', 'confirmPassword'].map((field, index) => (
-                        <div className="field-wrap" key={index}>
-                            <input
-                                type={field.includes('password') ? 'password' : 'text'}
-                                name={field}
-                                required
-                                autoComplete="off"
-                                value={formData[field]}
-                                onChange={handleChange}
-                                className={formData[field] ? 'filled' : ''}
-                            />
-                            <label className={formData[field] ? 'active' : ''}>
-                                {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}<span className="req">*</span>
-                            </label>
+                    <div className="field-row">
+                        <div className="field-wrap">
+                            <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
+                            <label>First Name<span className="req">*</span></label>
                         </div>
-                    ))}
+                        <div className="field-wrap">
+                            <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
+                            <label>Last Name<span className="req">*</span></label>
+                        </div>
+                    </div>
+                    <div className="field-wrap">
+                        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                        <label>Email<span className="req">*</span></label>
+                    </div>
+                    <div className="field-wrap">
+                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
+                        <label>Phone<span className="req">*</span></label>
+                    </div>
+                    <div className="field-wrap">
+                        <input type="text" name="street" value={formData.street} onChange={handleChange} required />
+                        <label>Street Address<span className="req">*</span></label>
+                    </div>
+                    <div className="field-row">
+                        <div className="field-wrap">
+                            <input type="text" name="city" value={formData.city} onChange={handleChange} required />
+                            <label>City<span className="req">*</span></label>
+                        </div>
+                        <div className="field-wrap">
+                            <select name="state" value={formData.state} onChange={handleChange} required>
+                                <option value="">---</option>
+                                {states.map((state) => (
+                                    <option key={state} value={state}>{state}</option>
+                                ))}
+                            </select>
+                            <label>State<span className="req">*</span></label>
+                        </div>
+                        <div className="field-wrap">
+                            <input type="text" name="zipCode" value={formData.zipCode} onChange={handleChange} required />
+                            <label>Zip Code<span className="req">*</span></label>
+                        </div>
+                    </div>
+                    <div className="field-wrap password-wrap">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required />
+                        <label>Password<span className="req">*</span></label>
+                        <span className='eye-icon' onClick={togglePasswordVisibility}>
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
+                    </div>
+                    <div className="field-wrap password-wrap">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required />
+                        <label>Confirm Password<span className="req">*</span></label>
+                        <span className='eye-icon' onClick={togglePasswordVisibility}>
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
+                    </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
-                    <div className='register-button'>
+                    <div className="register-button">
                         <button type="submit">Register</button>
                     </div>
                 </form>
-                <p className="already-registered">Already have an account? <Link to={'/login'}>Login</Link></p>
+                <p className="already-registered">Already have an account? <Link to="/login">Login</Link></p>
             </div>
         </div>
     );

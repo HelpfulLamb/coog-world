@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 import './Profile.css';
 
 const formatPhoneNumber = (phone) => {
     if (!phone) return '';
     const cleaned = ('' + phone).replace(/\D/g, '');
-
     if (cleaned.length === 10) {
         const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) return `(${match[1]}) ${match[2]}-${match[3]}`;
+        if (match) return `(${match[1]}) ${match[2]} - ${match[3]}`;
     }
-
     return cleaned;
 };
-
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -26,6 +24,8 @@ function Profile() {
     const [showPurchases, setShowPurchases] = useState(false);
     const [rides, setRides] = useState([]);
     const [showRides, setShowRides] = useState(false);
+
+    const {cartItems} = useCart();
 
     const navigate = useNavigate();
 
@@ -43,56 +43,35 @@ function Profile() {
         try {
             const ticketRes = await fetch(`/api/ticket-type/purchases/${userId}`);
             const ticketData = await ticketRes.json();
-            
             const today = new Date().setHours(0, 0, 0, 0);
-            const upcoming = [];
-            const past = [];
-    
+            const upcoming = [], past = [];
             ticketData.tickets.forEach(ticket => {
                 const visitDate = new Date(ticket.date).setHours(0, 0, 0, 0);
-                if (visitDate >= today) {
-                    upcoming.push(ticket);
-                } else {
-                    past.push(ticket);
-                }
+                (visitDate >= today ? upcoming : past).push(ticket);
             });
-    
             setUpcomingTickets(upcoming);
             setPastTickets(past);
-    
             const shopRes = await fetch(`/api/shop-purchases/${userId}`);
             const shopData = await shopRes.json();
-            console.log("🧾 Shop Purchases:", shopData.purchases);
-            console.log("🧾 Full Shop Purchases Payload:", shopData.purchases);
             setPurchases(shopData.purchases);
-    
             const rideRes = await fetch(`/api/rides/history/${userId}`);
             const rideData = await rideRes.json();
             setRides(rideData.rides);
-    
         } catch (err) {
             console.error('Error fetching user-related data:', err);
         }
-    };    
-
+    };
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handleEdit = async () => {
         const userId = user.id || user.Visitor_ID;
-        const updatedData = {
-            ...user,
-            ...formData,
-            email: formData.email || user.email,
-        };
-
+        const updatedData = { ...user, ...formData, email: formData.email || user.email };
         const response = await fetch(`/api/users/${userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData),
         });
-
         const data = await response.json();
         if (response.ok) {
             setUser(data);
@@ -103,137 +82,210 @@ function Profile() {
             alert(data.message || 'Update failed.');
         }
     };
-
     const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete your account?')) {
+        if (window.confirm('Are you sure you want to delete your account? This cannot be undone.')) {
             const userId = user.id || user.Visitor_ID;
-            const response = await fetch(`/api/users/${userId}`, {
-                method: 'DELETE'
-            });
-
+            const response = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
             if (response.ok) {
                 localStorage.removeItem('user');
-                navigate('/register');
+                navigate('/registration');
             } else {
                 alert('Failed to delete account.');
             }
         }
     };
-
-    if (!user) return <p>Loading user data...</p>;
-
+    if (!user) return <div className="loading">Loading user data...</div>;
     return (
-        <div className="profile-container">
-            <h1 className="profile-header">Coog Profile</h1>
-            <div className="profile-info">
-                {isEditing ? (
-                    <>
-                        <label>First Name:</label>
-                        <input name="first_name" value={formData.first_name || ''} onChange={handleChange} />
-
-                        <label>Last Name:</label>
-                        <input name="last_name" value={formData.last_name || ''} onChange={handleChange} />
-
-                        <label>Email:</label>
-                        <input name="email" value={formData.email || ''} onChange={handleChange} />
-
-                        <label>Phone:</label>
-                        <input name="phone" value={formData.phone || ''} onChange={handleChange} />
-
-                        <label>Address:</label>
-                        <input name="address" value={formData.address || ''} onChange={handleChange} />
-
-                        <button onClick={handleEdit} className='profile-button'>✅ Save Changes</button>
-                        <button onClick={() => setIsEditing(false)} className='profile-button'>❌ Cancel</button>
-                    </>
-                ) : (
-                    <>
-                        <h2 className="profile-name">{user.first_name} {user.last_name}</h2>
-                        <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Phone:</strong> {formatPhoneNumber(user.phone)}</p>
-                        <p><strong>Address:</strong> {user.address}</p>
-                        <button onClick={() => setIsEditing(true)} className='profile-button'>✏️ Edit Profile</button>
-                        <button onClick={handleDelete} className='profile-button'>🗑 Delete Account</button>
-                    </>
-                )}
+        <div className='profile-page'>
+            <div className="profile-page-container">
+                <div className="profile-header-container">
+                    <h1 className="profile-main-title">My Profile</h1>
+                    <p className="profile-welcome">Welcome back, {user.first_name}!</p>
+                </div>
+                <div className="profile-content-container">
+                    {/* Profile Information Section */}
+                    <section className="profile-section profile-information">
+                        <div className="profile-actions">
+                            {isEditing ? (
+                                <>
+                                    <button onClick={handleEdit} className="profile-btn profile-btn-save">Save Changes</button>
+                                    <button onClick={() => setIsEditing(false)} className="profile-btn profile-btn-cancel">Cancel</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button onClick={() => setIsEditing(true)} className="profile-btn profile-btn-edit">Edit Profile</button>
+                                    <button onClick={handleDelete} className="profile-btn profile-btn-delete">Delete Account</button>
+                                </>
+                            )}
+                        </div>
+                        {isEditing ? (
+                            <div className="profile-edit-form">
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>First Name</label>
+                                        <input type="text" name="first_name" value={formData.first_name || ''} onChange={handleChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Last Name</label>
+                                        <input type="text" name="last_name" value={formData.last_name || ''} onChange={handleChange} />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" value={formData.email || ''} onChange={handleChange} />
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Phone</label>
+                                        <input type="tel" name="phone" value={formData.phone || ''} onChange={handleChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Address</label>
+                                        <input type="text" name="address" value={formData.address || ''} onChange={handleChange} />
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="profile-view">
+                                <div className="profile-avatar">
+                                    <span>{user.first_name.charAt(0)}{user.last_name.charAt(0)}</span>
+                                </div>
+                                <div className="profile-details">
+                                    <h2 className="profile-name">{user.first_name} {user.last_name}</h2>
+                                    <div className="profile-detail">
+                                        <span className="detail-label">Email:</span>
+                                        <span className="detail-value">{user.email}</span>
+                                    </div>
+                                    <div className="profile-detail">
+                                        <span className="detail-label">Phone:</span>
+                                        <span className="detail-value">{formatPhoneNumber(user.phone) || 'Not provided'}</span>
+                                    </div>
+                                    <div className="profile-detail">
+                                        <span className="detail-label">Address:</span>
+                                        <span className="detail-value">{user.address || 'Not provided'}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <ul>
+                                        <li><Link to="/cart" className="nav-link">View Your Cart ({cartItems.length})</Link></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                    <section className="profile-section profile-tickets">
+                        <div className="section-header" onClick={() => setShowTickets(!showTickets)}>
+                            <h3>Tickets & Visits</h3>
+                            <span className="toggle-icon">
+                                {showTickets ? '▼' : '►'}
+                            </span>
+                        </div>
+                        {showTickets && (
+                            <div className="section-content">
+                                <div className="ticket-category">
+                                    <h4>Upcoming Visits</h4>
+                                    {upcomingTickets.length > 0 ? (
+                                        <div className="ticket-list">
+                                            {upcomingTickets.map((ticket, index) => (
+                                                <div key={`upcoming-${index}`} className="ticket-item">
+                                                    <div className="ticket-type purchase-header">
+                                                        <span>{ticket.type}</span>
+                                                        <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+                                                    </div>
+                                                    <div className="ticket-meta">
+                                                        <span>Qty: {ticket.quantity}</span>
+                                                        <span>Date: {new Date(ticket.date).toLocaleDateString()}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="no-items">No upcoming visits scheduled</p>
+                                    )}
+                                </div>
+                                <div className="ticket-category">
+                                    <h4>Past Visits</h4>
+                                    {pastTickets.length > 0 ? (
+                                        <div className="ticket-list past-tickets">
+                                            {pastTickets.map((ticket, index) => (
+                                                <div key={`past-${index}`} className="ticket-item">
+                                                    <div className="ticket-type purchase-header">
+                                                        <span>{ticket.type}</span>
+                                                        <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+                                                    </div>
+                                                    <div className="ticket-meta">
+                                                        <span>Qty: {ticket.quantity}</span>
+                                                        <span>Date: {new Date(ticket.date).toLocaleDateString()}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="no-items">No past visits recorded</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                    <section className="profile-section profile-purchases">
+                        <div className="section-header" onClick={() => setShowPurchases(!showPurchases)}>
+                            <h3>Shop Purchases</h3>
+                            <span className="toggle-icon">
+                                {showPurchases ? '▼' : '►'}
+                            </span>
+                        </div>
+                        {showPurchases && (
+                            <div className="section-content">
+                                {purchases.length > 0 ? (
+                                    <div className="purchase-list">
+                                        {purchases.map((purchase, index) => (
+                                            <div key={index} className="purchase-item">
+                                                <div className="purchase-header">
+                                                    <span className="purchase-name">{purchase.item}</span>
+                                                    <span className="purchase-price">${parseFloat(purchase.total_price).toFixed(2)}</span>
+                                                </div>
+                                                <div className="purchase-meta">
+                                                    <span>Qty: {purchase.quantity}</span>
+                                                    <span>Date: {new Date(purchase.date).toLocaleDateString()}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="no-items">No purchases found</p>
+                                )}
+                            </div>
+                        )}
+                    </section>
+                    <section className="profile-section profile-rides">
+                        <div className="section-header" onClick={() => setShowRides(!showRides)}>
+                            <h3>Ride History</h3>
+                            <span className="toggle-icon">
+                                {showRides ? '▼' : '►'}
+                            </span>
+                        </div>
+                        {showRides && (
+                            <div className="section-content">
+                                {rides.length > 0 ? (
+                                    <div className="ride-list">
+                                        {rides.map((ride, index) => (
+                                            <div key={index} className="ride-item">
+                                                <div className="ride-name">{ride.Ride_name}</div>
+                                                <div className="ride-meta">
+                                                    <span className="ride-type">{ride.Ride_type}</span>
+                                                    <span className="ride-date">{new Date(ride.ride_date).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="no-items">No ride history available</p>
+                                )}
+                            </div>
+                        )}
+                    </section>
+                </div>
             </div>
-
-            <div className="tickets">
-  <button className="toggle-section" onClick={() => setShowTickets(!showTickets)}>
-    {showTickets ? 'Hide Tickets' : 'Your Tickets'}
-  </button>
-
-  {showTickets && (
-    <>
-      <h3>📅 Upcoming Visits</h3>
-      <ul className="profile-list">
-        {upcomingTickets.length > 0 ? (
-          upcomingTickets.map((ticket, index) => (
-            <li key={`upcoming-${index}`}>
-              <strong>Ticket Type:</strong> {ticket.type} |{" "}
-              <strong>Quantity:</strong> {ticket.quantity} |{" "}
-              <strong>Visit Date:</strong> {new Date(ticket.date).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p>No upcoming visits.</p>
-        )}
-      </ul>
-
-      <h3>📜 Past Visits</h3>
-      <ul className="profile-list">
-        {pastTickets.length > 0 ? (
-          pastTickets.map((ticket, index) => (
-            <li key={`past-${index}`}>
-              <strong>Ticket Type:</strong> {ticket.type} |{" "}
-              <strong>Quantity:</strong> {ticket.quantity} |{" "}
-              <strong>Visit Date:</strong> {new Date(ticket.date).toLocaleDateString()}
-            </li>
-          ))
-        ) : (
-          <p>No past visits.</p>
-        )}
-      </ul>
-    </>
-  )}
-</div>
-
-            <div className="shop-purchases">
-                <button className="toggle-section" onClick={() => setShowPurchases(!showPurchases)}>
-                    {showPurchases ? 'Hide Shop Purchases' : 'Your Shop Purchases'}
-                </button>
-                {showPurchases && (
-                    <ul className="profile-list">
-                    {purchases.map((purchase, index) => {
-  console.log("Purchase object", purchase); // ⬅️ Add this
-  return (
-    <li key={index}>
-  Item: <strong>{purchase.item}</strong> | 
-  Quantity: <strong>{purchase.quantity}</strong> |
-  Price: ${parseFloat(purchase.total_price).toFixed(2)} |
-  Date: {new Date(purchase.date).toLocaleDateString()}
-</li>
-  );
-})}
-
-                  </ul>                  
-                )}
-            </div>
-            <div className="ride-history">
-  <button className="toggle-section" onClick={() => setShowRides(!showRides)}>
-    {showRides ? 'Hide Ride History' : 'Your Ride History'}
-  </button>
-  {showRides && (
-    <ul className="profile-list">
-      {rides.map((ride, index) => (
-        <li key={index}>
-          Ride: {ride.Ride_name} | Type: {ride.Ride_type} | Date: {new Date(ride.ride_date).toLocaleString()}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
-
         </div>
     );
 }

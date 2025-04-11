@@ -70,9 +70,9 @@ exports.getAllAvailableItems = async () => {
         it.Item_shop_price,
         i.Item_quantity
       FROM 
-        inventory i
+        inventory as i
       JOIN 
-        items it ON i.Item_ID = it.Item_ID
+        items as it ON i.Item_ID = it.Item_ID
     `);
     return items;
   };

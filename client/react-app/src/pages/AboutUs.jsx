@@ -1,55 +1,12 @@
 import React from 'react';
+import './Styling.css';
 
 function AboutUs() {
-    const styles = {
-        aboutUs: {
-            maxWidth: '800px',
-            margin: '0 auto',
-            padding: '20px',
-            fontFamily: 'Arial, sans-serif',
-            lineHeight: '1.6',
-            color: '#333',
-        },
-        header: {
-            color: '#C8102E',
-            borderBottom: '2px solid #C8102E',
-            paddingBottom: '10px',
-        },
-        section: {
-            marginBottom: '30px',
-        },
-        description: {
-            backgroundColor: '#f9f9f9',
-            padding: '20px',
-            borderRadius: '5px',
-        },
-        contactInfo: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-        },
-        contactCard: {
-            flex: '0 0 30%',
-            backgroundColor: '#f0f0f0',
-            padding: '15px',
-            borderRadius: '5px',
-            marginBottom: '20px',
-        },
-        link: {
-            color: '#C8102E',
-            textDecoration: 'none',
-        },
-        phone: {
-            fontWeight: 'bold',
-        },
-    };
-
     return (
-        <div className="about-us" style={styles.aboutUs}>
-            <h1 style={styles.header}>About Us</h1>
-            
-            <section className="description" style={{...styles.section, ...styles.description}}>
-                <h2>What is Coog World?</h2>
+        <section className='about-section fade-in'>
+            <h2 className='section-title'>About Us</h2>
+            <div className='about-content'>
+                <h3>What is Coog World?</h3>
                 <p>
                     Coog World is a thrilling theme park owned and operated by the University of Houston, 
                     bringing the spirit of Cougars to life with exciting rides, live shows, and family-friendly 
@@ -57,32 +14,26 @@ function AboutUs() {
                     supporting education. We encourage students to invite their friends and family to our 
                     park to create lasting memories.
                 </p>
-            </section>
-            
-            <section className="contact" style={styles.section}>
-                <h2 style={styles.header}>Contact Us</h2>
-                
-                <div className="contact-info" style={styles.contactInfo}>
-                    <div className="contact-card" style={styles.contactCard}>
-                        <h3>Customer Support</h3>
-                        <p style={styles.phone}>Phone: <a href="tel:832-193-1940" style={styles.link}>832-193-1940</a></p>
-                        <p>Email: <a href="mailto:Coogworld_support@CoogWorld.org" style={styles.link}>Coogworld_Support@CoogWorld.org</a></p>
-                    </div>
-                    
-                    <div className="contact-card" style={styles.contactCard}>
-                        <h3>Park Services</h3>
-                        <p style={styles.phone}>Phone: <a href="tel:832-982-8274" style={styles.link}>832-982-8274</a></p>
-                        <p>Email: <a href="mailto:Coogworld_service@CoogWorld.org" style={styles.link}>Coogworld_service@CoogWorld.org</a></p>
-                    </div>
-                    
-                    <div className="contact-card" style={styles.contactCard}>
-                        <h3>Business Inquiries</h3>
-                        <p style={styles.phone}>Phone: <a href="tel:832-910-2953" style={styles.link}>832-910-2953</a></p>
-                        <p>Email: <a href="mailto:Coogworld_business@CoogWorld.org" style={styles.link}>Coogworld_business@CoogWorld.org</a></p>
-                    </div>
+            </div>
+            <div className='contact-info'>
+                <h3>Contact Us:</h3>
+                <div>
+                    <strong>Customer Support</strong>
+                    <p>Phone: <a href="tel:832-193-1940">832-193-1940</a></p>
+                    <p>Email: <a href="mailto:Coogworld_support@CoogWorld.org">Coogworld_Support@CoogWorld.org</a></p>
                 </div>
-            </section>
-        </div>
+                <div>
+                    <strong>Park Services</strong>
+                    <p>Phone: <a href="tel:832-982-8274">832-982-8274</a></p>
+                    <p>Email: <a href="mailto:Coogworld_service@CoogWorld.org">Coogworld_service@CoogWorld.org</a></p>
+                </div>
+                <div>
+                    <strong>Business Inquiries</strong>
+                    <p>Phone: <a href="tel:832-910-2953">832-910-2953</a></p>
+                    <p>Email: <a href="mailto:Coogworld_business@CoogWorld.org">Coogworld_business@CoogWorld.org</a></p>
+                </div>
+            </div>
+        </section>
     );
 }
 

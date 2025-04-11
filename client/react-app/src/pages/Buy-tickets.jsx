@@ -49,18 +49,13 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
 
             <div style={{ marginBottom: '10px' }}>
                 <label>Quantity: </label>
-                <select
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}
-                >
+                <select value={quantity} onChange={(e) => setQuantity(e.target.value)} style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}>
                     {[...Array(10).keys()].map(num => (
                         <option key={num + 1} value={num + 1}>{num + 1}</option>
                     ))}
                 </select>
             </div>
 
-            {/* ✅ Visit Date Input */}
             <div style={{ marginBottom: '10px' }}>
                 <label>Visit Date: </label>
                 <input
@@ -69,9 +64,8 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                     onChange={(e) => setVisitDate(e.target.value)}
                     style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
                     required
-                />
+                    min={new Date().toLocaleDateString('en-CA')} />
             </div>
-
             <div><strong>Total: ${(price * quantity).toFixed(2)}</strong></div>
             <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
