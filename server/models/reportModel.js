@@ -37,7 +37,7 @@ exports.getRainoutRows = async () => {
     WHERE Wtr_level = 'Severe'
       AND Is_park_closed = 1
       AND Wtr_cond NOT IN ('Sunny', 'Foggy')
-    ORDER BY Wtr_created DESC;
+    ORDER BY Wtr_created ASC;
   `;
 
   try {
