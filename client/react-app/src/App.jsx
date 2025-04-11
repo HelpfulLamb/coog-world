@@ -63,6 +63,8 @@ function App() {
                         <Route path='/merch' element={<Merchandise />} />
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/employee-dashboard' element={<Dashboard />}>
+              <Route index element={<AdminHome />} />  {/* 👈 This line is what you need */}
+              <Route path='revenue-report' element={<Revenue />} />
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='shows' element={<Show />} />

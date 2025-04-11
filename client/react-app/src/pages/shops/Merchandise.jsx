@@ -85,7 +85,7 @@ function Merchandise() {
 
     return (
         <>
-            <h1 className='page-titles'>Awaken the Coog Spirit!</h1>
+            <h1 className='page-titles'>Awaken the Coog World love!</h1>
             <div className='merch-container'>
                 {merchOptions.map((merch, index) => (
                     <MerchCard
