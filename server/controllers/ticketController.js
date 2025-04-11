@@ -89,7 +89,7 @@ exports.deleteTicketById = async (req, res) => {
 exports.purchaseTicket = async (req, res) => {
   try {
       let { user_id, Visitor_ID, ticket_id, quantity, price, total_amount } = req.body;
-      const visitorId = user_id || Visitor_ID; // fallback in case
+      const visitorId = user_id || Visitor_ID;
 
       if (!visitorId || !ticket_id || !quantity) {
           return res.status(400).json({ message: 'Missing Visitor_ID, ticket_id, or quantity' });
@@ -146,7 +146,8 @@ exports.getUserTicketPurchases = async (req, res) => {
           SELECT 
   tt.ticket_type AS type,
   pp.quantity_sold AS quantity,
-  pp.visit_date AS date
+  pp.visit_date AS date,
+  pp.total_amount AS total
           FROM product_purchases pp
           JOIN ticket_type tt ON pp.product_id = tt.ticket_id
           JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID

@@ -4,7 +4,7 @@ import shirtImage from '../../images/shirt1.webp';
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
-function MerchCard({ title, price, description, itemId, quantity }) {
+function MerchCard({ title, price, description, inventoryId, quantity, itemId }) {
     const { addToCart } = useCart();
     const { user } = useAuth();
 
@@ -17,14 +17,15 @@ function MerchCard({ title, price, description, itemId, quantity }) {
             return;
         }
 
-        console.log("🛒 Adding to cart:", { title, price, itemId });  // ✅ Confirm it shows a number
+        console.log("🛒 Adding to cart:", { title, price, itemId });
 
         addToCart({
             type: 'merch',
             title,
             price,
             quantity: 1,
-            itemId,  // ✅ This must be defined
+            itemId,
+            inventoryId,
         });
 
         alert("🛍️ Item added to cart!");
@@ -93,7 +94,8 @@ function Merchandise() {
                     title={merch.Item_name}
                     price={merch.Item_shop_price}
                     description={merch.Item_desc}
-                    itemId={merch.Inventory_ID}
+                    itemId={merch.Item_ID}
+                    inventoryId={merch.Inventory_ID}
                     quantity={merch.Item_quantity}
                   />                  
                   
