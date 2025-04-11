@@ -199,3 +199,19 @@
         width: 100%;
     }
 }
+.bar-chart {
+    background-color: white; /* White background for the chart */
+    padding: 10px; /* Padding around the chart */
+    border-radius: 8px; /* Optional: Adds rounded corners to the chart container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Light shadow around the chart */
+    max-width: 800px; /* Maximum width of the chart */
+    margin: 0 auto; /* Center the chart horizontally */
+}
+.report-container {
+    max-width: 800px; /* Maximum width of the entire report */
+    margin: 0 auto; /* Center the report on the page */
+    padding: 20px; /* Padding around the report */
+}
+.bar-chart-container {
+    padding-top: 20px; /* Add space above the chart */
+}
