@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import './Dashboard.css';
 
 const DashboardNav = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const role = user?.role?.toLowerCase();
+
+    const [isWeatherDropdownOpen, setIsWeatherDropdownOpen] = useState(false);
+
+    const toggleWeatherDropdown = () => {
+        setIsWeatherDropdownOpen(prev => !prev);
+    };
+
     return(
         <nav className="dashboard-nav">
             <ul>
@@ -19,7 +26,18 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/items'}>Items</Link></li>
                         <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
-                        <li><Link to={'/employee-dashboard/weather-report'}>Weather Report</Link></li>
+                        <li className="dropdown">
+                            <button onClick={toggleWeatherDropdown} className="dropdown-btn">
+                                Weather
+                                <span className={`arrow-icon ${isWeatherDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isWeatherDropdownOpen && (
+                                <ul className="dropdown-menu">
+                                    <li><Link to={'/employee-dashboard/weather-report'}>Weather Report</Link></li>
+                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainouts</Link></li>
+                                </ul>
+                            )}
+                        </li>
                         <li><Link to={'/employee-dashboard/report'}>Reports</Link></li>
                     </>
                 )}
