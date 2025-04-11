@@ -14,12 +14,14 @@ rideRouter.get('/', rideController.getAllRides);
 rideRouter.get('/info', rideController.getRideInfo);
 rideRouter.get('/user-view', rideController.getRideForCard);
 rideRouter.get('/history/:id', rideController.getVisitorRideHistory);
-rideRouter.get('/:id', rideController.getRideById);
+//rideRouter.get('/:id', rideController.getRideById);
 
 // delete rides (all or specific)
 rideRouter.delete('/delete-all', rideController.deleteAllRides);
 rideRouter.delete('/delete-selected', rideController.deleteRideById);
 
+// Show Ride by Month & User
+rideRouter.get('/ride-stats', rideController.getRideStatsByMonth);
 
 module.exports = {
     rideRouter
