@@ -25,7 +25,7 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li><Link to={'/employee-dashboard/items'}>Items</Link></li>
                         <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li>
-                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleWeatherDropdown} className="dropdown-btn">
                                 Weather
