@@ -37,6 +37,7 @@ import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
 import Reports from './pages/operations/Reports.jsx';
+import Rainout from './pages/operations/Rainout.jsx';
 
 function App() {
   const location = useLocation();
@@ -73,6 +74,7 @@ function App() {
                             <Route path='maintenance-report' element={<Maintenance />} />
                             <Route path='weather-report' element={<Weather />} />
                             <Route path='report' element={<Reports />} />
+                            <Route path='rainout-report' element={<Rainout />}/>
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />
                     </Routes>
