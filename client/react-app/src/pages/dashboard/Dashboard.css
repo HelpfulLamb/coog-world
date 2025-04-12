@@ -200,3 +200,47 @@
         border-color: #334155;
     }
 }
+.dropdown-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+    text-align: left;
+}
+
+.dropdown-menu {
+    list-style: none;
+    margin: 5px 0 0 15px;
+    padding: 0;
+}
+
+.dropdown-menu li {
+    margin: 3px 0;
+}
+.dropdown-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.arrow-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.arrow-icon.open {
+    transform: rotate(180deg);
+}
+.chart-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
