@@ -69,37 +69,46 @@ exports.getVisitorRideHistory = async (visitorId) => {
 
 exports.getRideStatsByMonth = async (month) => {
     const query = `
-      SELECT 
-          r.ride_name,
-          IFNULL(COUNT(vrl.ride_id), 0) AS total_rides,
-          COALESCE(v_top.visitor_name, 'No Riders') AS top_rider,
-          COALESCE(v_top.ride_count, 0) AS top_rides
-      FROM 
-          rides r
-      LEFT JOIN 
-          visitor_ride_log vrl
-          ON r.ride_id = vrl.ride_id 
-          AND DATE_FORMAT(vrl.ride_date, '%Y-%m') = ?
-      LEFT JOIN 
-      (
-          SELECT 
-              vrl.ride_id, 
-              CONCAT(v.First_name, ' ', v.Last_name) AS visitor_name, 
-              COUNT(*) AS ride_count
-          FROM 
-              visitor_ride_log vrl
-          JOIN 
-              visitors v ON v.visitor_id = vrl.visitor_id
-          WHERE 
-              DATE_FORMAT(vrl.ride_date, '%Y-%m') = ?
-          GROUP BY 
-              vrl.ride_id, vrl.visitor_id
-          ORDER BY 
-              ride_count DESC
-      ) v_top 
-      ON v_top.ride_id = r.ride_id
-      GROUP BY 
-          r.ride_id, r.ride_name, v_top.visitor_name, v_top.ride_count;
+        SELECT 
+            r.ride_name,
+            IFNULL(COUNT(vrl.ride_id), 0) AS total_rides,
+            COALESCE(v_top.visitor_name, 'No Riders') AS top_rider,
+            COALESCE(v_top.ride_count, 0) AS top_rides
+        FROM 
+            rides r
+        LEFT JOIN 
+            visitor_ride_log vrl
+            ON r.ride_id = vrl.ride_id 
+            AND DATE_FORMAT(vrl.ride_date, '%Y-%m') = ?
+        LEFT JOIN 
+        (
+            SELECT 
+                ride_id,
+                visitor_name,
+                ride_count
+            FROM (
+                SELECT 
+                    vrl.ride_id, 
+                    CONCAT(v.first_name, ' ', v.last_name) AS visitor_name, 
+                    COUNT(*) AS ride_count,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY vrl.ride_id 
+                        ORDER BY COUNT(*) DESC, CONCAT(v.first_name, ' ', v.last_name) ASC
+                    ) AS rn
+                FROM 
+                    visitor_ride_log vrl
+                JOIN 
+                    visitors v ON v.visitor_id = vrl.visitor_id
+                WHERE 
+                    DATE_FORMAT(vrl.ride_date, '%Y-%m') = ?
+                GROUP BY 
+                    vrl.ride_id, vrl.visitor_id
+            ) ranked
+            WHERE rn = 1
+        ) v_top 
+        ON v_top.ride_id = r.ride_id
+        GROUP BY 
+            r.ride_id, r.ride_name, v_top.visitor_name, v_top.ride_count;
     `;
   
     const [rows] = await db.query(query, [month, month]); // Use the db connection's query method

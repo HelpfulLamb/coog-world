@@ -1,5 +1,163 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AddMaintenance from "../modals/AddMaintenance.jsx";
+
+function RideMaintenanceReport() {
+    const [selectedMonth, setSelectedMonth] = useState("");
+    const [rideMaintenanceData, setRideMaintenanceData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOption, setSortOption] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+    
+    const months = [
+        { value: 1, label: "January" },
+        { value: 2, label: "February" },
+        { value: 3, label: "March" },
+        { value: 4, label: "April" },
+        { value: 5, label: "May" },
+        { value: 6, label: "June" },
+        { value: 7, label: "July" },
+        { value: 8, label: "August" },
+        { value: 9, label: "September" },
+        { value: 10, label: "October" },
+        { value: 11, label: "November" },
+        { value: 12, label: "December" }
+    ];
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const maxMonth = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
+
+    // Fetch ride frequency data based on the selected month
+    const fetchRideMaintenanceData = async (month) => {
+        if (!month) return;
+        setLoading(true);
+        try {
+            const response = await fetch(`/api/maintenance/avg-stat?month=${month}`);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            const data = await response.json();
+            setRideMaintenanceData(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Handle dropdown change
+    const handleMonthChange = (event) => {
+        const month = event.target.value;
+        setSelectedMonth(month);
+        fetchRideMaintenanceData(month);
+    };
+
+    useEffect(() => {
+        let filtered = [...rideMaintenanceData];
+
+        // Filter by search term
+        if (searchTerm) {
+            filtered = filtered.filter(ride =>
+                ride.ride_name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        // Sort the data
+        switch (sortOption) {
+            case 'nameAsc':
+              filtered.sort((a, b) => a.ride_name.localeCompare(b.ride_name));
+              break;
+            case 'nameDesc':
+              filtered.sort((a, b) => b.ride_name.localeCompare(a.ride_name));
+              break;
+            case 'maintenanceAsc':
+              filtered.sort((a, b) => a.total_maintenance - b.total_maintenance);
+              break;
+            case 'maintenanceDesc':
+              filtered.sort((a, b) => b.total_maintenance - a.total_maintenance);
+              break;
+            default:
+              break;
+        }
+
+        setFilteredData(filtered);
+    }, [rideMaintenanceData, searchTerm, sortOption]);
+
+    return (
+        <div className="ride-maintenance-report">
+            <h2>Ride Maintenance Report</h2>
+
+            <div className="filter-controls">
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="month">Select Month:</label>
+                        <input type="month" id="month" value={selectedMonth} onChange={handleMonthChange} max={maxMonth} className="month-input" />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="searchTerm">Search Ride Name:</label>
+                        <input
+                            type="text"
+                            id="searchTerm"
+                            placeholder="Search by ride name"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="filter-group">
+                        <label htmlFor="sortOption">Sort By:</label>
+                        <select id="sortOption" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                            <option value="">-- Select Sorting --</option>
+                            <option value="nameAsc">Ride Name (A-Z)</option>
+                            <option value="nameDesc">Ride Name (Z-A)</option>
+                            <option value="maintenanceAsc">Maintenance Count (Low to High)</option>
+                            <option value="maintenanceDesc">Maintenance Count (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error}</p>}
+
+            {!loading && !error && filteredData.length > 0 && (
+                <div className="table-container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Ride Name</th>
+                                <th>Times Maintenance</th>
+                                <th>Message</th>
+                                <th>Message Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredData.map((ride, index) => (
+                                <tr key={index}>
+                                    <td>{ride.ride_name}</td>
+                                    <td>{ride.total_maintenance}</td>
+                                    <td>{ride.log_message}</td>
+                                    <td>{formatDate(ride.log_date)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {!loading && !error && rideMaintenanceData.length === 0 && selectedMonth && (
+                <p>No data available for the selected month.</p>
+            )}
+        </div>
+    );
+}
 
 function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChange }) {
     const formatDate = (dateString) => {
@@ -287,6 +445,8 @@ function Maintenance() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onAddMaintenance={handleAddMaintenance}
+            />
+            <RideMaintenanceReport
             />
         </>
     );
