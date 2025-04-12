@@ -14,9 +14,6 @@ maintenanceRouter.get('/info', maintenanceController.getMaintenanceInfo);
 maintenanceRouter.get('/object', maintenanceController.getMaintenanceById);
 maintenanceRouter.get('/objects/:objectType', maintenanceController.getObjectsByType);
 
-// Get ride maintenance report
-maintenanceRouter.get('/avg-stat', maintenanceController.getRideMaintenance);
-
 // delete rides (all or specific)
 maintenanceRouter.delete('/', maintenanceController.deleteAllMaintenance);
 maintenanceRouter.delete('/:id', maintenanceController.deleteMaintenanceById);

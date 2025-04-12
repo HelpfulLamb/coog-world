@@ -79,36 +79,6 @@ exports.getMaintenanceById = async (req, res) => {
     }
 };
 
-// Function to fetch ride maintenance stats by month
-exports.getRideMaintenance = async (req, res) => {
-    const { month } = req.query; // Get month from query parameter
-    
-    // Validate month input format (YYYY-MM)
-    const monthFormatRegex = /^\d{4}-\d{2}$/;
-    if (!month) {
-        return res.status(400).json({ message: 'Month is required.' });
-    }
-
-    if (!monthFormatRegex.test(month)) {
-        return res.status(400).json({ message: 'Invalid month format. Please use YYYY-MM format.' });
-    }
-
-    try {
-        const stats = await maintenanceModel.getRideMaintenance(month); // Fetch stats from the model
-        
-        if (stats.length === 0) { // Handle case where no data is found
-            return res.status(404).json({ message: 'No ride stats found for this month.' });
-        }
-
-        // Return the ride stats as a JSON response
-        res.status(200).json(stats);
-    } catch (error) {
-        // If an error occurs, return a 500 status code with the error message
-        res.status(500).json({ message: error.message });
-    }
-};
-
-
 exports.deleteAllMaintenance = async (req, res) => {
     try {
         await maintenanceModel.deleteAllMaintenance();
