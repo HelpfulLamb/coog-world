@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Report.css';
-import TicketSalesReport from './TicketSalesReport';
 
 const RevenueReport = () => {
   const [revenueData, setRevenueData] = useState(null);
@@ -167,7 +166,6 @@ const Reports = () => {
       <h1>📈 Reports Dashboard</h1>
       <section style={{ marginTop: '2rem' }}>
         <RevenueReport />
-        <TicketSalesReport />
       </section>
     </div>
   );
