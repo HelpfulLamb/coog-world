@@ -62,13 +62,16 @@ exports.getRainoutRows = async () => {
 
 exports.getRevenueSummary = async () => {
   const query = `
-  SELECT 
-    SUM(CASE WHEN pp.product_type = 'Ticket' THEN pp.total_amount ELSE 0 END) AS ticketRevenue,
-    SUM(CASE WHEN pp.product_type = 'Merchandise' THEN pp.total_amount ELSE 0 END) AS merchRevenue,
-    SUM(CASE WHEN pp.product_type = 'Food' THEN pp.total_amount ELSE 0 END) AS foodRevenue,
-    SUM(CASE WHEN pp.product_type = 'Service' THEN pp.total_amount ELSE 0 END) AS serviceRevenue,
-    SUM(pp.total_amount) AS totalRevenue
-  FROM product_purchases pp;
+    SELECT 
+      SUM(CASE WHEN product_type = 'Ticket' THEN total_amount ELSE 0 END) AS ticketRevenue,
+      SUM(CASE WHEN product_type = 'Merchandise' THEN total_amount ELSE 0 END) AS merchRevenue,
+      SUM(CASE WHEN product_type = 'Food' THEN total_amount ELSE 0 END) AS foodRevenue,
+      SUM(CASE WHEN product_type = 'Service' THEN total_amount ELSE 0 END) AS serviceRevenue,
+      SUM(total_amount) AS totalRevenue,
+      COUNT(DISTINCT CASE 
+        WHEN product_type = 'Ticket' AND DATE(purchase_created) = CURDATE()
+        THEN visitor_id END) AS totalVisitorsToday
+    FROM product_purchases;
   `;
 
   try {
@@ -76,7 +79,7 @@ exports.getRevenueSummary = async () => {
     if (!results || results.length === 0) {
       throw new Error('No revenue data found');
     }
-    return results[0]; // ✅ Make sure to return only the first result
+    return results[0]; // return first row
   } catch (error) {
     throw new Error('Error fetching revenue summary: ' + error.message);
   }
