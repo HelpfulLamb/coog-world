@@ -14,27 +14,44 @@ const Home = () => {
       try {
         const response = await axios.get('/api/reports/revenue-summary');
         console.log("📊 Revenue Summary Response:", response.data);
-
-        // Format total revenue nicely
+  
         const formattedRevenue = `$${Number(response.data.totalRevenue).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`;
-
+  
         setRevenue(formattedRevenue);
-        setTicketCount(response.data.totalTicketsSold ?? 'N/A');
-        setVisitorCount(response.data.totalVisitors ?? 'N/A');
-        setLastUpdated(new Date().toLocaleTimeString());
       } catch (error) {
         console.error("Error fetching revenue:", error);
         setRevenue('Error loading data');
+      }
+    };
+  
+    const fetchTicketsSoldToday = async () => {
+      try {
+        const response = await axios.get('/api/reports/tickets-today');
+        setTicketCount(response.data.total ?? 'N/A');
+      } catch (error) {
+        console.error("Error fetching tickets sold today:", error);
         setTicketCount('Error');
+      }
+    };
+  
+    const fetchVisitorsToday = async () => {
+      try {
+        const response = await axios.get('/api/reports/visitors-today');
+        setVisitorCount(response.data.total ?? 'N/A');
+      } catch (error) {
+        console.error("Error fetching daily visitors:", error);
         setVisitorCount('Error');
       }
     };
-
+  
     fetchRevenue();
-  }, []);
+    fetchTicketsSoldToday();
+    fetchVisitorsToday();
+    setLastUpdated(new Date().toLocaleTimeString());
+  }, []);  
 
   const cardStyle = {
     backgroundColor: 'white',

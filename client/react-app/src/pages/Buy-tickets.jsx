@@ -78,6 +78,7 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
     const { addToCart } = useCart();
     const navigate = useNavigate();
+    const [visitDate, setVisitDate] = useState('');
 
     const handleAddParking = () => {
         if (!userId || !ticketId) {
@@ -86,11 +87,18 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
             return;
         }
 
+        if (!visitDate) {
+            alert("Please select a visit date for the parking pass.");
+            return;
+        }
+
         addToCart({
+            type: 'ticket',
             ticketId,
             title,
             price,
-            quantity: 1, 
+            quantity: 1,
+            visitDate
         });
 
         alert("✅ Parking pass added to cart!");
@@ -104,6 +112,17 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
                 <li>{description1}</li>
                 <li>{description2}</li>
             </ul>
+            <div style={{ marginBottom: '10px' }}>
+                <label>Visit Date: </label>
+                <input
+                    type="date"
+                    value={visitDate}
+                    onChange={(e) => setVisitDate(e.target.value)}
+                    style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
+                    required
+                    min={new Date().toLocaleDateString('en-CA')}
+                />
+            </div>
             <button className='fancy' onClick={handleAddParking}>Add Parking</button>
         </div>
     );

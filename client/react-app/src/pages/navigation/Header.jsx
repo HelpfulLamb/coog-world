@@ -5,7 +5,7 @@ import { Logout } from '../registration/Login';
 import logo from '../../images/coogworldlogo.png';
 
 function Header() {
-    const { isAuthenticated, setIsAuthenticated } = useAuth(); 
+    const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();  
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     useEffect(() => {
@@ -15,10 +15,11 @@ function Header() {
         }
     }, [setIsAuthenticated]);
     const handleLogout = () => {
-        Logout(navigate); 
-        setIsAuthenticated(false); 
-        setIsSidebarOpen(false);
-    };
+        setUser(null);                  // clear user context
+        setIsAuthenticated(false);     // reset auth status
+        Logout(navigate);              // clear localStorage and redirect
+        setIsSidebarOpen(false);       // close mobile sidebar if open
+    };    
     const toggleSidebar = () => {
         setIsSidebarOpen(prev => !prev);
     };
