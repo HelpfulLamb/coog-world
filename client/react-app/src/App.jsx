@@ -43,8 +43,8 @@ function App() {
   const location = useLocation();
   const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
 
-    return (
-        <AuthProvider>
+  return (
+    <AuthProvider>
             <CartProvider> {/* ✅ wrap inside AuthProvider */}
                 <div className="app-container">
                     {!isEmployeeDashboard && <Header />}

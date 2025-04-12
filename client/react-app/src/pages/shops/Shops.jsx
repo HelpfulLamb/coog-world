@@ -33,7 +33,7 @@ function Shop(){
         }, 
         {
             title: 'Merchandise',
-            description1: 'See how you can show your Cougar Pride!',
+            description1: 'Display your Coog World love!',
             button: "/merch",
             backgroundImage: toyImage
         },
