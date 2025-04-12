@@ -1,5 +1,6 @@
 const reportModel = require('../models/reportModel.js');
 const { Parser } = require('json2csv'); 
+const db = require('../config/db.js');
 
 exports.getRainoutsReport = async (req, res) => {
   try {
@@ -27,6 +28,23 @@ exports.getRevenueReport = async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ message: 'Server error: ' + error.message });
+  }
+};
+exports.getRevenueDetails = async (req, res) => {
+  try {
+    const [results] = await db.query(`
+      SELECT 
+        product_type, 
+        quantity_sold, 
+        purchase_price, 
+        total_amount, 
+        purchase_created 
+      FROM product_purchases
+    `);
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching revenue details:", error);
+    res.status(500).json({ message: "Failed to retrieve revenue details." });
   }
 };
 exports.getRevenueSummary = async (req, res) => {

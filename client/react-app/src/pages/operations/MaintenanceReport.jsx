@@ -11,8 +11,13 @@ function RideMaintenanceReport() {
     const [filteredData, setFilteredData] = useState([]);
 
     const formatDate = (dateString) => {
+        if (!dateString) return "00/00/0000";
         const date = new Date(dateString);
         return date.toLocaleDateString();
+    };
+    //Calculate Total
+    const getTotalMaintenance = () => {
+        return filteredData.reduce((sum, ride) => sum + (ride.total_maintenance || 0), 0);
     };
     
     const months = [
@@ -148,6 +153,13 @@ function RideMaintenanceReport() {
                                 </tr>
                             ))}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong>{getTotalMaintenance()}</strong></td>
+                                <td colSpan="2"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             )}

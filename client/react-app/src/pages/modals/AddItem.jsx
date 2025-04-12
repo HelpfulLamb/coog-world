@@ -50,7 +50,7 @@ export function UpdateItem({isOpen, onClose, itemToEdit, onUpdateItem}){
     const getPlaceholders = (field) => {
         const placeholders = {
             'Item_name': 'e.g. Plush',
-            'Item_desc': 'e.g. Red Shirt',
+            'Item_desc': 'e.g. White Shirt',
             'Item_shop_price': 'e.g. 50.00',
             'Item_supply_price': 'e.g. 1.50'
         };
