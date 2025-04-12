@@ -80,6 +80,58 @@ exports.getMaintenanceById = async (id) => {
     return maintenance[0];
 };
 
+// For ride maintenance Report
+exports.getRideMaintenance = async (month) => {
+    const query = `
+        SELECT 
+            r.ride_name,
+            IFNULL(m_count.total_maint, 0) AS total_maintenance,
+            ml.log_message,
+            ml.log_date
+        FROM 
+            rides r
+        LEFT JOIN 
+            (
+                SELECT 
+                    m.maint_obj_ID,
+                    COUNT(*) AS total_maint
+                FROM 
+                    maintenance m
+                WHERE 
+                    DATE_FORMAT(m.maint_created, '%Y-%m') = ?
+                GROUP BY 
+                    m.maint_obj_ID
+            ) m_count
+            ON m_count.maint_obj_ID = r.ride_ID
+        LEFT JOIN 
+            (
+                SELECT 
+                    ml.object_ID,
+                    ml.message AS log_message,
+                    ml.log_date
+                FROM 
+                    maintenance_log ml
+                JOIN 
+                (
+                    -- Get latest log per object
+                    SELECT 
+                        object_ID, 
+                        MAX(log_date) AS latest_log_date
+                    FROM 
+                        maintenance_log
+                    GROUP BY 
+                        object_ID
+                ) latest_ml
+                ON ml.object_ID = latest_ml.object_ID 
+                AND ml.log_date = latest_ml.latest_log_date
+            ) ml
+            ON ml.object_ID = r.ride_ID;
+    `;
+  
+    const [rows] = await db.query(query, [month]); // Use the db connection's query method
+    return rows;
+};
+
 exports.deleteAllMaintenance = async () => {
     await db.query('DELETE FROM maintenance');
 };
