@@ -25,6 +25,32 @@ exports.getRainoutsPerMonth = async () => {
   }
 };
 
+exports.getRainoutRows = async () => {
+  const query = `
+    SELECT
+      Wtr_id,
+      Wtr_created,
+      Wtr_level,
+      Wtr_cond,
+      Is_park_closed
+    FROM weather
+    WHERE Wtr_level = 'Severe'
+      AND Is_park_closed = 1
+      AND Wtr_cond NOT IN ('Sunny', 'Foggy')
+    ORDER BY Wtr_created ASC;
+  `;
+
+  try {
+    const [rows] = await db.query(query);
+    if (rows.length === 0) {
+      throw new Error('No rainout entries found');
+    }
+    return rows;
+  } catch (error) {
+    throw new Error('Error fetching rainout rows: ' + error.message);
+  }
+};
+
 /*exports.getTotalRevenue = async () => {
   // Return mock data instead of querying the database
   return {

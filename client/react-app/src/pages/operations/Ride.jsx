@@ -26,6 +26,11 @@ function RideFrequencyReport() {
         { value: 12, label: "December" }
     ];
 
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const maxMonth = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
+
     // Fetch ride frequency data based on the selected month
     const fetchRideFrequencyData = async (month) => {
         if (!month) return;
@@ -91,38 +96,33 @@ function RideFrequencyReport() {
             <h2>Ride Frequency Report</h2>
 
             <div className="filter-controls">
-                <div className="filter-group">
-                    <label htmlFor="month">Select Month:</label>
-                    <select id="month" value={selectedMonth} onChange={handleMonthChange}>
-                        <option value="">-- Select a Month --</option>
-                        {months.map((month) => (
-                            <option key={month.value} value={`2025-${String(month.value).padStart(2, '0')}`}>
-                                {month.label} 2025
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <div className="filter-row">
+                    <div className="filter-group">
+                        <label htmlFor="month">Select Month:</label>
+                        <input type="month" id="month" value={selectedMonth} onChange={handleMonthChange} max={maxMonth} className="monht-input" />
+                    </div>
 
-                <div className="filter-group">
-                    <label htmlFor="searchTerm">Search Top Rider Name:</label>
-                    <input
-                        type="text"
-                        id="searchTerm"
-                        placeholder="Search by ride name"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
+                    <div className="filter-group">
+                        <label htmlFor="searchTerm">Search Top Rider Name:</label>
+                        <input
+                            type="text"
+                            id="searchTerm"
+                            placeholder="Search by ride name"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
 
-                <div className="filter-group">
-                    <label htmlFor="sortOption">Sort By:</label>
-                    <select id="sortOption" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-                        <option value="">-- Select Sorting --</option>
-                        <option value="nameAsc">Ride Name (A-Z)</option>
-                        <option value="nameDesc">Ride Name (Z-A)</option>
-                        <option value="timesRiddenDesc">Times Ridden (High to Low)</option>
-                        <option value="topRiderCountDesc">Top Rider's Count (High to Low)</option>
-                    </select>
+                    <div className="filter-group">
+                        <label htmlFor="sortOption">Sort By:</label>
+                        <select id="sortOption" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                            <option value="">-- Select Sorting --</option>
+                            <option value="nameAsc">Ride Name (A-Z)</option>
+                            <option value="nameDesc">Ride Name (Z-A)</option>
+                            <option value="timesRiddenDesc">Times Ridden (High to Low)</option>
+                            <option value="topRiderCountDesc">Top Rider's Count (High to Low)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

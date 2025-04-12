@@ -19,7 +19,7 @@ exports.updateStatus = async (status) => {
         } else if(Maint_obj === 'kiosk'){
             await db.query('UPDATE kiosks SET Kiosk_operate = 0 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
         } else if(Maint_obj === 'stage'){
-            await db.query('UPDATE stages SET Is_operate = 0 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+            await db.query('UPDATE stages SET Is_operate = 0 WHERE Stage_ID = ?', [Maint_obj_ID]);
         }
     } else if(Maint_Status === 'Completed'){
         if(Maint_obj === 'ride'){
@@ -27,7 +27,7 @@ exports.updateStatus = async (status) => {
         } else if(Maint_obj === 'kiosk'){
             await db.query('UPDATE kiosks SET Kiosk_operate = 1 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
         } else if(Maint_obj === 'stage'){
-            await db.query('UPDATE stages SET Is_operate = 1 WHERE Kiosk_ID = ?', [Maint_obj_ID]);
+            await db.query('UPDATE stages SET Is_operate = 1 WHERE Stage_ID = ?', [Maint_obj_ID]);
         }
     }
     return report;

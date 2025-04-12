@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
-import { CartProvider } from './context/CartContext.jsx'; // ✅ Added this
+import { CartProvider } from './context/CartContext.jsx';
 
 // Navigation Components
 import Header from './pages/navigation/Header.jsx';
@@ -37,6 +37,7 @@ import Inventory from './pages/operations/Inventory.jsx';
 import Maintenance from './pages/operations/MaintenanceReport.jsx';
 import Weather from './pages/operations/WeatherReport.jsx';
 import Reports from './pages/operations/Reports.jsx';
+import Rainout from './pages/operations/Rainout.jsx';
 
 function App() {
   const location = useLocation();
@@ -44,26 +45,26 @@ function App() {
 
   return (
     <AuthProvider>
-            <CartProvider> {/* ✅ wrap inside AuthProvider */}
-                <div className="app-container">
+      <CartProvider>
+        <div className="app-container">
           {!isEmployeeDashboard && <Header />}
           <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/about-us' element={<About />} />
-          <Route path='/tickets' element={<Tickets />} />
-          <Route path='/services' element={<Services />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/shop' element={<Shop />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/registration' element={<Register />} />
-          <Route path='/parkshops' element={<Parkshops />} />
-          <Route path='/parkrides' element={<ParkRides />} />
-          <Route path='/parkshows' element={<ParkShows />} />
-          <Route path='/merch' element={<Merchandise />} />
-          <Route path='/profile' element={<Profile />} />
+            <Route path='/' element={<Home />} />
+            <Route path='/home' element={<Home />} />
+            <Route path='/about-us' element={<About />} />
+            <Route path='/tickets' element={<Tickets />} />
+            <Route path='/services' element={<Services />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/shop' element={<Shop />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/registration' element={<Register />} />
+            <Route path='/parkshops' element={<Parkshops />} />
+            <Route path='/parkrides' element={<ParkRides />} />
+            <Route path='/parkshows' element={<ParkShows />} />
+            <Route path='/merch' element={<Merchandise />} />
+            <Route path='/profile' element={<Profile />} />
             <Route path='/employee-dashboard' element={<Dashboard />}>
-              <Route index element={<AdminHome />} />  {/* 👈 This line is what you need */}
+              <Route index element={<AdminHome />} />
               <Route path='revenue-report' element={<Revenue />} />
               <Route path='employees' element={<Employee />} />
               <Route path='rides' element={<Ride />} />
@@ -75,6 +76,7 @@ function App() {
               <Route path='maintenance-report' element={<Maintenance />} />
               <Route path='weather-report' element={<Weather />} />
               <Route path='report' element={<Reports />} />
+              <Route path='rainout-report' element={<Rainout />} />
             </Route>
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
