@@ -64,3 +64,50 @@ exports.getTicketsSoldToday = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch tickets sold today.' });
   }
 };
+exports.getTicketSalesReport = async (req, res) => {
+  try {
+    const [results] = await db.query(`
+      SELECT 
+  tt.ticket_type AS ticket_type,
+  SUM(pp.quantity_sold) AS total_sold,
+  ROUND(AVG(pp.quantity_sold), 2) AS monthly_avg
+FROM product_purchases pp
+JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+WHERE pp.product_type = 'Ticket'
+GROUP BY tt.ticket_type;
+    `);
+    res.json(results);
+  } catch (err) {
+    console.error('Ticket sales report error:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+exports.getCustomerStats = async (req, res) => {
+  try {
+    const [monthly] = await db.query(`
+      SELECT 
+        DATE_FORMAT(purchase_created, '%Y-%m') AS month,
+        COUNT(DISTINCT Transaction_ID) AS customers
+      FROM product_purchases
+      GROUP BY month
+      ORDER BY month ASC
+    `);
+
+    const [averageResult] = await db.query(`
+      SELECT ROUND(AVG(monthly_count), 2) AS average
+      FROM (
+        SELECT COUNT(DISTINCT Transaction_ID) AS monthly_count
+        FROM product_purchases
+        GROUP BY DATE_FORMAT(purchase_created, '%Y-%m')
+      ) AS monthly_data
+    `);
+
+    res.status(200).json({
+      monthly,
+      average: averageResult[0].average
+    });
+  } catch (error) {
+    console.error('Customer stats report error:', error);
+    res.status(500).json({ message: 'Failed to fetch customer stats.' });
+  }
+};
