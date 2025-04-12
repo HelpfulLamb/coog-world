@@ -36,10 +36,10 @@ app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
 app.use('/api/reports', reportRoutes);
 
-app.use(express.static(path.join(__dirname, 'client')));
-app.get('*', (req, res) => {
+//app.use(express.static(path.join(__dirname, 'client')));
+/*app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
+}); */
 
 // 404 fallback (API only)
 app.use((req, res) => {
