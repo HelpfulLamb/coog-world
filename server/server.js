@@ -41,9 +41,11 @@ app.use('/api/attendance', attendanceRouter);
 app.use('/api/cart', cartRouter);
 
 app.use(express.static(path.join(__dirname, 'client')));
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
+
 
 // 404 fallback (API only)
 app.use((req, res) => {

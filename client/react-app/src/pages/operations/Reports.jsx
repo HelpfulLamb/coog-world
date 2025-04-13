@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Report.css';
-import TicketSalesReport from './TicketSalesReport';
+import CustomerTrendsChart from './CustomerTrendsChart';
 
 const RevenueReport = () => {
   const [revenueData, setRevenueData] = useState(null);
@@ -161,17 +161,162 @@ const RevenueReport = () => {
   );
 };
 
+const TicketSalesReportInline = () => {
+  const [salesData, setSalesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        const res = await axios.get('/api/reports/ticket-sales');
+        console.log("🎟️ Ticket Sales Response:", res.data);
+        setSalesData(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        setError('Failed to load ticket sales data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSales();
+  }, []);
+
+  if (loading) return <div>Loading ticket sales summary...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+
+  return (
+    <div style={{ marginTop: '3rem' }}>
+      <h2 style={{ padding: '1rem', color: '#c8102e', fontWeight: 'bold' }}>
+        🎟️ Ticket Sales Summary
+      </h2>
+
+      <div style={{ overflowX: 'auto' }}>
+        <table
+          className="table"
+          style={{
+            borderCollapse: 'collapse',
+            width: '100%',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          <thead style={{ backgroundColor: '#2f3e46', color: 'white' }}>
+            <tr>
+              <th style={{ padding: '0.75rem' }}>Ticket Type</th>
+              <th style={{ padding: '0.75rem' }}>Total Sold</th>
+              <th style={{ padding: '0.75rem' }}>Monthly Avg</th>
+            </tr>
+          </thead>
+          <tbody>
+            {salesData.map((row, index) => (
+              <tr
+                key={index}
+                style={{
+                  backgroundColor: index % 2 === 0 ? '#f8f9fa' : '#ffffff',
+                }}
+              >
+                <td style={{ padding: '0.75rem', fontWeight: '500' }}>{row.ticket_type}</td>
+                <td style={{ padding: '0.75rem' }}>{row.total_sold}</td>
+                <td style={{ padding: '0.75rem' }}>{row.monthly_avg}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const CustomerStatsReport = () => {
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [average, setAverage] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomerStats = async () => {
+      try {
+        const res = await axios.get('/api/reports/customer-stats');
+        setMonthlyData(res.data?.monthly || []);
+        setAverage(res.data.average);
+      } catch (err) {
+        setError('Failed to load customer stats.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCustomerStats();
+  }, []);
+
+  if (loading) return <div>Loading customer report...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+
+  return (
+    <div style={{ marginTop: '3rem' }}>
+      <h2 style={{ padding: '1rem', color: '#c8102e', fontWeight: 'bold' }}>
+        👥 Customer Activity Report
+      </h2>
+
+      <p style={{ margin: '1rem 0', fontWeight: 'bold' }}>
+        Average Monthly Visitors: <span style={{ color: '#c8102e' }}>{average}</span>
+      </p>
+
+      <div style={{ overflowX: 'auto' }}>
+        <table
+          className="table"
+          style={{
+            borderCollapse: 'collapse',
+            width: '100%',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          <thead style={{ backgroundColor: '#2f3e46', color: 'white' }}>
+            <tr>
+              <th style={{ padding: '0.75rem' }}>Month</th>
+              <th style={{ padding: '0.75rem' }}>Unique Visitors</th>
+            </tr>
+          </thead>
+          <tbody>
+            {monthlyData.map((row, index) => (
+              <tr
+                key={index}
+                style={{
+                  backgroundColor: index % 2 === 0 ? '#f8f9fa' : '#ffffff',
+                }}
+              >
+                <td style={{ padding: '0.75rem', fontWeight: '500' }}>{row.month}</td>
+                <td style={{ padding: '0.75rem' }}>{row.customers}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+
+
 const Reports = () => {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>📈 Reports Dashboard</h1>
       <section style={{ marginTop: '2rem' }}>
         <RevenueReport />
-        <TicketSalesReport />
+        <TicketSalesReportInline />
+        <CustomerStatsReport /> 
+        <CustomerTrendsChart />
       </section>
     </div>
   );
 };
+
+
 
 export { RevenueReport };
 export default Reports;
