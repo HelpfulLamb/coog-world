@@ -244,3 +244,11 @@
     margin: 20px auto;
     padding: 20px;
 }
+.dashboard-title h1 {
+    color: white; 
+    transition: color 0.3s ease; 
+}
+
+.dashboard-title h1:hover {
+    color: rgb(62, 114, 190); 
+}
