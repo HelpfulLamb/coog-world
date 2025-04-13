@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Report.css';
 import CustomerTrendsChart from './CustomerTrendsChart';
+import TicketSalesTrends from './TicketSalesTrends.jsx';
 
 const RevenueReport = () => {
   const [revenueData, setRevenueData] = useState(null);
@@ -11,7 +12,7 @@ const RevenueReport = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-
+  const [trendData, setTrendData] = useState([]);
   useEffect(() => {
     const fetchRevenue = async () => {
       try {
@@ -311,6 +312,7 @@ const Reports = () => {
         <TicketSalesReportInline />
         <CustomerStatsReport /> 
         <CustomerTrendsChart />
+        <TicketSalesTrends />
       </section>
     </div>
   );
