@@ -12,7 +12,7 @@ reportRoutes.get('/visitors-today', reportController.getTotalVisitorsToday);
 reportRoutes.get('/ticket-sales', reportController.getTicketSalesReport);
 reportRoutes.get('/customer-counts', reportController.getCustomerCounts);
 reportRoutes.get('/customer-stats', reportController.getCustomerStats);
-
+reportRoutes.get('/ticket-sales-trends', reportController.getTicketSalesTrends);
 module.exports = {
   reportRoutes
 };
