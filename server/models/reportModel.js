@@ -105,3 +105,13 @@ exports.getTopRidePerMonth = async () => {
       throw new Error('Error fetching monthly ride data: ' + error.message);
     }
 };  
+exports.getTicketsSoldToday = async () => {
+  const query = `
+    SELECT SUM(quantity_sold) AS total_tickets
+    FROM product_purchases
+    WHERE product_type = 'Ticket'
+      AND DATE(purchase_created) = CURDATE();
+  `;
+  const [results] = await db.query(query);
+  return results[0].total_tickets || 0;
+};

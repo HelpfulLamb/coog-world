@@ -38,7 +38,7 @@ function Profile() {
             fetchData(parsedUser.id || parsedUser.Visitor_ID);
         }
     }, []);
-
+    
     const fetchData = async (userId) => {
         try {
             const ticketRes = await fetch(`/api/ticket-type/purchases/${userId}`);
@@ -94,6 +94,15 @@ function Profile() {
             }
         }
     };
+    const groupByDate = (tickets) => {
+        return tickets.reduce((acc, ticket) => {
+            const date = new Date(ticket.date).toLocaleDateString();
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(ticket);
+            return acc;
+        }, {});
+    };
+    
     if (!user) return <div className="loading">Loading user data...</div>;
     return (
         <div className='profile-page'>
@@ -186,18 +195,38 @@ function Profile() {
                                     <h4>Upcoming Visits</h4>
                                     {upcomingTickets.length > 0 ? (
                                         <div className="ticket-list">
-                                            {upcomingTickets.map((ticket, index) => (
-                                                <div key={`upcoming-${index}`} className="ticket-item">
-                                                    <div className="ticket-type purchase-header">
-                                                        <span>{ticket.type}</span>
-                                                        <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
-                                                    </div>
-                                                    <div className="ticket-meta">
-                                                        <span>Qty: {ticket.quantity}</span>
-                                                        <span>Date: {new Date(ticket.date).toLocaleDateString()}</span>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                            {Object.entries(groupByDate(upcomingTickets))
+  .sort(([a], [b]) => new Date(a) - new Date(b)) // sort dates ascending
+  .map(([date, ticketsOnDate], index) => {
+    const formattedDate = new Date(date).toLocaleDateString(undefined, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const dayTotal = ticketsOnDate.reduce((sum, t) => sum + parseFloat(t.total), 0);
+    
+    return (
+      <div key={`group-${index}`} className="ticket-date-group">
+        <h5 style={{ marginBottom: '0.5rem' }}>{formattedDate}</h5>
+        {ticketsOnDate.map((ticket, subIndex) => (
+          <div key={`ticket-${subIndex}`} className="ticket-item">
+            <div className="ticket-type purchase-header">
+              <span>{ticket.type}</span>
+              <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+            </div>
+            <div className="ticket-meta">
+              <span>Qty: {ticket.quantity}</span>
+            </div>
+          </div>
+        ))}
+        <div style={{ textAlign: 'right', fontWeight: 'bold', marginTop: '0.25rem' }}>
+          Total: ${dayTotal.toFixed(2)}
+        </div>
+      </div>
+    );
+})}
+
                                         </div>
                                     ) : (
                                         <p className="no-items">No upcoming visits scheduled</p>

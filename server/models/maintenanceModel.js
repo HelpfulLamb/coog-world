@@ -98,7 +98,7 @@ exports.getRideMaintenance = async (month) => {
                 FROM 
                     maintenance m
                 WHERE 
-                    DATE_FORMAT(m.maint_created, '%Y-%m') = ?
+                    DATE_FORMAT(m.Maintenance_Date, '%Y-%m') = ?
                 GROUP BY 
                     m.maint_obj_ID
             ) m_count
