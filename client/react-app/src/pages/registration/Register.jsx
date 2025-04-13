@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {FaEye, FaEyeSlash} from 'react-icons/fa';
 import './Register.css';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 function Register() {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ function Register() {
     });
     const [message, setMessage] = useState({ error: '', success: '' });
     const [showPassword, setShowPassword] = useState(false);
+    const { setUser, setIsAuthenticated } = useAuth();
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -72,21 +74,39 @@ function Register() {
                 }),
             });
             const data = await response.json();
+            // Once the user registers, they will be auto logged in and redirected to their profile
             if (response.ok) {    
                 setMessage({ success: 'Account successfully created!', error: '' });
-                setFormData({
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    phone: '',
-                    password: '',
-                    confirmPassword: '',
-                    street: '',
-                    city: '',
-                    state: '',
-                    zipCode: ''
+                const loginResponse = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
                 });
-                navigate('/login');
+
+                const loginData = await loginResponse.json();
+
+                if (loginResponse.ok) {
+                    localStorage.setItem('user', JSON.stringify(loginData));
+                    setUser(loginData);
+                    setIsAuthenticated(true);
+                
+                    setFormData({
+                        first_name: '',
+                        last_name: '',
+                        email: '',
+                        phone: '',
+                        password: '',
+                        confirmPassword: '',
+                        street: '',
+                        city: '',
+                        state: '',
+                        zipCode: ''
+                    });
+                
+                    navigate('/profile');
+                } else {
+                    setMessage({ error: loginData.message || 'Login failed after registration.', success: '' });
+                }
             } else {
                 setMessage({ error: data.message || 'Registration failed.', success: '' });
             }
