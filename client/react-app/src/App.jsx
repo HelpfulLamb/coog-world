@@ -39,6 +39,7 @@ import Weather from './pages/operations/WeatherReport.jsx';
 import Reports from './pages/operations/Reports.jsx';
 import Rainout from './pages/operations/Rainout.jsx';
 import ClockInOut from './pages/operations/ClockInOut.jsx';
+import AttendanceReport from './pages/reports/AttendanceReport.jsx';
 
 function App() {
   const location = useLocation();
@@ -78,6 +79,7 @@ function App() {
                             <Route path='report' element={<Reports />} />
                             <Route path='rainout-report' element={<Rainout />}/>
                             <Route path='hours' element={<ClockInOut />}/>
+                            <Route path='attendance-report' element={<AttendanceReport />} />
                             <Route path='revenue-report' element={<Revenue />}/>
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />

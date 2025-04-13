@@ -3,8 +3,10 @@ const db = require('../config/db.js');
 exports.getLastOpenSession = async (empId) => {
   const [rows] = await db.query(
     `SELECT * FROM attendance 
-     WHERE Emp_ID = ? AND clock_out IS NULL 
-     ORDER BY clock_in DESC LIMIT 1`,
+     WHERE Emp_ID = ? AND clock_out IS NULL
+     AND DATE(clock_in) = CURDATE()
+     ORDER BY clock_in DESC 
+     LIMIT 1`,
     [empId]
   );
   return rows[0];

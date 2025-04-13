@@ -11,11 +11,15 @@ inventoryRouter.post('/create-item', inventoryController.createItem);
 // update existing items and assignments
 inventoryRouter.put('/items/:id', inventoryController.updateItem);
 
+// mark trigger message as seen
+inventoryRouter.patch('/restock-alerts/:id/acknowledge', inventoryController.markMessageSeen);
+
 // retrieve inventory (all or specific)
 inventoryRouter.get('/all', inventoryController.getAllInventory);
 inventoryRouter.get('/info', inventoryController.getInventoryInfo);
 inventoryRouter.get('/merchandise', inventoryController.getAllAvailableItems);
 inventoryRouter.get('/items', inventoryController.getAllItems);
+inventoryRouter.get('/restock-alerts', inventoryController.getInvStockAlerts);
 
 // delete items (all or specific)
 inventoryRouter.delete('/delete-all', inventoryController.deleteAllInventory);

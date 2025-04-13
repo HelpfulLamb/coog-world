@@ -5,6 +5,8 @@ const employeeRouter = express.Router();
 // create new employee
 employeeRouter.post('/create-employee', employeeController.createEmployee);
 employeeRouter.post('/login', employeeController.loginEmployee);
+employeeRouter.post('/attendance-report', employeeController.getEmployeeAttendanceReport);
+employeeRouter.post('/total-hours', employeeController.getTotalHoursWorked);
 
 // update existing employee
 employeeRouter.put('/:id', employeeController.updateEmployee);
@@ -13,8 +15,8 @@ employeeRouter.put('/:id', employeeController.updateEmployee);
 employeeRouter.get('/', employeeController.getAllEmployees);
 employeeRouter.get('/info', employeeController.getEmployeeInfo);
 employeeRouter.get('/attendance', employeeController.getEmployeeAttendance);
-employeeRouter.get('/total-hours', employeeController.getTotalHoursWorked);
-employeeRouter.get('/employee-show', employeeController.getEmployeeShowUps);
+employeeRouter.get('/employee-show', employeeController.getEmployeeShowUps); // employees
+employeeRouter.get('/employee-spread', employeeController.getParkEmployeeNumber); // get employees per area and total employees
 employeeRouter.get('/summary', employeeController.getEmployeeSummary);
 // make sure any route getting id stays at the bottom
 employeeRouter.get('/:id', employeeController.getEmployeeById);
