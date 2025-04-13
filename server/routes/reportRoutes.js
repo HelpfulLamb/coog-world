@@ -8,6 +8,7 @@ reportRoutes.get('/revenue', reportController.getRevenueReport);
 reportRoutes.get('/revenue-summary', reportController.getRevenueSummary);
 reportRoutes.get('/tickets-today', reportController.getTicketsSoldToday);
 reportRoutes.get('/revenue-details', reportController.getRevenueDetails);
+reportRoutes.get('/visitors-today', reportController.getTotalVisitorsToday);
 
 module.exports = {
   reportRoutes

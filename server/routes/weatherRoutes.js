@@ -11,13 +11,13 @@ weatherRouter.put('/:id', weatherController.updateWeather);
 // mark triggers as seen
 weatherRouter.patch('/weather-alerts/:id/acknowledge', weatherController.markMessageSeen);
 
-// retrieve rides (all or specific)
+// retrieve weather (all or specific)
 weatherRouter.get('/', weatherController.getAllWeather);
 weatherRouter.get('/weather-alerts', weatherController.getWeatherAlerts);
 weatherRouter.get('/info', weatherController.getWeatherInfo);
 weatherRouter.get('/:id', weatherController.getWeatherById);
 
-// delete rides (all or specific)
+// delete weather (all or specific)
 weatherRouter.delete('/delete-all', weatherController.deleteAllWeather);
 weatherRouter.delete('/delete-selected', weatherController.deleteWeatherById);
 

@@ -64,3 +64,11 @@ exports.getTicketsSoldToday = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch tickets sold today.' });
   }
 };
+exports.getTotalVisitorsToday = async (req, res) => {
+    try {
+        const visitors = await reportModel.getTotalVisitorsToday();
+        res.status(200).json(visitors);
+    } catch (error) {
+        res.status(500).json({message: 'Failed to get total visitors for today'});
+    }
+};

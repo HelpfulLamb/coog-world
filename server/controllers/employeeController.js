@@ -107,21 +107,44 @@ exports.getEmployeeAttendance = async (req, res) => {
 };
 
 exports.getTotalHoursWorked = async (req, res) => {
-    const {startDate, endDate} = req.body;
     try {
-        const [data] = await db.query(
-            `SELECT
-            e.Emp_ID,
-            CONCAT(e.First_name, ' ', e.Last_name) AS name,
-            ROUND(SUM(TIMESTAMPDIFF(MINUTE, a.clock_in, a.clock_out)) / 60, 2) AS total_hours_worked
-            FROM employees as e
-            JOIN attendance a ON e.Emp_ID = a.Emp_ID
-            WHERE a.clock_in BETWEEN ? AND ?
-            GROUP BY e.Emp_ID`, 
-            [startDate, endDate]);
-        res.status(200).json({data});
+        const {startDate, endDate, Emp_ID, minHours, maxHours} = req.body;
+        let query = `
+        SELECT
+        e.Emp_ID,
+        CONCAT(e.First_name, ' ', e.Last_name) AS name,
+        ROUND(SUM(TIMESTAMPDIFF(MINUTE, a.clock_in, a.clock_out)) / 60, 2) AS total_hours_worked
+        FROM employees e
+        JOIN attendance a ON e.Emp_ID = a.Emp_ID
+        WHERE 1=1`;
+        const params = [];
+        if(startDate){
+            query += ` AND a.clock_in >= ?`;
+            params.push(startDate);
+        }
+        if(endDate){
+            query += ` AND a.clock_out <= ?`;
+            params.push(endDate);
+        }
+        if(Emp_ID){
+            query += ` AND e.Emp_ID = ?`;
+            params.push(Emp_ID);
+        }
+        query += ` GROUP BY e.Emp_ID`;
+        if(minHours){
+            query += ` HAVING total_hours_worked >= ?`;
+            params.push(minHours);
+        }
+        if(maxHours){
+            query += (minHours ? ` AND` : ` HAVING`) + ` total_hours_worked <= ?`;
+            params.push(maxHours);
+        }
+        query += ` ORDER BY total_hours_worked DESC`;
+        const [data] = await db.query(query, params);
+        res.status(200).json(data);
     } catch (error) {
-        res.status(500).json({message: error.message});
+        console.error("Error generating hours summary:", error);
+        res.status(500).json({message: `Server error while generating hours summary: ${error.message}`});
     }
 };
 
@@ -186,6 +209,96 @@ exports.deleteEmployeeById = async (req, res) => {
          }
         await employeeModel.deleteEmployeeById(Emp_ID);
         res.status(200).json({message: 'Employee deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getEmployeeAttendanceReport = async (req, res) => {
+    try {
+        const {startDate, endDate, Emp_ID, area_ID, status, clockType} = req.body;
+        let query = `
+    SELECT
+        e.Emp_ID,
+        CONCAT(e.First_name, ' ', e.Last_name) AS name,
+        s.area_name,
+        assign.assign_start_date AS day,
+        a.clock_in,
+        a.clock_out,
+        ROUND(TIMESTAMPDIFF(MINUTE, a.clock_in, a.clock_out)/60, 2) AS hours_worked,
+        CASE 
+            WHEN a.Attendance_ID IS NOT NULL THEN 'Present'
+            ELSE 'Absent'
+        END AS status
+    FROM assignments assign
+    JOIN employees e ON assign.Emp_ID = e.Emp_ID
+    JOIN sectors s ON assign.area_ID = s.area_ID
+    LEFT JOIN attendance a ON
+        a.Emp_ID = assign.Emp_ID 
+        AND DATE(a.clock_in) = assign.assign_start_date
+    WHERE 1=1`;
+    const params = [];
+    if(startDate){
+        query += ` AND assign.assign_start_date >= ?`;
+        params.push(startDate);
+    }
+    if(endDate){
+        query += ` AND assign.assign_start_date <= ?`;
+        params.push(endDate);
+    }
+    if(Emp_ID){
+        query += ` AND e.Emp_ID = ?`;
+        params.push(Emp_ID);
+    }
+    if(area_ID){
+        query += ` AND s.area_ID = ?`;
+        params.push(area_ID);
+    }
+    if(status){
+        if(status === 'Present'){
+            query += ` AND a.Attendance_ID IS NOT NULL`;
+        } else if(status === 'Absent'){
+            query += ` AND a.Attendance_ID IS NULL`;
+        }
+    }
+    if(clockType === 'clockin'){
+        query += ` AND a.clock_in IS NOT NULL`;
+    } else if(clockType === 'clockout'){
+        query += ` AND a.clock_out IS NOT NULL`;
+    }
+    query += ` ORDER BY assign.assign_start_date DESC`;
+        const [rows] = await db.query(query, params);
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({message: `Server error while generating attendance report: ${error.message}`});
+    }
+};
+
+exports.getParkEmployeeNumber = async (req, res) => {
+    try {
+        const [data] = await db.query(
+            `SELECT
+            s.area_name AS park_area,
+            COUNT(*) AS total_area_emp,
+            MIN(e.Start_date) AS earliest_hire,
+            MAX(e.Start_date) AS latest_hire,
+            COUNT(CASE WHEN e.End_date IS NULL THEN 1 END) AS currently_active
+            FROM employees e
+            JOIN sectors s ON e.Emp_sec = s.area_ID
+            WHERE e.Emp_sec != 5
+            GROUP BY s.area_name
+            
+            UNION ALL
+            
+            SELECT
+            'All' AS park_area,
+            COUNT(*) AS total_area_emp,
+            MIN(Start_date) AS earliest_hire,
+            MAX(Start_date) AS latest_hire,
+            COUNT(CASE WHEN End_date IS NULL THEN 1 END) AS currently_active
+            FROM employees
+            WHERE Emp_sec != 5`);
+        res.status(200).json(data);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

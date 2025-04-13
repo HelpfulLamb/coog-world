@@ -65,10 +65,7 @@ exports.markMessageSeen = async (req, res) => {
 exports.getInvStockAlerts = async (req, res) => {
     try {
         const message = await inventoryModel.getInvStockAlerts();
-        if(!message || message.length === 0){
-            return res.status(404).json({message: 'No low stock alerts found.'});
-        }
-        res.status(200).json(message);
+        res.status(200).json(message || []);
     } catch (error) {
         res.status(500).json({message: error.message});
     }

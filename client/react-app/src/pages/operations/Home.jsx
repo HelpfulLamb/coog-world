@@ -12,8 +12,8 @@ const Home = () => {
   const [restockAlert, setRestockAlert] = useState([]);
 
   useEffect(() => {
-    fetch('/api/weather/weather-alerts').then(res => res.json()).then(setWeatherAlert);
-    fetch('/api/inventory/restock-alerts').then(res => res.json()).then(setRestockAlert);
+    fetch('/api/weather/weather-alerts').then(res => res.json()).then(data => setWeatherAlert(data)).catch(err => console.error('Failed to load weather alerts:', err));
+    fetch('/api/inventory/restock-alerts').then(res => res.json()).then(data => setRestockAlert(data)).catch(err => console.error('Failed to load maintenance alerts:', err));
   }, []);
   const acknowledge = async (type, id) => {
     const url = type === 'weather' 
@@ -113,19 +113,25 @@ const Home = () => {
     <>
         <div className="alerts-panel">
             <h3>Weather Alerts</h3>
-            {weatherAlert.map(alert => (
+            {Array.isArray(weatherAlert) && weatherAlert.length > 0 ? (weatherAlert.map(alert => (
                 <div className="alert-card" key={alert.Alert_ID}>
                     <p>{alert.Message}</p>
                     <button onClick={() => acknowledge('weather', alert.Alert_ID)}>OK</button>
                 </div>
-            ))}
+            ))
+        ) : (
+            <p>No Weather Alerts</p>
+        )}
             <h3>Restock Alerts</h3>
-            {restockAlert.map(alert => (
+            {Array.isArray(restockAlert) && restockAlert.length > 0 ? (restockAlert.map(alert => (
                 <div className="alert-card" key={alert.Notification_ID}>
                     <p>{alert.Message}</p>
                     <button onClick={() => acknowledge('restock', alert.Notification_ID)}>OK</button>
                 </div>
-            ))}
+            ))
+        ) : (
+            <p>No Restock Alerts</p>
+        )}
         </div>
 
         <div style={{ padding: '2rem', color: 'white' }}>
