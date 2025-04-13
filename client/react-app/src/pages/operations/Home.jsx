@@ -180,13 +180,16 @@ const Home = () => {
 
         {/* Quick Access Section */}
         <h2 style={{ color: '#c8102e', marginBottom: '1rem' }}>Quick Access:</h2>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <Link to="/employee-dashboard/employees" style={quickButtonStyle}>Manage Employees</Link>
-            <Link to="/employee-dashboard/ticket-report" style={quickButtonStyle}>Ticket Reports</Link>
-            <Link to="/employee-dashboard/inventory-report" style={quickButtonStyle}>Inventory</Link>
-            <Link to="/employee-dashboard/maintenance-report" style={quickButtonStyle}>Maintenance</Link>
-            <Link to="/employee-dashboard/weather-report" style={quickButtonStyle}>Weather</Link>
-        </div>
+<div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+  <Link to="/employee-dashboard/employees" style={quickButtonStyle}>Manage Employees</Link>
+  <Link to="/employee-dashboard/ticket-report" style={quickButtonStyle}>Ticket Reports</Link>
+  <Link to="/employee-dashboard/inventory-report" style={quickButtonStyle}>Inventory</Link>
+  <Link to="/employee-dashboard/maintenance-report" style={quickButtonStyle}>Maintenance</Link>
+  <Link to="/employee-dashboard/weather-report" style={quickButtonStyle}>Weather</Link>
+  <Link to="/employee-dashboard/ticket-sales-trends" style={quickButtonStyle}>Ticket Sales Trends</Link>
+  <Link to="/employee-dashboard/customer-trends-report" style={quickButtonStyle}>Customer Trends Report</Link>
+</div>
+
         </div>
     </>
   );
