@@ -16,6 +16,7 @@ const DashboardNav = () => {
         <nav className="dashboard-nav">
             <ul>
                 <li><Link to={'/employee-dashboard'}>Home</Link></li>
+                <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
                 {(role === 'admin' || role === 'manager') && (
                     <>
                         <li><Link to={'/employee-dashboard/employees'}>Employees</Link></li>
