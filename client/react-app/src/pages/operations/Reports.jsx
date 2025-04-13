@@ -310,9 +310,9 @@ const Reports = () => {
       <section style={{ marginTop: '2rem' }}>
         <RevenueReport />
         <TicketSalesReportInline />
+        <TicketSalesTrends />
         <CustomerStatsReport /> 
         <CustomerTrendsChart />
-        <TicketSalesTrends />
       </section>
     </div>
   );
