@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Report.css';
+import CustomerTrendsChart from './CustomerTrendsChart';
 
 const RevenueReport = () => {
   const [revenueData, setRevenueData] = useState(null);
@@ -309,6 +310,7 @@ const Reports = () => {
         <RevenueReport />
         <TicketSalesReportInline />
         <CustomerStatsReport /> 
+        <CustomerTrendsChart />
       </section>
     </div>
   );

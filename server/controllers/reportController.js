@@ -111,3 +111,55 @@ exports.getCustomerStats = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch customer stats.' });
   }
 };
+exports.getCustomerCounts = async (req, res) => {
+  try {
+    const [daily] = await db.query(`
+      SELECT 
+        DATE(t.Transaction_date) AS date,
+        COUNT(DISTINCT t.Visitor_ID) AS customers
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY date
+      ORDER BY date;
+    `);
+
+    const [weekly] = await db.query(`
+      SELECT 
+        YEARWEEK(t.Transaction_date, 1) AS week,
+        COUNT(DISTINCT t.Visitor_ID) AS customers
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY week
+      ORDER BY week;
+    `);
+
+    const [monthly] = await db.query(`
+      SELECT 
+        DATE_FORMAT(t.Transaction_date, '%Y-%m') AS month,
+        COUNT(DISTINCT t.Visitor_ID) AS customers
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY month
+      ORDER BY month;
+    `);
+
+    const [yearly] = await db.query(`
+      SELECT 
+        YEAR(t.Transaction_date) AS year,
+        COUNT(DISTINCT t.Visitor_ID) AS customers
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY year
+      ORDER BY year;
+    `);
+
+    res.status(200).json({ daily, weekly, monthly, yearly });
+  } catch (error) {
+    console.error('Error fetching customer stats:', error);
+    res.status(500).json({ message: 'Failed to fetch customer stats.' });
+  }
+};
