@@ -5,14 +5,21 @@ const weatherRouter = express.Router();
 // create new weather
 weatherRouter.post('/create-weather', weatherController.createWeather);
 
+// updating existing logs
+weatherRouter.put('/:id', weatherController.updateWeather);
+
+// mark triggers as seen
+weatherRouter.patch('/weather-alerts/:id/acknowledge', weatherController.markMessageSeen);
+
 // retrieve rides (all or specific)
 weatherRouter.get('/', weatherController.getAllWeather);
+weatherRouter.get('/weather-alerts', weatherController.getWeatherAlerts);
 weatherRouter.get('/info', weatherController.getWeatherInfo);
 weatherRouter.get('/:id', weatherController.getWeatherById);
 
 // delete rides (all or specific)
-weatherRouter.delete('/', weatherController.deleteAllWeather);
-weatherRouter.delete('/:id', weatherController.deleteWeatherById);
+weatherRouter.delete('/delete-all', weatherController.deleteAllWeather);
+weatherRouter.delete('/delete-selected', weatherController.deleteWeatherById);
 
 
 module.exports = {

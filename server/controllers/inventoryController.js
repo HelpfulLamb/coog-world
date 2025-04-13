@@ -52,6 +52,28 @@ exports.updateItem = async (req, res) => {
     }
 };
 
+exports.markMessageSeen = async (req, res) => {
+    const alertID = req.params.id;
+    try {
+        await inventoryModel.markMessageSeen(alertID);
+        res.status(200).json({message: 'Low stock alert acknowledged.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getInvStockAlerts = async (req, res) => {
+    try {
+        const message = await inventoryModel.getInvStockAlerts();
+        if(!message || message.length === 0){
+            return res.status(404).json({message: 'No low stock alerts found.'});
+        }
+        res.status(200).json(message);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
 exports.getAllInventory = async (req, res) => {
     try {
         const inv = await inventoryModel.getAllInventory();
