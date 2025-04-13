@@ -75,7 +75,8 @@ exports.getTotalVisitorsToday = async (req, res) => {
     } catch (error) {
         res.status(500).json({message: 'Failed to get total visitors for today'});
     }
-  
+};
+
 exports.getTicketSalesReport = async (req, res) => {
   try {
     const [results] = await db.query(`
