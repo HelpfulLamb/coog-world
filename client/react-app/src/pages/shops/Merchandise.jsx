@@ -1,5 +1,5 @@
 import './Shops.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import shirtImage from '../../images/shirt1.webp';
 import magnetImage from '../../images/magnet.png';
 import { useCart } from "../../context/CartContext";
@@ -11,25 +11,55 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
   
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
-  
-    const handleAddToCart = () => {
+
+    const handleAddToCart = async () => {
       if (!userId) {
         alert("Please log in to add items.");
         return;
       }
-  
-      console.log("🛒 Adding to cart:", { title, price, itemId });
-  
-      addToCart({
-        type: 'merch',
-        title,
-        price,
-        quantity: 1,
-        itemId,
-        inventoryId,
-      });
-  
-      alert("🛍️ Item added to cart!");
+
+      try {
+        const response = await fetch('/api/cart/add-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            Visitor_ID: userId,
+            Product_Type: 'Item',  // Matches your 'Item'/'Ticket' enum
+            Product_ID: itemId,
+            Product_Name: title,
+            Visit_Date: null,
+            Quantity: 1, 
+            Price: Number(parseFloat(price).toFixed(2))
+          })
+        });
+
+        console.log("Response status:", response.status);
+    
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+    
+        // Optional: Update local cart state
+        addToCart({
+          type: 'merch',
+          title,
+          price,
+          quantity: 1,
+          itemId,
+          inventoryId,
+        });
+    
+        alert("🛍️ Item added to cart!");
+
+        // Reload the page after success
+        window.location.reload();
+    
+      } catch (error) {
+        console.error("Cart error:", error);
+        alert("❌ Failed to add item. Please try again.");
+      }
     };
   
     // 👇 Select image based on item name
