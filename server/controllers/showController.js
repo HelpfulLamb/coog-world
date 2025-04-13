@@ -1,4 +1,5 @@
 const showModel = require('../models/showModel.js');
+const db = require('../config/db.js');
 
 exports.createShow = async (req, res) => {
     try {
@@ -83,5 +84,31 @@ exports.deleteShowById = async (req, res) => {
         res.status(200).json({message: 'Show deleted successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
+    }
+};
+
+exports.logVisitorShow = async (req, res) => {
+    const {Visitor_ID, Show_ID} = req.body;
+    if (!Visitor_ID || !Show_ID) {
+        return res.status(400).json({ message: 'Visitor_ID and Show_ID are required.' });
+    }
+    try {
+        await db.query(
+            'INSERT INTO visitor_show_log (Visitor_ID, Show_ID) VALUES (?, ?)',
+            [Visitor_ID, Show_ID]);
+        res.status(200).json({success: true, message: 'Show Logged Successfully.'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success: false, message: 'Failed to log show.', error: error.message});
+    }
+};
+
+exports.getVisitorShowHistory = async (req, res) => {
+    const visitorId = req.params.id;
+    try {
+        const history = await showModel.getVisitorShowHistory(visitorId);
+        res.status(200).json({shows: history});
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch watch history.', error: error.message})
     }
 };

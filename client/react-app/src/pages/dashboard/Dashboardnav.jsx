@@ -28,16 +28,6 @@ const DashboardNav = () => {
         <nav className="dashboard-nav">
             <ul>
                 <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
-                {(role === 'manager') && (
-                    <>
-                        <li><Link to={'/employee-dashboard/employees'}>Employees</Link></li>
-                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
-                        <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
-                        <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
-                        <li><Link to={'/employee-dashboard/items'}>Items</Link></li>
-                        <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li>
-                    </>
-                )}
                 {(role === 'admin' || role === 'manager') && (
                     <>
                         <li className="dropdown">
@@ -69,34 +59,38 @@ const DashboardNav = () => {
                             )}
                         </li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
-                        <li className="dropdown">
-                            <button onClick={toggleWeatherDropdown} className="dropdown-btn">
-                                Weather
-                                <span className={`arrow-icon ${isWeatherDropdownOpen ? 'open' : ''}`}>▼</span>
-                            </button>
-                            {isWeatherDropdownOpen && (
-                                <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
-                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainout Report</Link></li>
-                                </ul>
-                            )}
-                        </li>
-                        <li className="dropdown">
-                            <button onClick={toggleReportsDropdown} className="dropdown-btn">
-                                Reports
-                                <span className={`arrow-icon ${isReportsDropdownOpen ? 'open' : ''}`}>▼</span>
-                            </button>
-                            {isReportsDropdownOpen && (
-                                <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
-                                </ul>
-                            )}
-                        </li>
                     </>
+                )}
+                {role === 'admin' && (
+                    <>
+                        <li className="dropdown">
+                        <button onClick={toggleWeatherDropdown} className="dropdown-btn">
+                            Weather
+                            <span className={`arrow-icon ${isWeatherDropdownOpen ? 'open' : ''}`}>▼</span>
+                        </button>
+                        {isWeatherDropdownOpen && (
+                            <ul className="dropdown-menu">
+                                <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
+                                <li><Link to={'/employee-dashboard/rainout-report'}>Rainout Report</Link></li>
+                            </ul>
+                        )}
+                    </li>
+                    <li className="dropdown">
+                        <button onClick={toggleReportsDropdown} className="dropdown-btn">
+                            Reports
+                            <span className={`arrow-icon ${isReportsDropdownOpen ? 'open' : ''}`}>▼</span>
+                        </button>
+                        {isReportsDropdownOpen && (
+                            <ul className="dropdown-menu">
+                                <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
+                            </ul>
+                        )}
+                    </li>
+                </>
                 )}
 
                 {role === 'maintenance' && (
-                    <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                    <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                 )}
             </ul>
         </nav>

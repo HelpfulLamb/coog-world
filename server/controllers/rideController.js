@@ -99,6 +99,7 @@ exports.deleteRideById = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
+
 exports.logVisitorRide = async (req, res) => {
     const { Visitor_ID, Ride_ID } = req.body;
 
@@ -117,6 +118,7 @@ exports.logVisitorRide = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to log ride.', error: err.message });
     }
 };
+
 exports.getVisitorRideHistory = async (req, res) => {
     const visitorId = req.params.id;
     try {
