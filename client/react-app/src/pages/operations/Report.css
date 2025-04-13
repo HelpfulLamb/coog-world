@@ -215,3 +215,28 @@
 .bar-chart-container {
     padding-top: 20px; /* Add space above the chart */
 }
+.attendance-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 3rem; /* spacing between boxes */
+    flex-wrap: wrap;
+  }
+  
+  .attendance-card.single {
+    background-color: white;
+    padding: 2rem 2.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+  }
+  
+  .attendance-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .attendance-value {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+  }
