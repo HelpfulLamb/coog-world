@@ -14,6 +14,8 @@ const { weatherRouter } = require('./routes/weatherRoutes.js');
 const { kioskRouter } = require('./routes/kioskRouter.js');
 const shopRoutes = require('./routes/shopRoutes');
 const { reportRoutes } = require('./routes/reportRoutes.js');
+const { attendanceRouter } = require('./routes/attendanceRoutes.js');
+const { cartRouter } = require('./routes/cartRoutes.js');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -35,6 +37,8 @@ app.use('/api/weather', weatherRouter);
 app.use('/api/kiosks', kioskRouter);
 app.use('/api/shop-purchases', shopRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/attendance', attendanceRouter);
+app.use('/api/cart', cartRouter);
 
 app.use(express.static(path.join(__dirname, 'client')));
 

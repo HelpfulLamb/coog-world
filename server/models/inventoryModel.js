@@ -34,6 +34,15 @@ exports.updateItem = async (selectedItem) => {
     return item;
 };
 
+exports.markMessageSeen = async (alertID) => {
+    await db.query('UPDATE restock_notifications SET Is_Seen = TRUE WHERE Notification_ID = ?', [alertID]);
+};
+
+exports.getInvStockAlerts = async () => {
+    const [alert] = await db.query('SELECT * FROM restock_notifications WHERE Is_Seen = FALSE ORDER BY Created_At DESC');
+    return alert;
+};
+
 exports.getAllInventory = async () => {
     const [inventory] = await db.query('SELECT * FROM inventory');
     return inventory;

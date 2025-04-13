@@ -115,6 +115,7 @@ exports.getTicketsSoldToday = async () => {
   const [results] = await db.query(query);
   return results[0].total_tickets || 0;
 };
+
 exports.getTicketSalesTrends = async () => {
   const query = `
     SELECT
@@ -133,4 +134,10 @@ exports.getTicketSalesTrends = async () => {
   const [results] = await db.query(query);
   return results;
 };
+
+// exports.getTotalVisitorsToday() = async () => {
+//     const [data] = await db.query(
+//         'SELECT COUNT(*) FROM product_purchases WHERE visit_date = CURDATE()');
+//     return data;
+// };
 

@@ -215,3 +215,49 @@
 .bar-chart-container {
     padding-top: 20px; /* Add space above the chart */
 }
+.attendance-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 3rem; /* spacing between boxes */
+    flex-wrap: wrap;
+}
+.attendance-card.single {
+    background-color: white;
+    padding: 2rem 2.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+}
+.attendance-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.attendance-value {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+}
+.alerts-panel {
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem;
+}
+.alert-card {
+    border: 1px solid #ccc;
+    border-left: 6px solid red;
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff8f8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.alert-card p {
+    margin: 0 0 0.5rem;
+}
+.alert-card button {
+    padding: 0.3rem 0.6rem;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
