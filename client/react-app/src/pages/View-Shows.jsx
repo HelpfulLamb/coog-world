@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import showImg from "../images/show1.jpeg";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 function ShowCard({show, onShowClick}){
     const formatDate = (dateString) => {
@@ -15,7 +16,7 @@ function ShowCard({show, onShowClick}){
             <p>{show.Show_start}</p>
             <p>{show.Stage_name}</p>
             <p>Located in: {show.area_name}</p>
-            <button className="fancy" onClick={() => onShowClick(show.Show_ID)}>Add to my Trip</button>
+            <button className="fancy" onClick={() => onShowClick(show.Show_ID)}>Add to my Watchlist</button>
         </div>
     );
 }
@@ -25,6 +26,7 @@ function ParkShows(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchShows = async () => {
             try {
@@ -36,19 +38,29 @@ function ParkShows(){
                 setShowOptions(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load shows: ${error.message}`);
             } finally {
                 setLoading(false);
             }
         };
         fetchShows();
     }, []);
+
     const handleWatchShow = async (showID) => {
         const user = JSON.parse(localStorage.getItem("user"));
         const visitorId = user?.id;
+        
         if(!visitorId || !showID){
-            alert('you must be logged in to watch a show.')
-            return navigate('/login');
+            toast.error('You must be logged in to watch a show.', {
+                duration: 3000,
+                position: 'top-center'
+            });
+            setTimeout(() => navigate('/login'), 1000);
+            return;
         }
+
+        const toastId = toast.loading('Logging your show...');
+        
         try {
             const response = await fetch('/api/shows/log', {
                 method: 'POST',
@@ -61,16 +73,30 @@ function ParkShows(){
                 }),
             });
             const result = await response.json();
+            
             if(response.ok){
-                alert('Show Logged successfully');
+                toast.success('Show logged successfully!', {
+                    id: toastId,
+                    duration: 3000,
+                    position: 'top-center'
+                });
             } else {
-                alert(`Failed: ${result.message}`);
+                toast.error(`Failed: ${result.message || 'Unknown error'}`, {
+                    id: toastId,
+                    duration: 4000,
+                    position: 'top-center'
+                });
             }
         } catch (error) {
-            console.error("❌ Error logging ride:", error);
-            alert("An error occurred while logging the show.");
+            console.error("Error logging show:", error);
+            toast.error('An error occurred while logging the show.', {
+                id: toastId,
+                duration: 4000,
+                position: 'top-center'
+            });
         }
     };
+
     if(loading){
         return <></>
     }

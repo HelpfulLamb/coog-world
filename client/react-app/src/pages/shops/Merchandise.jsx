@@ -7,19 +7,36 @@ import pencilImage from '../../images/pencil.jpg';
 import plushImage from '../../images/plush.jpeg';
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function MerchCard({ title, price, description, inventoryId, quantity, itemId }) {
     const { addToCart } = useCart();
     const { user } = useAuth();
+    const navigate = useNavigate();
   
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
 
     const handleAddToCart = async () => {
       if (!userId) {
-        alert("Please log in to add items.");
+        toast.error('Please log in to purchase items.', {
+          duration: 3000,
+          position: 'top-center'
+        });
+        setTimeout(() => navigate('/login'), 1000);
         return;
       }
+
+      if (quantity === 0) {
+        toast.error('This item is out of stock.', {
+          duration: 3000,
+          position: 'top-center'
+        });
+        return;
+      }
+
+      const toastId = toast.loading('Adding item to cart...');
 
       try {
         const response = await fetch('/api/cart/add-item', {
@@ -29,7 +46,7 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
           },
           body: JSON.stringify({
             Visitor_ID: userId,
-            Product_Type: 'Item',  // Matches your 'Item'/'Ticket' enum
+            Product_Type: 'Item',
             Product_ID: itemId,
             Product_Name: title,
             Visit_Date: null,
@@ -37,14 +54,11 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
             Price: Number(parseFloat(price).toFixed(2))
           })
         });
-
-        console.log("Response status:", response.status);
     
         if (!response.ok) {
           throw new Error('Failed to add to cart');
         }
     
-        // Optional: Update local cart state
         addToCart({
           type: 'merch',
           title,
@@ -54,15 +68,22 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
           inventoryId,
         });
     
-        alert("🛍️ Item added to cart!");
+        toast.success('✅ Item added to cart!', {
+          id: toastId,
+          duration: 3000,
+          position: 'top-center'
+        });
     
       } catch (error) {
         console.error("Cart error:", error);
-        alert("❌ Failed to add item. Please try again.");
+        toast.error('❌ Failed to add item. Please try again.', {
+          id: toastId,
+          duration: 4000,
+          position: 'top-center'
+        });
       }
     };
   
-    // 👇 Select image based on item name
     const getImageForTitle = (title) => {
       if (title.toLowerCase().includes("magnet")) return magnetImage;
       if (title.toLowerCase().includes("pencil")) return pencilImage;
@@ -96,7 +117,7 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
         )}
       </div>
     );
-  }
+}
 
 function Merchandise() {
     const [merchOptions, setMerchOptions] = useState([]);
@@ -111,10 +132,10 @@ function Merchandise() {
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log("🧾 Available merch:", data);
                 setMerchOptions(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load merchandise: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -131,16 +152,15 @@ function Merchandise() {
             <div className='merch-container'>
                 {merchOptions.map((merch, index) => (
                     <MerchCard
-                    key={merch.Inventory_ID}
-                    title={merch.Item_name}
-                    price={merch.Item_shop_price}
-                    description={merch.Item_desc}
-                    itemId={merch.Item_ID}
-                    inventoryId={merch.Inventory_ID}
-                    quantity={merch.Item_quantity}
-                    imageFileName={merch.Image || 'magnet.png'}
-                  />                  
-                  
+                        key={merch.Inventory_ID}
+                        title={merch.Item_name}
+                        price={merch.Item_shop_price}
+                        description={merch.Item_desc}
+                        itemId={merch.Item_ID}
+                        inventoryId={merch.Inventory_ID}
+                        quantity={merch.Item_quantity}
+                        imageFileName={merch.Image || 'magnet.png'}
+                    />                  
                 ))}
             </div>
         </>
