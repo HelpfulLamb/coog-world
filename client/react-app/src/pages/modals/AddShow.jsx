@@ -103,7 +103,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                             <select name="Stage_ID" id="Stage_ID" required value={formData.Stage_ID} onChange={handleInputChange}>
                                 <option value="">-- Select a Stage --</option>
                                 {allStages.map(stage => (
-                                    <option key={stage.Stage_ID} value={stage.Stage_name}>{stage.Stage_name}</option>
+                                    <option key={stage.Stage_ID} value={stage.Stage_ID}>{stage.Stage_name}</option>
                                 ))}
                             </select>
                         </div>
