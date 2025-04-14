@@ -16,13 +16,14 @@ const DashboardNav = () => {
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
     };
+
     const toggleInvDropdown = () => {
         setIsInvDropdownOpen(prev => !prev);
     };
     const toggleEmpDropdown = () => {
         setIsEmpDropdownOpen(prev => !prev);
     };
-    const toggleReportsDropdown = () => { // Toggle function for Reports dropdown
+    const toggleReportsDropdown = () => { 
         setIsReportsDropdownOpen(prev => !prev);
     };
     const toggleShowDropdown = () => { // Toggle function for Reports dropdown
@@ -32,7 +33,7 @@ const DashboardNav = () => {
         setIsMaintDropdownOpen(prev => !prev);
     };
 
-    return(
+    return (
         <nav className="dashboard-nav">
             <ul>
                 <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
@@ -46,7 +47,8 @@ const DashboardNav = () => {
                             {isEmpDropdownOpen && (
                                 <ul>
                                     <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
-                                    <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li>
+                                    {/* <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li> */}
+                                    <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
                                 </ul>
                             )}
                         </li>
@@ -64,6 +66,8 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
+                        <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
+                        <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleInvDropdown}>
@@ -124,6 +128,11 @@ const DashboardNav = () => {
                 )}
 
                 {role === 'maintenance' && (
+                    <>
+                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
+                        <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                    </>
                     <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                 )}
             </ul>

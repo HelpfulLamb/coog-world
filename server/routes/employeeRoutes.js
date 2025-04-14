@@ -20,6 +20,7 @@ employeeRouter.get('/employee-spread', employeeController.getParkEmployeeNumber)
 employeeRouter.get('/summary', employeeController.getEmployeeSummary);
 // make sure any route getting id stays at the bottom
 employeeRouter.get('/:id', employeeController.getEmployeeById);
+employeeRouter.get('/profile/:id', employeeController.getEmployeeProfile);
 
 // delete employees (all or specific)
 employeeRouter.delete('/delete-all', employeeController.deleteAllEmployees);

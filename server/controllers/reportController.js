@@ -58,7 +58,17 @@ exports.getRevenueSummary = async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve revenue summary." });
   }
 };
-
+exports.getOpenMaintenanceCount = async (req, res) => {
+  try {
+    const [result] = await db.query(
+      "SELECT COUNT(*) AS count FROM maintenance WHERE Maint_Status = 'In Progress'"
+    );
+    res.status(200).json({ count: result[0].count });
+  } catch (error) {
+    console.error("Error fetching open maintenance count:", error);
+    res.status(500).json({ message: 'Failed to fetch open maintenance count' });
+  }
+};
 exports.getTicketsSoldToday = async (req, res) => {
   try {
     const total = await reportModel.getTicketsSoldToday();

@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
-import { CartProvider } from './context/CartContext.jsx'; // ✅ Added this
+import { CartProvider } from './context/CartContext.jsx';
 
 // Navigation Components
 import Header from './pages/navigation/Header.jsx';
@@ -27,6 +27,7 @@ import ParkShows from './pages/View-Shows.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import AdminHome from './pages/operations/Home.jsx';
 import Revenue from './pages/operations/Revenue.jsx';
+import EmployeeProfile from './pages/operations/EmployeeProfile.jsx';
 import Employee from './pages/operations/Employees.jsx';
 import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
@@ -46,6 +47,8 @@ import PopularShows from './pages/reports/ShowsReport.jsx';
 import RideBreakdown from './pages/reports/RideMaintReport.jsx';
 import StageBreakdown from './pages/reports/StageMaintReport.jsx';
 import KioskBreakdown from './pages/reports/KioskMaintReport.jsx';
+import Attendance from './pages/operations/Attendance.jsx';
+import Stage from './pages/operations/Stage.jsx'; 
 
 function App() {
   const location = useLocation();
@@ -73,11 +76,13 @@ function App() {
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/employee-dashboard' element={<Dashboard />}>
                             <Route index element={<AdminHome />} />
+                            <Route path='employee-profile' element={<EmployeeProfile/>}/>
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='shows' element={<Show />} />
                             <Route path='show-report' element={<PopularShows />} />
                             <Route path='kiosks' element={<Kiosk />} />
+                            <Route path='stages' element={<Stage />} />
                             <Route path='ticket-report' element={<TicketReport />} />
                             <Route path='items' element={<Item />} />
                             <Route path='inventory-report' element={<Inventory />} />
@@ -89,6 +94,7 @@ function App() {
                             <Route path='report' element={<Reports />} />
                             <Route path='rainout-report' element={<Rainout />}/>
                             <Route path='hours' element={<ClockInOut />}/>
+                            <Route path='attendance' element={<Attendance />}/>
                             <Route path='attendance-report' element={<AttendanceReport />} />
                             <Route path='revenue-report' element={<Revenue />}/>
                             <Route path='ticket-sales-trends' element={<TicketSalesTrends />} />
