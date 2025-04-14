@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import './report.css';
+import './Report.css';
 
 function formatUTCToCentralTime(mysqlDatetime) {
     if (!mysqlDatetime) return 'N/A';
