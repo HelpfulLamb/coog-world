@@ -320,3 +320,61 @@ exports.getParkEmployeeNumber = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
+exports.changeEmployeePassword = async (req, res) => {
+    const { empId, currentPassword, newPassword } = req.body;
+
+    if (!empId || !currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Missing required fields.' });
+    }
+
+    try {
+        const employee = await employeeModel.getEmployeeById(empId);
+
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found.' });
+        }
+
+        if (employee.Emp_password !== currentPassword) {
+            return res.status(401).json({ message: 'Current password is incorrect.' });
+        }
+
+        const updated = await employeeModel.updateEmployeePassword(empId, newPassword);
+
+        if (updated.affectedRows === 0) {
+            return res.status(500).json({ message: 'Password update failed.' });
+        }
+
+        res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (err) {
+        console.error('Error changing password:', err);
+        res.status(500).json({ message: 'An error occurred while updating the password.' });
+    }
+};
+exports.changePassword = async (req, res) => {
+    const { empId, currentPassword, newPassword } = req.body;
+  
+    if (!empId || !currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
+  
+    try {
+      const employee = await employeeModel.getEmployeeById(empId);
+      if (!employee) {
+        return res.status(404).json({ message: 'Employee not found.' });
+      }
+  
+      if (employee.Emp_password !== currentPassword) {
+        return res.status(401).json({ message: 'Current password is incorrect.' });
+      }
+  
+      await employeeModel.updatePassword(empId, newPassword);
+  
+      res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (err) {
+      console.error('🔥 Server error while changing password:', err);
+      res.status(500).json({ message: 'Server error while changing password.' });
+    }
+  };
+  
+  
+  

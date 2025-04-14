@@ -5,7 +5,6 @@ exports.createMaintenance = async (req, res) => {
     try {
         const { Maintenance_Date, Maintenance_Cost, Maintenance_Type, Maintenance_Object, Maintenance_Object_ID} = req.body;
 
-        // Validate input fields to ensure no empty values are passed
         if (!Maintenance_Date || !Maintenance_Cost || !Maintenance_Type || !Maintenance_Object || !Maintenance_Object_ID) {
             return res.status(400).json({ message: 'All fields are required. Server may be unavailable.' });
         }

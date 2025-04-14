@@ -268,8 +268,8 @@ const ClockInOut = () => {
 
             <div className="attendance-wrapper">
                 <div className="attendance-card single">
-                    <div className="attendance-label">Clock In</div>
-                    <div className="attendance-value">
+                    <div className="attendance-label" style={{ color: 'black' }}>Clock In</div>
+                    <div className="attendance-value" style={{ color: 'black' }}>
                         {attendance?.clock_in || 'Not clocked in yet'}
                     </div>
                     <button
@@ -283,8 +283,8 @@ const ClockInOut = () => {
                 </div>
 
                 <div className="attendance-card single">
-                    <div className="attendance-label">Clock Out</div>
-                    <div className="attendance-value">
+                    <div className="attendance-label" style={{ color: 'black' }}>Clock Out</div>
+                    <div className="attendance-value" style={{ color: 'black' }}>
                         {attendance?.clock_out || 'Not clocked out yet'}
                     </div>
                     <button
