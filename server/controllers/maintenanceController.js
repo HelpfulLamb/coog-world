@@ -81,30 +81,26 @@ exports.getMaintenanceById = async (req, res) => {
 };
 
 // Function to fetch ride maintenance stats by month
-exports.getRideMaintenance = async (req, res) => {
-    const { month } = req.query; // Get month from query parameter
-    
-    // Validate month input format (YYYY-MM)
+exports.getParkMaintenance = async (req, res) => {
+    const { month, object = 'ride', type = 'both' } = req.query;
+    const validObjects = ['ride', 'kiosk', 'stage'];
     const monthFormatRegex = /^\d{4}-\d{2}$/;
     if (!month) {
         return res.status(400).json({ message: 'Month is required.' });
     }
-
     if (!monthFormatRegex.test(month)) {
         return res.status(400).json({ message: 'Invalid month format. Please use YYYY-MM format.' });
     }
-
+    if(!validObjects.includes(object)){
+        return res.status(400).json({message: 'Invalid object type'});
+    }
     try {
-        const stats = await maintenanceModel.getRideMaintenance(month); // Fetch stats from the model
-        
+        const stats = await maintenanceModel.getParkMaintenance(month, object, type);
         if (stats.length === 0) { // Handle case where no data is found
-            return res.status(404).json({ message: 'No ride stats found for this month.' });
+            return res.status(404).json({message: `No ${object} stats found for this month.`});
         }
-
-        // Return the ride stats as a JSON response
         res.status(200).json(stats);
     } catch (error) {
-        // If an error occurs, return a 500 status code with the error message
         res.status(500).json({ message: error.message });
     }
 };

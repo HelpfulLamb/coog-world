@@ -42,13 +42,18 @@ function RainoutReport() {
         }
 
         // Filter by year (based on Wtr_created date)
-        if (selectedYear) {
-            filtered = filtered.filter(item => new Date(item.Wtr_created).getFullYear() === Number(selectedYear));
+        if (selectedYear && !selectedMonth) {
+            filtered = filtered.filter(item => {
+                return new Date(item.Wtr_created).getFullYear() === Number(selectedYear)});
         }
 
         // Filter by month (based on Wtr_created date)
         if (selectedMonth) {
-            filtered = filtered.filter(item => new Date(item.Wtr_created).getMonth() + 1 === Number(selectedMonth));  // JavaScript months are 0-indexed
+            const [year, month] = selectedMonth.split('-').map(Number);
+            filtered = filtered.filter(item => {
+                const itemDate = new Date(item.Wtr_created);
+                return itemDate.getFullYear() === year && itemDate.getMonth() + 1 === month;
+            });
         }
 
         setFilteredData(filtered);
@@ -60,17 +65,11 @@ function RainoutReport() {
         setSelectedMonth("");
     };
 
-    // Extract unique years and months from the data
-    const uniqueYears = [...new Set(rainoutData.map(item => new Date(item.Wtr_created).getFullYear()))];
 
     // Generate months and ensure they are sorted (from 1 to 12)
     const uniqueMonths = [...new Set(rainoutData.map(item => new Date(item.Wtr_created).getMonth() + 1))];  // Months are 0-indexed
     uniqueMonths.sort((a, b) => a - b); // Ensure months are sorted from 1 to 12
 
-    // Create a map for month names
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -100,34 +99,12 @@ function RainoutReport() {
 
                     <div className="filter-group">
                         <label htmlFor="year">Year:</label>
-                        <select
-                            id="year"
-                            value={selectedYear}
-                            onChange={(e) => setSelectedYear(e.target.value)}
-                        >
-                            <option value="">-- Select Year --</option>
-                            {uniqueYears.map((year) => (
-                                <option key={year} value={year}>
-                                    {year}
-                                </option>
-                            ))}
-                        </select>
+                        <input type="number" id="year" value={selectedYear} min='2000' max={new Date().getFullYear()} onChange={(e) => setSelectedYear(e.target.value)} placeholder="e.g. 2025" />
                     </div>
 
                     <div className="filter-group">
                         <label htmlFor="month">Month:</label>
-                        <select
-                            id="month"
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(e.target.value)}
-                        >
-                            <option value="">-- Select Month --</option>
-                            {uniqueMonths.map((month) => (
-                                <option key={month} value={month}>
-                                    {monthNames[month - 1]} {/* Display the full month name */}
-                                </option>
-                            ))}
-                        </select>
+                        <input type="month" id="month" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} />
                     </div>
                 </div>
 

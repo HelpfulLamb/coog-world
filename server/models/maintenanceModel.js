@@ -81,28 +81,40 @@ exports.getMaintenanceById = async (id) => {
 };
 
 // For ride maintenance Report
-exports.getRideMaintenance = async (month) => {
+exports.getParkMaintenance = async (month, objectType, maintenanceType) => {
+    const tableMap = {
+        ride: {table: 'rides', id: 'Ride_ID', name: 'Ride_name'},
+        kiosk: {table: 'kiosks', id: 'Kiosk_ID', name: 'Kiosk_name'},
+        stage: {table: 'stages', id: 'Stage_ID', name: 'Stage_name'}
+    };
+    const {table, id, name} = tableMap[objectType];
+    const typeFilter = maintenanceType === 'both' ? '' : `AND m.Maint_Type = '${maintenanceType}'`;
     const query = `
         SELECT 
-            r.ride_name,
+            o.${name} AS object_name,
             IFNULL(m_count.total_maint, 0) AS total_maintenance,
+            IFNULL(m_count.routine_count, 0) AS routine_count,
+            IFNULL(m_count.emergency_count, 0) AS emergency_count,
             ml.log_message,
             ml.log_date
         FROM 
-            rides r
+            ${table} o
         LEFT JOIN 
             (
                 SELECT 
                     m.maint_obj_ID,
-                    COUNT(*) AS total_maint
+                    COUNT(*) AS total_maint,
+                    SUM(CASE WHEN m.Maint_Type = 'Routine' THEN 1 ELSE 0 END) AS routine_count,
+                    SUM(CASE WHEN m.Maint_Type = 'Emergency' THEN 1 ELSE 0 END) AS emergency_count
                 FROM 
                     maintenance m
                 WHERE 
                     DATE_FORMAT(m.Maintenance_Date, '%Y-%m') = ?
+                    ${typeFilter}
                 GROUP BY 
                     m.maint_obj_ID
             ) m_count
-            ON m_count.maint_obj_ID = r.ride_ID
+            ON m_count.maint_obj_ID = o.${id}
         LEFT JOIN 
             (
                 SELECT 
@@ -113,7 +125,6 @@ exports.getRideMaintenance = async (month) => {
                     maintenance_log ml
                 JOIN 
                 (
-                    -- Get latest log per object
                     SELECT 
                         object_ID, 
                         MAX(log_date) AS latest_log_date
@@ -125,7 +136,7 @@ exports.getRideMaintenance = async (month) => {
                 ON ml.object_ID = latest_ml.object_ID 
                 AND ml.log_date = latest_ml.latest_log_date
             ) ml
-            ON ml.object_ID = r.ride_ID;
+            ON ml.object_ID = o.${id};
     `;
   
     const [rows] = await db.query(query, [month]); // Use the db connection's query method

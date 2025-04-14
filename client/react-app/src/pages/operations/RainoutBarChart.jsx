@@ -1,5 +1,4 @@
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
 
 const RainoutBarChart = ({ filteredData }) => {
     const chartData = {
@@ -14,7 +13,6 @@ const RainoutBarChart = ({ filteredData }) => {
     };
 
     filteredData.forEach(item => {
-        const month = new Date(item.Wtr_created).getMonth() + 1; 
         const monthName = new Date(item.Wtr_created).toLocaleString('default', { month: 'long' });
 
         if (!chartData.labels.includes(monthName)) {

@@ -1,4 +1,16 @@
 import { useState, useEffect } from "react";
+import { Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function PopularShows(){
     const [filters, setFilters] = useState({
@@ -32,6 +44,24 @@ function PopularShows(){
         });
         setReportData([]);
     };
+    const chartData = {
+        labels: reportData.map(show => show.Show_name),
+        datasets: [
+            {
+                label: 'Total Viewers',
+                data: reportData.map(show => show.total_viewers),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            }
+        ]
+    };
+    
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Total Viewers by Show' }
+        }
+    };
     return(
         <>
             <div>
@@ -42,6 +72,11 @@ function PopularShows(){
                 </div>
                 <button onClick={fetchReport}>Generate Report</button>
                 <button onClick={clearFilters}>Clear</button>
+                {reportData.length > 0 && (
+                    <div style={{ marginTop: '2rem' }}>
+                        <Bar data={chartData} options={chartOptions} />
+                    </div>
+                )}
                 <div className="table-container">
                     <table className="table">
                         <thead>

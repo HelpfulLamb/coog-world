@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { CartProvider } from './context/CartContext.jsx';
+import {Toaster} from 'react-hot-toast';
 
 // Navigation Components
 import Header from './pages/navigation/Header.jsx';
@@ -44,11 +45,10 @@ import AttendanceReport from './pages/reports/AttendanceReport.jsx';
 import TicketSalesTrends from './pages/operations/TicketSalesTrends.jsx';
 import CustomerTrendsChart from './pages/operations/CustomerTrendsChart.jsx';
 import PopularShows from './pages/reports/ShowsReport.jsx';
-import RideBreakdown from './pages/reports/RideMaintReport.jsx';
-import StageBreakdown from './pages/reports/StageMaintReport.jsx';
-import KioskBreakdown from './pages/reports/KioskMaintReport.jsx';
 import Attendance from './pages/operations/Attendance.jsx';
 import Stage from './pages/operations/Stage.jsx'; 
+import RideFrequencyReport from './pages/reports/RideFrequency.jsx';
+import ParkMaintenanceReport from './pages/reports/MaintLog.jsx';
 
 function App() {
   const location = useLocation();
@@ -58,10 +58,10 @@ function App() {
     <AuthProvider>
             <CartProvider> {/* ✅ wrap inside AuthProvider */}
                 <div className="app-container">
+                    <Toaster position='top-right' reverseOrder={false} />
                     {!isEmployeeDashboard && <Header />}
                     <Routes>
                         <Route path='/' element={<Home />} />
-                        <Route path='/home' element={<Home />} />
                         <Route path='/about-us' element={<About />} />
                         <Route path='/tickets' element={<Tickets />} />
                         <Route path='/services' element={<Services />} />
@@ -79,6 +79,7 @@ function App() {
                             <Route path='employee-profile' element={<EmployeeProfile/>}/>
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
+                            <Route path='ride-frequency' element={<RideFrequencyReport />} />
                             <Route path='shows' element={<Show />} />
                             <Route path='show-report' element={<PopularShows />} />
                             <Route path='kiosks' element={<Kiosk />} />
@@ -87,9 +88,7 @@ function App() {
                             <Route path='items' element={<Item />} />
                             <Route path='inventory-report' element={<Inventory />} />
                             <Route path='maintenance-report' element={<Maintenance />} />
-                            <Route path='ride-breakdown' element={<RideBreakdown />} />
-                            <Route path='stage-breakdown' element={<StageBreakdown />} />
-                            <Route path='kiosk-breakdown' element={<KioskBreakdown />} />
+                            <Route path='park-maintenance' element={<ParkMaintenanceReport />} />
                             <Route path='weather-report' element={<Weather />} />
                             <Route path='report' element={<Reports />} />
                             <Route path='rainout-report' element={<Rainout />}/>

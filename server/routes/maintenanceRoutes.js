@@ -19,7 +19,7 @@ maintenanceRouter.get('/pending', maintenanceController.getOpenMaintenanceCount)
 maintenanceRouter.get('/objects/:objectType', maintenanceController.getObjectsByType);
 
 // Get ride maintenance report
-maintenanceRouter.get('/avg-stat', maintenanceController.getRideMaintenance);
+maintenanceRouter.get('/avg-stat', maintenanceController.getParkMaintenance);
 
 // delete rides (all or specific)
 maintenanceRouter.delete('/', maintenanceController.deleteAllMaintenance);
