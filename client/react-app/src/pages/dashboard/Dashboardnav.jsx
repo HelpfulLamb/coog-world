@@ -7,27 +7,29 @@ const DashboardNav = () => {
     const role = user?.role?.toLowerCase();
 
     const [isWeatherDropdownOpen, setIsWeatherDropdownOpen] = useState(false);
+
+    const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
     const [isInvDropdownOpen, setIsInvDropdownOpen] = useState(false);
     const [isEmpDropdownOpen, setIsEmpDropdownOpen] = useState(false);
-    const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false); // State for Reports dropdown
 
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
     };
+
     const toggleInvDropdown = () => {
         setIsInvDropdownOpen(prev => !prev);
     };
     const toggleEmpDropdown = () => {
         setIsEmpDropdownOpen(prev => !prev);
     };
-    const toggleReportsDropdown = () => { // Toggle function for Reports dropdown
+    const toggleReportsDropdown = () => { 
         setIsReportsDropdownOpen(prev => !prev);
     };
 
-    return(
+    return (
         <nav className="dashboard-nav">
             <ul>
-                <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
+                <li><Link to={'/employee-dashboard/hours'}>Clock-In/Clock-Out</Link></li>
                 {(role === 'manager') && (
                     <>
                         <li><Link to={'/employee-dashboard/employees'}>Employees</Link></li>
@@ -38,7 +40,7 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li>
                     </>
                 )}
-                {(role === 'admin' || role === 'manager') && (
+                {(role === 'admin') && (
                     <>
                         <li className="dropdown">
                             <button onClick={toggleEmpDropdown}>
@@ -48,12 +50,14 @@ const DashboardNav = () => {
                             {isEmpDropdownOpen && (
                                 <ul>
                                     <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
-                                    <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li>
+                                    {/* <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li> */}
+                                    <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
                                 </ul>
                             )}
                         </li>
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
                         <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li className="dropdown">
@@ -98,7 +102,11 @@ const DashboardNav = () => {
                 )}
 
                 {role === 'maintenance' && (
-                    <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                    <>
+                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
+                        <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                    </>
                 )}
             </ul>
         </nav>
