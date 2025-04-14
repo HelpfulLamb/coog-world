@@ -132,8 +132,8 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                     </>
-                    <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                 )}
             </ul>
         </nav>
