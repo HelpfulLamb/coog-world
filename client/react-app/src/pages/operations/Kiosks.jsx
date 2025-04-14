@@ -58,6 +58,21 @@ function Kiosk(){
     const [costRangeFilter, setCostRangeFilter] = useState('');
     const [sortOption, setSortOption] = useState('');
 
+    const [allKiosks, setAllKiosks] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [kiosks] = await Promise.all([fetch('/api/kiosks/info')]);
+                const kioskData = await kiosks.json();
+                setAllKiosks(kioskData);
+            } catch (error) {
+                setMessage({error: 'Failed to load stages or shows.', success: ''});
+            }
+        };
+        fetchData();
+    }, []);
+
     useEffect(() => {
         const fetchKiosk = async () => {
             try {
@@ -170,12 +185,12 @@ function Kiosk(){
                 <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="kioskName">Kiosk Name:</label>
-                        <input 
-                        type="text"
-                        id="kioskName"
-                        value={kioskNameFilter}
-                        onChange={(e) => setKioskNameFilter(e.target.value)}
-                        placeholder="Filter by kiosk name" />
+                        <select type="text" id="kioskName" value={kioskNameFilter} onChange={(e) => setKioskNameFilter(e.target.value)}>
+                            <option value="">-- Select a Kiosk --</option>
+                            {allKiosks.map(kiosk => (
+                                <option key={kiosk.Kiosk_ID} value={kiosk.Kiosk_name}>{kiosk.Kiosk_name}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="filter-group">
                         <label htmlFor="kioskType">Kiosk Type:</label>

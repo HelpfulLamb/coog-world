@@ -179,3 +179,17 @@ exports.getKioskBreakdowns = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
+
+exports.getOpenMaintenanceCount = async (req, res) => {
+    try {
+      const [rows] = await db.query(`
+        SELECT COUNT(*) AS openCount
+        FROM maintenance
+        WHERE Maint_Status IN ('PENDING', 'IN PROGRESS')
+      `);
+      res.status(200).json(rows[0]);
+    } catch (err) {
+      console.error('Error fetching open maintenance count:', err);
+      res.status(500).json({ error: 'Database error' });
+    }
+  };

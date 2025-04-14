@@ -135,9 +135,9 @@ exports.getTicketSalesTrends = async () => {
   return results;
 };
 
-// exports.getTotalVisitorsToday() = async () => {
-//     const [data] = await db.query(
-//         'SELECT COUNT(*) FROM product_purchases WHERE visit_date = CURDATE()');
-//     return data;
-// };
+exports.getTotalVisitorsToday = async () => {
+    const [data] = await db.query(
+        'SELECT COUNT(*) AS visitors_today FROM product_purchases WHERE visit_date = CURDATE()');
+    return data;
+};
 

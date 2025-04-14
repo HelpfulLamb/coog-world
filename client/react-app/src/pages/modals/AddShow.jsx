@@ -10,7 +10,22 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
         Show_date: '',
         Perf_num: ''
     });
+    const [allStages, setAllStages] = useState([]);
     const [message, setMessage] = useState({error: '', success: ''});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [stages] = await Promise.all([fetch('/api/stages/all')]);
+                const stageData = await stages.json();
+                setAllStages(stageData);
+            } catch (error) {
+                setMessage({error: 'Failed to load stages.', success: ''});
+            }
+        };
+        if(isOpen) fetchData();
+    }, [isOpen]);
+
     useEffect(() => {
         if(showToEdit){
             setFormData({
@@ -87,13 +102,9 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                             <label htmlFor="Stage_ID">Stage</label>
                             <select name="Stage_ID" id="Stage_ID" required value={formData.Stage_ID} onChange={handleInputChange}>
                                 <option value="">-- Select a Stage --</option>
-                                <option value="1">Music Hall</option>
-                                <option value="2">Cullen Performance Stage</option>
-                                <option value="3">Plaza Outdoor Stage</option>
-                                <option value="4">Leiss' Wacky Circus</option>
-                                <option value="5">The Downtown Drama</option>
-                                <option value="6">Crescent Moon Theatre</option>
-                                <option value="7">Stage of Wonder</option>
+                                {allStages.map(stage => (
+                                    <option key={stage.Stage_ID} value={stage.Stage_name}>{stage.Stage_name}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -119,8 +130,22 @@ function AddShow({isOpen, onClose, onAddShow}){
         Show_cost: '',
         Show_date: ''
     });
+    const [allStages, setAllStages] = useState([]);
 
     const [message, setMessage] = useState({error: '', success: ''});
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [stages] = await Promise.all([fetch('/api/stages/all')]);
+                const stageData = await stages.json();
+                setAllStages(stageData);
+            } catch (error) {
+                setMessage({error: 'Failed to load stages.', success: ''});
+            }
+        };
+        if(isOpen) fetchData();
+    }, [isOpen]);
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -204,20 +229,11 @@ function AddShow({isOpen, onClose, onAddShow}){
                     ))}
                     <div className="modal-input-group">
                         <label htmlFor="Stage_ID">Stage</label>
-                        <select
-                            id="Stage_ID"
-                            name="Stage_ID"
-                            required
-                            value={newShow.Stage_ID}
-                            onChange={handleInputChange}>
+                        <select id="Stage_ID" name="Stage_ID" required value={newShow.Stage_ID} onChange={handleInputChange}>
                             <option value="">-- Select a Stage --</option>
-                            <option value="1">Music Hall</option>
-                            <option value="2">Cullen Performance Stage</option>
-                            <option value="3">Plaza Outdoor Stage</option>
-                            <option value="4">Leiss' Wacky Circus</option>
-                            <option value="5">The Downtown Drama</option>
-                            <option value="6">Crescent Moon Theatre</option>
-                            <option value="7">Stage of Wonder</option>
+                            {allStages.map(stage => (
+                                <option key={stage.Stage_ID} value={stage.Stage_ID}>{stage.Stage_name}</option>
+                            ))}
                         </select>
                     </div>
                     {message.error && <p className="error-message">{message.error}</p>}

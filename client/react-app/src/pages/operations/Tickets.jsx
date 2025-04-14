@@ -13,8 +13,6 @@ function TicketTable({ticketInformation, setIsModalOpen, onEditTicket, onDeleteT
                         <tr>
                             <th>Ticket Type</th>
                             <th>Price</th>
-                            <th>Monthly Avg</th>
-                            <th>Total Sold</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -23,8 +21,6 @@ function TicketTable({ticketInformation, setIsModalOpen, onEditTicket, onDeleteT
                             <tr key={ticket.ticket_id}>
                                 <td>{ticket.ticket_type}</td>
                                 <td>${ticket.price}</td>
-                                <td>N/A</td>
-                                <td>N/A</td>
                                 <td>
                                     <button onClick={() => onEditTicket(ticket)} className="action-btn edit-button">Edit</button>
                                     <button onClick={() => onDeleteTicket(ticket.ticket_id)} className="action-btn delete-button">Delete</button>

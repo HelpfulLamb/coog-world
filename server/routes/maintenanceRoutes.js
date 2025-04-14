@@ -15,6 +15,7 @@ maintenanceRouter.get('/object', maintenanceController.getMaintenanceById);
 maintenanceRouter.get('/ride-breakdowns', maintenanceController.getRideBreakdowns);
 maintenanceRouter.get('/stage-breakdowns', maintenanceController.getStageBreakdowns);
 maintenanceRouter.get('/kiosk-breakdowns', maintenanceController.getKioskBreakdowns);
+maintenanceRouter.get('/pending', maintenanceController.getOpenMaintenanceCount);
 maintenanceRouter.get('/objects/:objectType', maintenanceController.getObjectsByType);
 
 // Get ride maintenance report

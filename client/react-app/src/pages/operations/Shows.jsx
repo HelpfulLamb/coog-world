@@ -74,6 +74,24 @@ function Show(){
     const [endDateFilter, setEndDateFilter] = useState('');
     const [sortOption, setSortOption] = useState('');
 
+    const [allStages, setAllStages] = useState([]);
+    const [allShows, setAllShows] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [stages, shows] = await Promise.all([fetch('/api/stages/all'), fetch('/api/shows/info')]);
+                const stageData = await stages.json();
+                const showData = await shows.json();
+                setAllStages(stageData);
+                setAllShows(showData);
+            } catch (error) {
+                setMessage({error: 'Failed to load stages or shows.', success: ''});
+            }
+        };
+        fetchData();
+    }, []);
+
     useEffect(() => {
         const fetchShow = async () => {
             try {
@@ -184,51 +202,33 @@ function Show(){
                 <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="showName">Show Name:</label>
-                        <input
-                            type="text"
-                            id="showName"
-                            value={showNameFilter}
-                            onChange={(e) => setShowNameFilter(e.target.value)}
-                            placeholder="Filter by show name" />
+                        <select type="text" id="showName" value={showNameFilter} onChange={(e) => setShowNameFilter(e.target.value)}>
+                            <option value="">-- Select a Show --</option>
+                            {allShows.map(show => (
+                                <option key={show.Show_ID} value={show.Show_name}>{show.Show_name}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="filter-group">
                         <label htmlFor="stageName">Stage Name:</label>
-                        <input
-                            type="text"
-                            id="stageName"
-                            value={stageNameFilter}
-                            onChange={(e) => setStageNameFilter(e.target.value)}
-                            placeholder="Filter by stage name" />
+                        <select type="text" id="stageName" value={stageNameFilter} onChange={(e) => setStageNameFilter(e.target.value)}>
+                            <option value="">-- Select a Stage --</option>
+                            {allStages.map(stage => (
+                                <option key={stage.Stage_ID} value={stage.Stage_name}>{stage.Stage_name}</option>
+                            ))}
+                        </select>
                     </div>
-                </div>
-                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="startDate">Performance From Date:</label>
-                        <input
-                            type="date"
-                            id="startDate"
-                            value={startDateFilter}
-                            onChange={(e) => setStartDateFilter(e.target.value)}
-                        />
+                        <input type="date" id="startDate" value={startDateFilter} onChange={(e) => setStartDateFilter(e.target.value)}/>
                     </div>
                     <div className="filter-group">
                         <label htmlFor="endDate">Performance To Date:</label>
-                        <input
-                            type="date"
-                            id="endDate"
-                            value={endDateFilter}
-                            onChange={(e) => setEndDateFilter(e.target.value)}
-                        />
+                        <input type="date" id="endDate" value={endDateFilter} onChange={(e) => setEndDateFilter(e.target.value)}/>
                     </div>
-                </div>
-                <div className="filter-row">
-                    <div className="filter-group select-input">
+                    <div className="filter-group">
                         <label htmlFor="sort">Sort By:</label>
-                        <select
-                            id="sort"
-                            value={sortOption}
-                            onChange={(e) => setSortOption(e.target.value)}
-                        >
+                        <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                             <option value="">-- Select a sort method --</option>
                             <option value="datePerformed">Date Performed (Oldest First)</option>
                             <option value="nameAsc">Name (A-Z)</option>
@@ -238,19 +238,19 @@ function Show(){
                             <option value="costDesc">Cost (High to Low)</option>
                         </select>
                     </div>
+                </div>
+                <div className="filter-row">
                     <button className="reset-button" onClick={resetFilters}>
                         Reset Filters
                     </button>
                 </div>
             </div>
-
             <div className="db-btn">
                 <h1>Coog World Shows</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Show</button>
                 </div>
             </div>
-
             <ShowTable showInformation={filteredShows} setIsModalOpen={setIsModalOpen} onEditShow={handleEditShow} onDeleteShow={handleDeleteShow} />
             <AddShow isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddShow={handleAddShow} />
             <UpdateShow isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedShow(null);}} showToEdit={selectedShow} onUpdateShow={handleUpdateShow} />

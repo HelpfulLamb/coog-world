@@ -202,8 +202,6 @@ const StageList = () => {
                             placeholder="Enter area name"
                         />
                     </div>
-                </div>
-                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="staffNumber">Staff Number:</label>
                         <input
@@ -224,8 +222,6 @@ const StageList = () => {
                             placeholder="Enter seat number"
                         />
                     </div>
-                </div>
-                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="dateFrom">From Date:</label>
                         <input
