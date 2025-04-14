@@ -1,6 +1,6 @@
 const db = require('../config/db.js');
 
-// Get all stages
+
 exports.getAllStages = async () => {
     const query = `
         SELECT 
@@ -17,13 +17,13 @@ exports.getAllStages = async () => {
     
     try {
         const [results] = await db.query(query);
-        return results; // Return the stages
+        return results; 
     } catch (err) {
-        throw new Error('Error fetching stages: ' + err.message); // Improved error handling
+        throw new Error('Error fetching stages: ' + err.message); 
     }
 };
 
-// Add a new stage
+
 exports.addStage = async (stageData) => {
     const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by } = stageData;
 
@@ -34,13 +34,13 @@ exports.addStage = async (stageData) => {
 
     try {
         const [result] = await db.query(query, [area_ID, Stage_name, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by]);
-        return result.insertId;  // Return the inserted Stage_ID
+        return result.insertId;  
     } catch (err) {
-        throw new Error('Error adding stage: ' + err.message); // Improved error handling
+        throw new Error('Error adding stage: ' + err.message); 
     }
 };
 
-// Update an existing stage
+
 exports.updateStage = async (stageID, stageData) => {
     const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = stageData;
 
@@ -52,13 +52,13 @@ exports.updateStage = async (stageID, stageData) => {
 
     try {
         const [result] = await db.query(query, [Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by, stageID]);
-        return result.affectedRows > 0;  // Return true if rows are updated
+        return result.affectedRows > 0;  
     } catch (err) {
-        throw new Error('Error updating stage: ' + err.message); // Improved error handling
+        throw new Error('Error updating stage: ' + err.message); 
     }
 };
 
-// Get a stage by ID
+
 exports.getStageById = async (stageID) => {
     const query = `
         SELECT 
@@ -76,13 +76,13 @@ exports.getStageById = async (stageID) => {
     
     try {
         const [results] = await db.query(query, [stageID]);
-        return results[0]; // Return the first result (since stage ID should be unique)
+        return results[0]; 
     } catch (err) {
-        throw new Error('Error fetching stage by ID: ' + err.message); // Improved error handling
+        throw new Error('Error fetching stage by ID: ' + err.message); 
     }
 };
 
-// Get all stages with additional employee information if needed
+
 exports.getAllStagesWithEmployeeInfo = async () => {
     const query = `
         SELECT 
@@ -102,8 +102,8 @@ exports.getAllStagesWithEmployeeInfo = async () => {
     
     try {
         const [results] = await db.query(query);
-        return results; // Return the stages with employee details
+        return results; 
     } catch (err) {
-        throw new Error('Error fetching stages with employee information: ' + err.message); // Improved error handling
+        throw new Error('Error fetching stages with employee information: ' + err.message); 
     }
 };

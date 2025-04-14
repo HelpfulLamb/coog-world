@@ -171,6 +171,7 @@ function Employee(){
     }
     return(
         <>
+            <EmployeeNumbers />
             <div className="filter-controls">
                 <h2>Filter Employees</h2>
                 <div className="filter-row">
@@ -240,6 +241,55 @@ function Employee(){
             <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
             <UpdateEmployee isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedEmp(null);}} empToEdit={selectedEmp} onUpdateEmp={handleUpdateEmp} />
         </>
+    );
+}
+
+export function EmployeeNumbers(){
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchEmpNum = async () => {
+            try {
+                const response = await fetch('/api/employees/employee-spread');
+                const result = await response.json();
+                setData(result);
+            } catch (error) {
+                console.error('Error fetching employee numbers: ', error);
+            }
+        };
+        fetchEmpNum();
+    }, []);
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+    return(
+        <div>
+            <h2>Number of Employees Per Area</h2>
+            <div className="table-container">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Park Area</th>
+                            <th>Total Employees</th>
+                            <th>Earliest Hire</th>
+                            <th>Latest Hire</th>
+                            <th>Currently Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.park_area}</td>
+                                <td>{row.total_area_emp}</td>
+                                <td>{formatDate(row.earliest_hire)}</td>
+                                <td>{formatDate(row.latest_hire)}</td>
+                                <td>{row.currently_active}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 }
 

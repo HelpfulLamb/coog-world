@@ -9,7 +9,6 @@ const DashboardNav = () => {
     const [isWeatherDropdownOpen, setIsWeatherDropdownOpen] = useState(false);
 
     const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
-    const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
     const [isInvDropdownOpen, setIsInvDropdownOpen] = useState(false);
     const [isEmpDropdownOpen, setIsEmpDropdownOpen] = useState(false);
 
@@ -23,12 +22,8 @@ const DashboardNav = () => {
     const toggleEmpDropdown = () => {
         setIsEmpDropdownOpen(prev => !prev);
     };
-    const toggleReportsDropdown = () => { // Toggle function for Reports dropdown
+    const toggleReportsDropdown = () => { 
         setIsReportsDropdownOpen(prev => !prev);
-    };
-
-    const toggleEmployeeDropdown = () => {
-        setIsEmployeeDropdownOpen(prev => !prev);
     };
 
     return (
@@ -55,7 +50,7 @@ const DashboardNav = () => {
                             {isEmpDropdownOpen && (
                                 <ul>
                                     <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
-                                    <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li>
+                                    {/* <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li> */}
                                     <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
                                 </ul>
                             )}
