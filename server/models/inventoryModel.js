@@ -34,6 +34,23 @@ exports.updateItem = async (selectedItem) => {
     return item;
 };
 
+//Restock
+exports.restockItem = async (newRestockLevel, Inventory_ID) => {
+    const [result] = await db.query(
+        'UPDATE inventory SET Item_quantity = ? WHERE Inventory_ID = ?',
+        [newRestockLevel, Inventory_ID]
+    );
+    return result;
+};
+//Restock controller uses this
+exports.getRestockLevel = async (Inventory_ID) => {
+    const [rows] = await db.query(
+        'SELECT Item_quantity FROM inventory WHERE Inventory_ID = ?',
+        [Inventory_ID]
+    );
+    return rows[0]; // returns the record or undefined if not found
+};
+
 exports.markMessageSeen = async (alertID) => {
     await db.query('UPDATE restock_notifications SET Is_Seen = TRUE WHERE Notification_ID = ?', [alertID]);
 };

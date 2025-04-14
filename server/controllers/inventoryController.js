@@ -52,6 +52,36 @@ exports.updateItem = async (req, res) => {
     }
 };
 
+// Restock
+exports.restockItem = async (req, res) => {
+    try {
+        const Inventory_ID = req.params.id;
+        const { restockAmount } = req.body;
+
+        if (!restockAmount || isNaN(restockAmount)) {
+            return res.status(400).json({ message: 'Invalid restock amount.' });
+        }
+
+        // Get current Restock_level
+        const currentItem = await inventoryModel.getRestockLevel(Inventory_ID);
+        if (!currentItem) {
+            return res.status(404).json({ message: 'Entry not found.' });
+        }
+
+        const newRestockLevel = parseInt(currentItem.Item_quantity, 10) + parseInt(restockAmount, 10);
+
+        const updatedItem = await inventoryModel.restockItem(newRestockLevel, Inventory_ID);
+
+        if (!updatedItem) {
+            return res.status(500).json({ message: 'Failed to restock item.' });
+        }
+
+        res.status(200).json({ message: 'Item restocked successfully.', item: updatedItem });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 exports.markMessageSeen = async (req, res) => {
     const alertID = req.params.id;
     try {
