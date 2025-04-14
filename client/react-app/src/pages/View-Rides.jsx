@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import rideImg from "../images/ride1.jpg";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 function RideCard({ ride, onRideClick }) {
-    console.log("📦 RideCard sending ID:", ride?.Ride_ID);
-    console.log("📦 ride object:", ride);
-  
     return (
       <div className="ride-card">
         <img src={rideImg} alt="ride image" draggable="false" />
@@ -17,16 +15,13 @@ function RideCard({ ride, onRideClick }) {
         </button>
       </div>
     );
-  }  
-    
+}  
 
 function ParkRides() {
   const [rideOptions, setRideOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("All");
-
-  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +35,7 @@ function ParkRides() {
         setRideOptions(data);
       } catch (error) {
         setError(error.message);
+        toast.error(`Failed to load rides: ${error.message}`);
       } finally {
         setLoading(false);
       }
@@ -51,13 +47,16 @@ function ParkRides() {
     const user = JSON.parse(localStorage.getItem("user"));
     const visitorId = user?.id;
   
-    console.log("🚀 Attempting to log ride:");
-    console.log("Visitor_ID:", visitorId, "Ride_ID:", rideId);
-  
     if (!visitorId || !rideId) {
-      alert("You must be logged in to log a ride.");
-      return navigate("/login");
+      toast.error('You must be logged in to get on a ride.', {
+        duration: 3000,
+        position: 'top-center'
+      });
+      setTimeout(() => navigate("/login"), 1000);
+      return;
     }
+
+    const toastId = toast.loading('Logging your ride...');
   
     try {
       const res = await fetch("/api/rides/log", {
@@ -70,19 +69,29 @@ function ParkRides() {
       });
   
       const result = await res.json();
-      console.log("📬 Server response:", result);
   
       if (res.ok) {
-        alert("🎉 Ride logged successfully!");
+        toast.success('🎉 Ride logged successfully!', {
+          id: toastId,
+          duration: 3000,
+          position: 'top-center'
+        });
       } else {
-        alert(`❌ Failed: ${result.message}`);
+        toast.error(`❌ Failed: ${result.message || 'Unknown error'}`, {
+          id: toastId,
+          duration: 4000,
+          position: 'top-center'
+        });
       }
     } catch (err) {
-      console.error("❌ Error logging ride:", err);
-      alert("An error occurred while logging the ride.");
+      console.error("Error logging ride:", err);
+      toast.error('An error occurred while logging the ride.', {
+        id: toastId,
+        duration: 4000,
+        position: 'top-center'
+      });
     }
   };    
-    
 
   if (loading) return <></>;
   if (error) return <div>Error: {error}</div>;
@@ -114,7 +123,11 @@ function ParkRides() {
       </div>
       <div className="ride-container">
       {rideOptions.filter((ride) => filter === "All" || ride.Ride_type === filter).map((ride, index) => (
-        <RideCard key={index} ride={ride} onRideClick={handleGetOnRide} />
+        <RideCard 
+          key={index} 
+          ride={ride} 
+          onRideClick={handleGetOnRide}
+        />
       ))}
       </div>
     </>
