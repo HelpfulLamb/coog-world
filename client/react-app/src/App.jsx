@@ -43,6 +43,10 @@ import ClockInOut from './pages/operations/ClockInOut.jsx';
 import AttendanceReport from './pages/reports/AttendanceReport.jsx';
 import TicketSalesTrends from './pages/operations/TicketSalesTrends.jsx';
 import CustomerTrendsChart from './pages/operations/CustomerTrendsChart.jsx';
+import PopularShows from './pages/reports/ShowsReport.jsx';
+import RideBreakdown from './pages/reports/RideMaintReport.jsx';
+import StageBreakdown from './pages/reports/StageMaintReport.jsx';
+import KioskBreakdown from './pages/reports/KioskMaintReport.jsx';
 import Attendance from './pages/operations/Attendance.jsx';
 import Stage from './pages/operations/Stage.jsx'; 
 
@@ -76,12 +80,16 @@ function App() {
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='shows' element={<Show />} />
+                            <Route path='show-report' element={<PopularShows />} />
                             <Route path='kiosks' element={<Kiosk />} />
                             <Route path='stages' element={<Stage />} />
                             <Route path='ticket-report' element={<TicketReport />} />
                             <Route path='items' element={<Item />} />
                             <Route path='inventory-report' element={<Inventory />} />
                             <Route path='maintenance-report' element={<Maintenance />} />
+                            <Route path='ride-breakdown' element={<RideBreakdown />} />
+                            <Route path='stage-breakdown' element={<StageBreakdown />} />
+                            <Route path='kiosk-breakdown' element={<KioskBreakdown />} />
                             <Route path='weather-report' element={<Weather />} />
                             <Route path='report' element={<Reports />} />
                             <Route path='rainout-report' element={<Rainout />}/>

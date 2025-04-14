@@ -4,6 +4,8 @@ const showRouter = express.Router();
 
 // create new shows
 showRouter.post('/create-show', showController.createShow);
+showRouter.post('/log', showController.logVisitorShow);
+showRouter.post('/top-shows', showController.getTopShows);
 
 // update existing show
 showRouter.put('/:id', showController.updateShow);
@@ -12,6 +14,8 @@ showRouter.put('/:id', showController.updateShow);
 showRouter.get('/', showController.getAllShows);
 showRouter.get('/user-view', showController.getShowForCard);
 showRouter.get('/info', showController.getShowInfo);
+showRouter.get('/today-show', showController.getPopularShowToday);
+showRouter.get('/history/:id', showController.getVisitorShowHistory);
 showRouter.get('/:id', showController.getShowById);
 
 // delete shows (all or specific)

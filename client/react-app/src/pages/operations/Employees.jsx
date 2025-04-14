@@ -211,7 +211,11 @@ function Employee(){
                         <label htmlFor="salaryRange">Salary Range:</label>
                         <select id="salaryRange" value={salaryRangeFilter} onChange={(e) => setSalaryRangeFilter(e.target.value)}>
                             <option value="">-- Select a Salary Range --</option>
-                            <option value="35000-65000">$35,000 - $65,000</option>
+                            <option value="35000-64999">$35,000 - $64,999</option>
+                            <option value="65000-94999">$65,000 - $94,999</option>
+                            <option value="95000-124999">$95,000 - $124,999</option>
+                            <option value="125000-249999">$125,000 - $249,999</option>
+                            <option value="250000-999999999">$250,000+</option>
                         </select>
                     </div>
                     <div className="filter-group">

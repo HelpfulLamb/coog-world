@@ -15,6 +15,7 @@ weatherRouter.patch('/weather-alerts/:id/acknowledge', weatherController.markMes
 weatherRouter.get('/', weatherController.getAllWeather);
 weatherRouter.get('/weather-alerts', weatherController.getWeatherAlerts);
 weatherRouter.get('/info', weatherController.getWeatherInfo);
+weatherRouter.get('/today', weatherController.getLatestWeather);
 weatherRouter.get('/:id', weatherController.getWeatherById);
 
 // delete weather (all or specific)

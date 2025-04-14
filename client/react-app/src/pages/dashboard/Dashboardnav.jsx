@@ -7,10 +7,11 @@ const DashboardNav = () => {
     const role = user?.role?.toLowerCase();
 
     const [isWeatherDropdownOpen, setIsWeatherDropdownOpen] = useState(false);
-
-    const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
     const [isInvDropdownOpen, setIsInvDropdownOpen] = useState(false);
     const [isEmpDropdownOpen, setIsEmpDropdownOpen] = useState(false);
+    const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
+    const [isShowDropdownOpen, setIsShowDropdownOpen] = useState(false);
+    const [isMaintDropdownOpen, setIsMaintDropdownOpen] = useState(false);
 
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
@@ -25,22 +26,18 @@ const DashboardNav = () => {
     const toggleReportsDropdown = () => { 
         setIsReportsDropdownOpen(prev => !prev);
     };
+    const toggleShowDropdown = () => { // Toggle function for Reports dropdown
+        setIsShowDropdownOpen(prev => !prev);
+    };
+    const toggleMaintDropdown = () => { // Toggle function for Reports dropdown
+        setIsMaintDropdownOpen(prev => !prev);
+    };
 
     return (
         <nav className="dashboard-nav">
             <ul>
-                <li><Link to={'/employee-dashboard/hours'}>Clock-In/Clock-Out</Link></li>
-                {(role === 'manager') && (
-                    <>
-                        <li><Link to={'/employee-dashboard/employees'}>Employees</Link></li>
-                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
-                        <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
-                        <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
-                        <li><Link to={'/employee-dashboard/items'}>Items</Link></li>
-                        <li><Link to={'/employee-dashboard/inventory-report'}>Inventory</Link></li>
-                    </>
-                )}
-                {(role === 'admin') && (
+                <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
+                {(role === 'admin' || role === 'manager') && (
                     <>
                         <li className="dropdown">
                             <button onClick={toggleEmpDropdown}>
@@ -57,6 +54,18 @@ const DashboardNav = () => {
                         </li>
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li className="dropdown">
+                            <button onClick={toggleShowDropdown}>
+                                Shows
+                                <span className={`arrow-icon ${isShowDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isShowDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/shows'}>Shows List</Link></li>
+                                    <li><Link to={'/employee-dashboard/show-report'}>Show Report</Link></li>
+                                </ul>
+                            )}
+                        </li>
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
                         <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
@@ -72,7 +81,24 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
+                        <li className="dropdown">
+                            <button onClick={toggleMaintDropdown}>
+                                Maintenance
+                                <span className={`arrow-icon ${isMaintDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isMaintDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Logs</Link></li>
+                                    <li><Link to={'/employee-dashboard/ride-breakdown'}>Ride Breakdowns</Link></li>
+                                    <li><Link to={'/employee-dashboard/stage-breakdown'}>Stage Malfunctions</Link></li>
+                                    <li><Link to={'/employee-dashboard/kiosk-breakdown'}>Kiosks Repairs</Link></li>
+                                </ul>
+                            )}
+                        </li>
+                    </>
+                )}
+                {role === 'admin' && (
+                    <>
                         <li className="dropdown">
                             <button onClick={toggleWeatherDropdown} className="dropdown-btn">
                                 Weather
@@ -106,6 +132,7 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
                     </>
                 )}
             </ul>

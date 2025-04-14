@@ -24,6 +24,8 @@ function Profile() {
     const [showPurchases, setShowPurchases] = useState(false);
     const [rides, setRides] = useState([]);
     const [showRides, setShowRides] = useState(false);
+    const [shows, setShows] = useState([]);
+    const [showShows, setShowShows] = useState(false);
 
     const {cartItems} = useCart();
 
@@ -57,6 +59,9 @@ function Profile() {
             const rideRes = await fetch(`/api/rides/history/${userId}`);
             const rideData = await rideRes.json();
             setRides(rideData.rides);
+            const showRes = await fetch(`/api/shows/history/${userId}`);
+            const showData = await showRes.json();
+            setShows(showData.shows);
         } catch (err) {
             console.error('Error fetching user-related data:', err);
         }
@@ -309,6 +314,32 @@ function Profile() {
                                     </div>
                                 ) : (
                                     <p className="no-items">No ride history available</p>
+                                )}
+                            </div>
+                        )}
+                    </section>
+                    <section className="profile-section profile-rides">
+                        <div className="section-header" onClick={() => setShowShows(!showShows)}>
+                            <h3>Watch History</h3>
+                            <span className="toggle-icon">
+                                {showShows ? '▼' : '►'}
+                            </span>
+                        </div>
+                        {showShows && (
+                            <div className="section-content">
+                                {shows.length > 0 ? (
+                                    <div className="ride-list">
+                                        {shows.map((show, index) => (
+                                            <div key={index} className="ride-item">
+                                                <div className="ride-name">{show.Show_name}</div>
+                                                <div className="ride-meta">
+                                                    <span className="ride-date">{new Date(show.watch_date).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="no-items">No watch history available</p>
                                 )}
                             </div>
                         )}

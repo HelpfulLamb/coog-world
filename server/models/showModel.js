@@ -23,7 +23,7 @@ exports.getAllShows = async () => {
 
 exports.getShowForCard = async () => {
     const [show] = await db.query(
-        'SELECT s.Show_name, s.Show_start, s.Show_date, a.area_name, p.Stage_name FROM shows as s, sectors as a, stages as p WHERE s.Stage_ID = p.Stage_ID and p.area_ID = a.area_ID');
+        'SELECT s.Show_ID, s.Show_name, s.Show_start, s.Show_date, a.area_name, p.Stage_name FROM shows as s, sectors as a, stages as p WHERE s.Stage_ID = p.Stage_ID and p.area_ID = a.area_ID');
     return show;
 };
 
@@ -44,4 +44,15 @@ exports.deleteAllShows = async () => {
 
 exports.deleteShowById = async (showid) => {
     await db.query('DELETE FROM shows WHERE Show_ID = ?', [showid]);
+};
+
+exports.getVisitorShowHistory = async (visitorId) => {
+    const [history] = await db.query(
+        `SELECT vsl.watch_date, s.Show_name
+        FROM visitor_show_log vsl
+        JOIN shows s ON vsl.Show_ID = s.Show_ID
+        WHERE vsl.Visitor_ID = ?
+        ORDER BY vsl.watch_date DESC`, 
+        [visitorId]);
+    return history;
 };

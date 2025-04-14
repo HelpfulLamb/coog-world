@@ -1,4 +1,5 @@
 const weatherModel = require('../models/weatherModel.js');
+const db = require('../config/db.js');
 
 exports.createWeather = async (req, res) => {
     const {temperature, Wtr_cond, Wtr_level, Special_alerts} = req.body;
@@ -101,3 +102,18 @@ exports.deleteWeatherById = async (req, res) => {
         res.status(500).json({message: error.message});
     }
 };
+
+exports.getLatestWeather = async (req, res) => {
+    try {
+      const [rows] = await db.query(`
+        SELECT Wtr_cond, temperature
+        FROM weather
+        ORDER BY Wtr_ID DESC
+        LIMIT 1
+      `);
+      res.status(200).json(rows[0]);
+    } catch (err) {
+      console.error('Error fetching latest weather:', err);
+      res.status(500).json({ error: 'Database error' });
+    }
+  };

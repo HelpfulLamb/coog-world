@@ -52,6 +52,20 @@ function Item(){
     const [itemTypeFilter, setItemTypeFilter] = useState('');
     const [sortOPtion, setSortOption] = useState('');
 
+    const [items, setItems] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [itemRes] = await Promise.all([fetch('/api/inventory/items')]);
+                const itemsData = await itemRes.json();
+                setItems(itemsData);
+            } catch (error) {
+                setMessage({ error: 'Failed to load items.', success: '' });
+            }
+        }
+        fetchData();
+    }, []);
+
     useEffect(() => {
         const fetchItems = async () => {
             try {
@@ -151,7 +165,12 @@ function Item(){
                 <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="itemName">Item Name:</label>
-                        <input type="text" id="itemName" value={itemNamefilter} onChange={(e) => setItemNameFilter(e.target.value)} placeholder="Filter by item name" />
+                        <select type="text" id="itemName" value={itemNamefilter} onChange={(e) => setItemNameFilter(e.target.value)}>
+                            <option value="">-- Select an Item --</option>
+                            {items.map(item => (
+                                <option key={item.Item_ID} value={item.Item_name}>{item.Item_name}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="filter-group">
                         <label htmlFor="itemType">Item Type:</label>
