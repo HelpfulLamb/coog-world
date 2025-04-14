@@ -7,6 +7,7 @@ attendanceRouter.post('/clock-out', attendanceController.clockOut);
 
 attendanceRouter.get('/today/:empId', attendanceController.getTodayAttendance);
 attendanceRouter.get('/all/:empId', attendanceController.getAllAttendance);
+attendanceRouter.get('/all', attendanceController.getAllAttendanceRecords);
 
 module.exports = {
     attendanceRouter

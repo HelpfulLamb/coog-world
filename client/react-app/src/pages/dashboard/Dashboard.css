@@ -252,3 +252,20 @@
 .dashboard-title h1:hover {
     color: rgb(62, 114, 190); 
 }
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.profile-link:hover {
+    color: #007bff; 
+    text-decoration: underline;
+}

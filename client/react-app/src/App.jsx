@@ -27,6 +27,7 @@ import ParkShows from './pages/View-Shows.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import AdminHome from './pages/operations/Home.jsx';
 import Revenue from './pages/operations/Revenue.jsx';
+import EmployeeProfile from './pages/operations/EmployeeProfile.jsx';
 import Employee from './pages/operations/Employees.jsx';
 import Ride from './pages/operations/Ride.jsx';
 import Kiosk from './pages/operations/Kiosks.jsx';
@@ -39,6 +40,8 @@ import Weather from './pages/operations/WeatherReport.jsx';
 import Reports from './pages/operations/Reports.jsx';
 import Rainout from './pages/operations/Rainout.jsx';
 import ClockInOut from './pages/operations/ClockInOut.jsx';
+import Attendance from './pages/operations/Attendance.jsx';
+import Stage from './pages/operations/Stage.jsx'; 
 
 function App() {
   const location = useLocation();
@@ -66,10 +69,12 @@ function App() {
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/employee-dashboard' element={<Dashboard />}>
                             <Route index element={<AdminHome />} />
+                            <Route path='employee-profile' element={<EmployeeProfile/>}/>
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='shows' element={<Show />} />
                             <Route path='kiosks' element={<Kiosk />} />
+                            <Route path='stages' element={<Stage />} />
                             <Route path='ticket-report' element={<TicketReport />} />
                             <Route path='items' element={<Item />} />
                             <Route path='inventory-report' element={<Inventory />} />
@@ -78,6 +83,7 @@ function App() {
                             <Route path='report' element={<Reports />} />
                             <Route path='rainout-report' element={<Rainout />}/>
                             <Route path='hours' element={<ClockInOut />}/>
+                            <Route path='attendance' element={<Attendance />}/>
                             <Route path='revenue-report' element={<Revenue />}/>
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />

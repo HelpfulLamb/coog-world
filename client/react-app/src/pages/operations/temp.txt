@@ -1,0 +1,82 @@
+<div className="filter-controls">
+        <h2>Filter Stages</h2>
+        <div className="filter-row">
+          <div className="filter-group">
+            <label htmlFor="stageName">Stage Name:</label>
+            <input
+              type="text"
+              id="stageName"
+              value={stageNameFilter}
+              onChange={(e) => setStageNameFilter(e.target.value)}
+              placeholder="Enter stage name"
+            />
+          </div>
+          <div className="filter-group">
+            <label htmlFor="areaName">Area Name:</label>
+            <input
+              type="text"
+              id="areaName"
+              value={areaNameFilter}
+              onChange={(e) => setAreaNameFilter(e.target.value)}
+              placeholder="Enter area name"
+            />
+          </div>
+        </div>
+        <div className="filter-row">
+          <div className="filter-group">
+            <label htmlFor="staffNumber">Staff Number:</label>
+            <input
+              type="number"
+              id="staffNumber"
+              value={staffNumberFilter}
+              onChange={(e) => setStaffNumberFilter(e.target.value)}
+              placeholder="Enter staff number"
+            />
+          </div>
+          <div className="filter-group">
+            <label htmlFor="seatNumber">Seat Number:</label>
+            <input
+              type="number"
+              id="seatNumber"
+              value={seatNumberFilter}
+              onChange={(e) => setSeatNumberFilter(e.target.value)}
+              placeholder="Enter seat number"
+            />
+          </div>
+        </div>
+        <div className="filter-row">
+          <div className="filter-group">
+            <label htmlFor="dateFrom">From Date:</label>
+            <input
+              type="date"
+              id="dateFrom"
+              value={dateFromFilter}
+              onChange={(e) => setDateFromFilter(e.target.value)}
+            />
+          </div>
+          <div className="filter-group">
+            <label htmlFor="dateTo">To Date:</label>
+            <input
+              type="date"
+              id="dateTo"
+              value={dateToFilter}
+              onChange={(e) => setDateToFilter(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="filter-row">
+          <div className="filter-group">
+            <label htmlFor="isOperational">Operational Status:</label>
+            <select
+              id="isOperational"
+              value={isOperationalFilter}
+              onChange={(e) => setIsOperationalFilter(e.target.value)}
+            >
+              <option value="">-- Select Operational Status --</option>
+              <option value="1">Operational</option>
+              <option value="0">Not Operational</option>
+            </select>
+          </div>
+          <button onClick={resetFilters} className="reset-button">Reset Filters</button>
+        </div>
+      </div>

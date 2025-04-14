@@ -16,6 +16,7 @@ const shopRoutes = require('./routes/shopRoutes');
 const { reportRoutes } = require('./routes/reportRoutes.js');
 const { attendanceRouter } = require('./routes/attendanceRoutes.js');
 const { cartRouter } = require('./routes/cartRoutes.js');
+const { stageRouter } = require('./routes/stageRoutes.js');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/shop-purchases', shopRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/attendance', attendanceRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/stages', stageRouter);
 
 app.use(express.static(path.join(__dirname, 'client')));
 

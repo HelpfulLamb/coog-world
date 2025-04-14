@@ -27,22 +27,33 @@ exports.updateClockOut = async (attendanceId, userId) => {
   return result;
 };
 exports.getTodayAttendance = async (empId) => {
-    const [rows] = await db.query(
-      `SELECT * FROM attendance 
+  const [rows] = await db.query(
+    `SELECT * FROM attendance 
        WHERE Emp_ID = ? 
-       AND DATE(clock_in) = CURDATE()`, 
-      [empId]
-    );
-    return rows;
-  };
+       AND DATE(clock_in) = CURDATE()`,
+    [empId]
+  );
+  return rows;
+};
 
-  exports.getAllAttendanceByEmpId = async (empId) => {
-    const [rows] = await db.query(
-      `SELECT Attendance_ID, Emp_ID, clock_in, clock_out, Attendance_created, Attendance_updated
+exports.getAllAttendanceByEmpId = async (empId) => {
+  const [rows] = await db.query(
+    `SELECT Attendance_ID, Emp_ID, clock_in, clock_out, Attendance_created, Attendance_updated
        FROM attendance
        WHERE Emp_ID = ?
        ORDER BY Attendance_created DESC`,
-      [empId]
-    );
-    return rows;
-  };
+    [empId]
+  );
+  return rows;
+};
+
+exports.getAllAttendance = async () => {
+  const [rows] = await db.query(
+    `SELECT a.Attendance_ID, a.Emp_ID, a.clock_in, a.clock_out, a.Attendance_created, a.Attendance_updated,
+              e.First_name AS employee_first_name, e.Last_name AS employee_last_name
+       FROM attendance a
+       JOIN employees e ON a.Emp_ID = e.Emp_ID
+       ORDER BY a.Attendance_created DESC`
+  );
+  return rows;
+};
