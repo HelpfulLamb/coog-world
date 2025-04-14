@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
-import { CartProvider } from './context/CartContext.jsx'; // ✅ Added this
+import { CartProvider } from './context/CartContext.jsx';
 
 // Navigation Components
 import Header from './pages/navigation/Header.jsx';

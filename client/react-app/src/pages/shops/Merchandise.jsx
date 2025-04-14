@@ -2,6 +2,9 @@ import './Shops.css';
 import React, { useEffect, useState } from 'react';
 import shirtImage from '../../images/shirt1.webp';
 import magnetImage from '../../images/magnet.png';
+import sunglassesImage from '../../images/sunglasses.png';
+import pencilImage from '../../images/pencil.jpg';
+import plushImage from '../../images/plush.jpeg';
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -62,6 +65,9 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
     // 👇 Select image based on item name
     const getImageForTitle = (title) => {
       if (title.toLowerCase().includes("magnet")) return magnetImage;
+      if (title.toLowerCase().includes("pencil")) return pencilImage;
+      if (title.toLowerCase().includes("sunglasses")) return sunglassesImage;
+      if (title.toLowerCase().includes("plush")) return plushImage;
       return shirtImage;
     };
   
