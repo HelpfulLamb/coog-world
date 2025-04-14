@@ -1,6 +1,7 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Home = () => {
   const [revenue, setRevenue] = useState('Loading...');
@@ -13,8 +14,90 @@ const Home = () => {
   const [restockAlert, setRestockAlert] = useState([]);
 
   useEffect(() => {
-    fetch('/api/weather/weather-alerts').then(res => res.json()).then(data => setWeatherAlert(data)).catch(err => console.error('Failed to load weather alerts:', err));
-    fetch('/api/inventory/restock-alerts').then(res => res.json()).then(data => setRestockAlert(data)).catch(err => console.error('Failed to load maintenance alerts:', err));
+    // Track if we've already shown alerts
+    const hasShownAlerts = { weather: false, restock: false };
+  
+    const fetchAndShowAlerts = async () => {
+      if (hasShownAlerts.weather) return;
+      
+      // Weather alerts
+      const weatherRes = await fetch('/api/weather/weather-alerts');
+      const weatherData = await weatherRes.json();
+      setWeatherAlert(weatherData);
+      weatherData.forEach(alert => {
+        toast.custom((t) => (
+          <div style={{background: '#fff',
+            padding: '1rem 1.5rem',
+            borderRadius: '10px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+            color: '#333',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            minWidth: '260px',}}>
+            <strong>🌩️ Weather Alert</strong>
+            <div>{alert.Message}</div>
+            <button
+            style={{alignSelf: 'flex-end',
+                background: '#c8102e',
+                color: '#fff',
+                border: 'none',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '6px',
+                cursor: 'pointer'}}
+              onClick={() => {
+                acknowledge('weather', alert.Alert_ID);
+                toast.dismiss(t.id);
+              }}
+            >
+              OK
+            </button>
+          </div>
+        ));
+      });
+      hasShownAlerts.weather = true;
+  
+      // Restock alerts
+      if (hasShownAlerts.restock) return;
+      
+      const restockRes = await fetch('/api/inventory/restock-alerts');
+      const restockData = await restockRes.json();
+      setRestockAlert(restockData);
+      restockData.forEach(alert => {
+        toast.custom((t) => (
+          <div style={{background: '#fff',
+            padding: '1rem 1.5rem',
+            borderRadius: '10px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+            color: '#333',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            minWidth: '260px',}}>
+            <strong>📦 Restock Alert</strong>
+            <div>{alert.Message}</div>
+            <button
+            style={{alignSelf: 'flex-end',
+                background: '#c8102e',
+                color: '#fff',
+                border: 'none',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '6px',
+                cursor: 'pointer'}}
+              onClick={() => {
+                acknowledge('restock', alert.Notification_ID);
+                toast.dismiss(t.id);
+              }}
+            >
+              OK
+            </button>
+          </div>
+        ));
+      });
+      hasShownAlerts.restock = true;
+    };
+  
+    fetchAndShowAlerts();
   }, []);
   const acknowledge = async (type, id) => {
     const url = type === 'weather' 
@@ -121,45 +204,9 @@ const Home = () => {
     textAlign: 'center'
   };
 
-  const quickButtonStyle = {
-    backgroundColor: 'white',
-    border: 'none',
-    padding: '1rem 1.5rem',
-    borderRadius: '10px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    boxShadow: '2px 4px 8px rgba(0,0,0,0.1)',
-    transition: 'all 0.2s ease-in-out',
-    textDecoration: 'none',
-    color: '#000'
-  };
-
   return (
     <>
-        <div className="alerts-panel">
-            <h3>Weather Alerts</h3>
-                {Array.isArray(weatherAlert) && weatherAlert.length > 0 ? (weatherAlert.map(alert => (
-                    <div className="alert-card" key={alert.Alert_ID}>
-                        <p>{alert.Message}</p>
-                        <button onClick={() => acknowledge('weather', alert.Alert_ID)}>OK</button>
-                    </div>
-                ))
-            ) : (
-                <p>No Weather Alerts</p>
-            )}
-                <h3>Restock Alerts</h3>
-                {Array.isArray(restockAlert) && restockAlert.length > 0 ? (restockAlert.map(alert => (
-                    <div className="alert-card" key={alert.Notification_ID}>
-                        <p>{alert.Message}</p>
-                        <button onClick={() => acknowledge('restock', alert.Notification_ID)}>OK</button>
-                    </div>
-                ))
-            ) : (
-                <p>No Restock Alerts</p>
-            )}
-            </div>
-
-            <div style={{ padding: '2rem', color: 'white' }}>
+        <div style={{ padding: '2rem', color: 'white' }}>
             <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
                 🎡 CoogWorld Admin Overview
             </h1>

@@ -89,7 +89,7 @@
     flex: 1;
     padding: 1.5rem;
     overflow: auto;
-    background-color: var(--bg-light);
+    background-color: rgb(247, 247, 247);
 }
 /* Buttons */
 .db-logout-button {

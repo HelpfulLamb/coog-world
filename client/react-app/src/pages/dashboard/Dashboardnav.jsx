@@ -12,6 +12,7 @@ const DashboardNav = () => {
     const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
     const [isShowDropdownOpen, setIsShowDropdownOpen] = useState(false);
     const [isMaintDropdownOpen, setIsMaintDropdownOpen] = useState(false);
+    const [isRideDropdownOpen, setIsRideDropdownOpen] = useState(false);
 
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
@@ -26,11 +27,14 @@ const DashboardNav = () => {
     const toggleReportsDropdown = () => { 
         setIsReportsDropdownOpen(prev => !prev);
     };
-    const toggleShowDropdown = () => { // Toggle function for Reports dropdown
+    const toggleShowDropdown = () => {
         setIsShowDropdownOpen(prev => !prev);
     };
-    const toggleMaintDropdown = () => { // Toggle function for Reports dropdown
+    const toggleMaintDropdown = () => {
         setIsMaintDropdownOpen(prev => !prev);
+    };
+    const toggleRideDropdown = () => {
+        setIsRideDropdownOpen(prev => !prev);
     };
 
     return (
@@ -52,7 +56,18 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
+                        <li className="dropdown">
+                            <button onClick={toggleRideDropdown}>
+                                Rides
+                                <span className={`arrow-icon ${isRideDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isRideDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
+                                    <li><Link to={'/employee-dashboard/ride-frequency'}>Ride Report</Link></li>
+                                </ul>
+                            )}
+                        </li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleShowDropdown}>
@@ -67,7 +82,6 @@ const DashboardNav = () => {
                             )}
                         </li>
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
-                        <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleInvDropdown}>
@@ -89,9 +103,7 @@ const DashboardNav = () => {
                             {isMaintDropdownOpen && (
                                 <ul>
                                     <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Logs</Link></li>
-                                    <li><Link to={'/employee-dashboard/ride-breakdown'}>Ride Breakdowns</Link></li>
-                                    <li><Link to={'/employee-dashboard/stage-breakdown'}>Stage Malfunctions</Link></li>
-                                    <li><Link to={'/employee-dashboard/kiosk-breakdown'}>Kiosks Repairs</Link></li>
+                                    <li><Link to={'/employee-dashboard/park-maintenance'}>Park Maintenance Report</Link></li>
                                 </ul>
                             )}
                         </li>
