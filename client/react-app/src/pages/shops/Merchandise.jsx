@@ -5,6 +5,7 @@ import magnetImage from '../../images/magnet.png';
 import sunglassesImage from '../../images/sunglasses.png';
 import pencilImage from '../../images/pencil.jpg';
 import plushImage from '../../images/plush.jpeg';
+import popcornImage from '../../images/popcorn.jpeg';
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -68,6 +69,7 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
       if (title.toLowerCase().includes("pencil")) return pencilImage;
       if (title.toLowerCase().includes("sunglasses")) return sunglassesImage;
       if (title.toLowerCase().includes("plush")) return plushImage;
+      if (title.toLowerCase().includes("popcorn")) return popcornImage;
       return shirtImage;
     };
   

@@ -10,11 +10,29 @@ function AboutUs() {
                 <p>
                     Coog World is a thrilling theme park owned and operated by the University of Houston, 
                     bringing the spirit of Cougars to life with exciting rides, live shows, and family-friendly 
-                    entertainment. The park is open to anyone that wants to stop by and have fun while also 
-                    supporting education. We encourage students to invite their friends and family to our 
-                    park to create lasting memories.
+                    entertainment... Not to mention, delicious food found at our on-site restaurants! The park is open to anyone that wants to stop by and have fun while also 
+                    supporting higher education. We invite all students to grab their friends and family and take them to our 
+                    park of lasting memories!
                 </p>
             </div>
+
+            {/*"Meet the Developers" Section */}
+            <div className="developer-section">
+                <h3 className="section-title">Meet the esteemed CoogWorld Developers!</h3>
+                <div className="developer-cards">
+                <div className="dev-row">
+                    <div className="dev-card"><h4>Brennan Green</h4><p>Computer Science</p><em>University of Houston</em></div>
+                    <div className="dev-card"><h4>Bryant Truong</h4><p>Computer Science</p><em>University of Houston</em></div>
+                    <div className="dev-card"><h4>David Morillon</h4><p>Computer Science</p><em>University of Houston</em></div>
+                </div>
+                <div className="dev-row">
+                    <div className="dev-card"><h4>Elizabeth Chan</h4><p>Computer Science</p><em>University of Houston</em></div>
+                    <div className="dev-card"><h4>Erin Sebastian</h4><p>Computer Science</p><em>University of Houston</em></div>
+                </div>
+                </div>
+
+            </div>
+
             <div className='contact-info'>
                 <h3>Contact Us:</h3>
                 <div>
