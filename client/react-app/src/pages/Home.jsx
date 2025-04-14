@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Services from './Services.jsx';
 import AboutUs from './AboutUs.jsx';
 
 function Home() {
+    const [weatherAlert, setWeatherAlert] = useState([]);
+    useEffect(() => {
+        fetch('/api/weather/weather-alerts').then(res => res.json()).then(data => setWeatherAlert(data)).catch(err => console.error('Failed to load weather alerts:', err));
+    }, []);
   return (
     <>
+        {weatherAlert.length > 0 && (
+            <div className='weather-alert-banner'>
+                {weatherAlert.map(alert => (
+                    <div key={alert.Alert_ID} className='weather-alert'>
+                        ⚠️ {alert.Message}
+                    </div>
+                ))}
+            </div>
+        )}
         <div className='top-banner'>
             🎉 2025 Season Passes NOW AVAILABLE! Buy Today & Save 🎟️
         </div>

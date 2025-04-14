@@ -287,7 +287,6 @@
     font-size: 1.25rem;
     margin-top: 0.5rem;
 }
-
 .profile-container {
     display: flex;
     justify-content: center;
@@ -431,4 +430,27 @@
     color: white;
     border: none;
     border-radius: 4px;
+.alerts-panel {
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem;
+}
+.alert-card {
+    border: 1px solid #ccc;
+    border-left: 6px solid red;
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff8f8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.alert-card p {
+    margin: 0 0 0.5rem;
+}
+.alert-card button {
+    padding: 0.3rem 0.6rem;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
 }

@@ -30,6 +30,7 @@ exports.getRevenueReport = async (req, res) => {
     return res.status(500).json({ message: 'Server error: ' + error.message });
   }
 };
+
 exports.getRevenueDetails = async (req, res) => {
   try {
     const [results] = await db.query(`
@@ -47,6 +48,7 @@ exports.getRevenueDetails = async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve revenue details." });
   }
 };
+
 exports.getRevenueSummary = async (req, res) => {
   try {
     const summary = await reportModel.getRevenueSummary();
@@ -56,6 +58,7 @@ exports.getRevenueSummary = async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve revenue summary." });
   }
 };
+
 exports.getTicketsSoldToday = async (req, res) => {
   try {
     const total = await reportModel.getTicketsSoldToday();
@@ -64,6 +67,16 @@ exports.getTicketsSoldToday = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch tickets sold today.' });
   }
 };
+
+exports.getTotalVisitorsToday = async (req, res) => {
+    try {
+        const visitors = await reportModel.getTotalVisitorsToday();
+        res.status(200).json(visitors);
+    } catch (error) {
+        res.status(500).json({message: 'Failed to get total visitors for today'});
+    }
+};
+
 exports.getTicketSalesReport = async (req, res) => {
   try {
     const [results] = await db.query(`
@@ -82,6 +95,64 @@ GROUP BY tt.ticket_type;
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.getTicketSalesTrends = async (req, res) => {
+  try {
+    const [daily] = await db.query(`
+      SELECT 
+        DATE(purchase_created) AS label,
+        ticket_type,
+        SUM(quantity_sold) AS total
+      FROM product_purchases pp
+      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY label, ticket_type
+      ORDER BY label;
+    `);
+
+    const [weekly] = await db.query(`
+      SELECT 
+        YEARWEEK(purchase_created, 1) AS label,
+        ticket_type,
+        SUM(quantity_sold) AS total
+      FROM product_purchases pp
+      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY label, ticket_type
+      ORDER BY label;
+    `);
+
+    const [monthly] = await db.query(`
+      SELECT 
+        DATE_FORMAT(purchase_created, '%Y-%m') AS label,
+        ticket_type,
+        SUM(quantity_sold) AS total
+      FROM product_purchases pp
+      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY label, ticket_type
+      ORDER BY label;
+    `);
+
+    const [yearly] = await db.query(`
+      SELECT 
+        YEAR(purchase_created) AS label,
+        ticket_type,
+        SUM(quantity_sold) AS total
+      FROM product_purchases pp
+      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+      WHERE pp.product_type = 'Ticket'
+      GROUP BY label, ticket_type
+      ORDER BY label;
+    `);
+
+    res.status(200).json({ daily, weekly, monthly, yearly });
+  } catch (err) {
+    console.error('Error fetching ticket sales trends:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 exports.getCustomerStats = async (req, res) => {
   try {
     const [monthly] = await db.query(`

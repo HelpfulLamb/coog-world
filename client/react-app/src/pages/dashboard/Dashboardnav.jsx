@@ -7,24 +7,28 @@ const DashboardNav = () => {
     const role = user?.role?.toLowerCase();
 
     const [isWeatherDropdownOpen, setIsWeatherDropdownOpen] = useState(false);
+
     const [isReportsDropdownOpen, setIsReportsDropdownOpen] = useState(false);
     const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
-    const [isInventoryDropdownOpen, setIsInventoryDropdownOpen] = useState(false);
+    const [isInvDropdownOpen, setIsInvDropdownOpen] = useState(false);
+    const [isEmpDropdownOpen, setIsEmpDropdownOpen] = useState(false);
 
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
     };
 
-    const toggleReportsDropdown = () => {
+    const toggleInvDropdown = () => {
+        setIsInvDropdownOpen(prev => !prev);
+    };
+    const toggleEmpDropdown = () => {
+        setIsEmpDropdownOpen(prev => !prev);
+    };
+    const toggleReportsDropdown = () => { // Toggle function for Reports dropdown
         setIsReportsDropdownOpen(prev => !prev);
     };
 
     const toggleEmployeeDropdown = () => {
         setIsEmployeeDropdownOpen(prev => !prev);
-    };
-
-    const toggleInventoryDropdown = () => {
-        setIsInventoryDropdownOpen(prev => !prev);
     };
 
     return (
@@ -43,15 +47,15 @@ const DashboardNav = () => {
                 )}
                 {(role === 'admin') && (
                     <>
-
                         <li className="dropdown">
-                            <button onClick={toggleEmployeeDropdown} className="dropdown-btn">
+                            <button onClick={toggleEmpDropdown}>
                                 Employees
-                                <span className={`arrow-icon ${isEmployeeDropdownOpen ? 'open' : ''}`}>▼</span>
+                                <span className={`arrow-icon ${isEmpDropdownOpen ? 'open' : ''}`}>▼</span>
                             </button>
-                            {isEmployeeDropdownOpen && (
-                                <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/employees'}>Employees</Link></li>
+                            {isEmpDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
+                                    <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li>
                                     <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
                                 </ul>
                             )}
@@ -62,14 +66,14 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/shows'}>Shows</Link></li>
                         <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li className="dropdown">
-                            <button onClick={toggleInventoryDropdown} className="dropdown-btn">
+                            <button onClick={toggleInvDropdown}>
                                 Inventory
-                                <span className={`arrow-icon ${isInventoryDropdownOpen ? 'open' : ''}`}>▼</span>
+                                <span className={`arrow-icon ${isInvDropdownOpen ? 'open' : ''}`}>▼</span>
                             </button>
-                            {isInventoryDropdownOpen && (
-                                <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/items'}>Item List</Link></li>
-                                    <li><Link to={'/employee-dashboard/inventory-report'}>Inventory List</Link></li>
+                            {isInvDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/items'}>Items List</Link></li>
+                                    <li><Link to={'/employee-dashboard/inventory-report'}>Inventory Management</Link></li>
                                 </ul>
                             )}
                         </li>
@@ -81,8 +85,8 @@ const DashboardNav = () => {
                             </button>
                             {isWeatherDropdownOpen && (
                                 <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/weather-report'}>Weather Report</Link></li>
-                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainouts</Link></li>
+                                    <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
+                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainout Report</Link></li>
                                 </ul>
                             )}
                         </li>
@@ -94,6 +98,8 @@ const DashboardNav = () => {
                             {isReportsDropdownOpen && (
                                 <ul className="dropdown-menu">
                                     <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
+                                    <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Trends</Link></li>
+                                    <li><Link to={'/employee-dashboard/customer-trends-report'}>Customer Trends Report</Link></li>
                                 </ul>
                             )}
                         </li>

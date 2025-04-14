@@ -52,9 +52,6 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
         });
     
         alert("🛍️ Item added to cart!");
-
-        // Reload the page after success
-        window.location.reload();
     
       } catch (error) {
         console.error("Cart error:", error);

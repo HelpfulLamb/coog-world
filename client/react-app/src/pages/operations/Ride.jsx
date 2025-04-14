@@ -11,21 +11,6 @@ function RideFrequencyReport() {
     const [sortOption, setSortOption] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
-    const months = [
-        { value: 1, label: "January" },
-        { value: 2, label: "February" },
-        { value: 3, label: "March" },
-        { value: 4, label: "April" },
-        { value: 5, label: "May" },
-        { value: 6, label: "June" },
-        { value: 7, label: "July" },
-        { value: 8, label: "August" },
-        { value: 9, label: "September" },
-        { value: 10, label: "October" },
-        { value: 11, label: "November" },
-        { value: 12, label: "December" }
-    ];
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
@@ -47,7 +32,6 @@ function RideFrequencyReport() {
         }
     };
 
-    // Handle dropdown change
     const handleMonthChange = (event) => {
         const month = event.target.value;
         setSelectedMonth(month);
@@ -56,15 +40,11 @@ function RideFrequencyReport() {
 
     useEffect(() => {
         let filtered = [...rideFrequencyData];
-
-        // Filter by search term
         if (searchTerm) {
             filtered = filtered.filter(ride =>
                 ride.top_rider.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-
-        // Sort the data
         switch (sortOption) {
             case 'nameAsc':
                 filtered.sort((a, b) => a.ride_name.localeCompare(b.ride_name));
@@ -87,7 +67,6 @@ function RideFrequencyReport() {
             default:
                 break;
         }
-
         setFilteredData(filtered);
     }, [rideFrequencyData, searchTerm, sortOption]);
 
@@ -99,7 +78,7 @@ function RideFrequencyReport() {
                 <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="month">Select Month:</label>
-                        <input type="month" id="month" value={selectedMonth} onChange={handleMonthChange} max={maxMonth} className="monht-input" />
+                        <input type="month" id="month" value={selectedMonth} onChange={handleMonthChange} max={maxMonth} className="month-input" />
                     </div>
 
                     <div className="filter-group">

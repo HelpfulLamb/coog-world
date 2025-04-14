@@ -40,6 +40,9 @@ import Weather from './pages/operations/WeatherReport.jsx';
 import Reports from './pages/operations/Reports.jsx';
 import Rainout from './pages/operations/Rainout.jsx';
 import ClockInOut from './pages/operations/ClockInOut.jsx';
+import AttendanceReport from './pages/reports/AttendanceReport.jsx';
+import TicketSalesTrends from './pages/operations/TicketSalesTrends.jsx';
+import CustomerTrendsChart from './pages/operations/CustomerTrendsChart.jsx';
 import Attendance from './pages/operations/Attendance.jsx';
 import Stage from './pages/operations/Stage.jsx'; 
 
@@ -84,7 +87,11 @@ function App() {
                             <Route path='rainout-report' element={<Rainout />}/>
                             <Route path='hours' element={<ClockInOut />}/>
                             <Route path='attendance' element={<Attendance />}/>
+                            <Route path='attendance-report' element={<AttendanceReport />} />
                             <Route path='revenue-report' element={<Revenue />}/>
+                            <Route path='ticket-sales-trends' element={<TicketSalesTrends />} />
+                            <Route path='customer-trends-report' element={<CustomerTrendsChart />} />
+
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />
                     </Routes>

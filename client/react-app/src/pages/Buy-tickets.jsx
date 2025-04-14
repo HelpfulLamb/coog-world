@@ -61,8 +61,6 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
         
             alert('✅ Ticket added to cart!');
     
-            // Reload the page after success
-            window.location.reload();
         
           } catch (error) {
             console.error("Cart error:", error);
@@ -159,8 +157,6 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
         
             alert("✅ Parking pass added to cart!");
     
-            // Reload the page after success
-            window.location.reload();
         
           } catch (error) {
             console.error("Cart error:", error);
