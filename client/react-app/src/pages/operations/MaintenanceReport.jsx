@@ -11,7 +11,7 @@ function RideMaintenanceReport() {
     const [filteredData, setFilteredData] = useState([]);
 
     const formatDate = (dateString) => {
-        if (!dateString) return "00/00/0000";
+        if (!dateString) return "-";
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
@@ -19,22 +19,6 @@ function RideMaintenanceReport() {
     const getTotalMaintenance = () => {
         return filteredData.reduce((sum, ride) => sum + (ride.total_maintenance || 0), 0);
     };
-    
-    const months = [
-        { value: 1, label: "January" },
-        { value: 2, label: "February" },
-        { value: 3, label: "March" },
-        { value: 4, label: "April" },
-        { value: 5, label: "May" },
-        { value: 6, label: "June" },
-        { value: 7, label: "July" },
-        { value: 8, label: "August" },
-        { value: 9, label: "September" },
-        { value: 10, label: "October" },
-        { value: 11, label: "November" },
-        { value: 12, label: "December" }
-    ];
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;

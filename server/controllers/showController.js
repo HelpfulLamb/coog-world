@@ -112,3 +112,50 @@ exports.getVisitorShowHistory = async (req, res) => {
         res.status(500).json({message: 'Failed to fetch watch history.', error: error.message})
     }
 };
+
+exports.getTopShows = async (req, res) => {
+    try {
+        const {startDate, endDate} = req.body;
+        let query = `
+        SELECT
+        s.Show_name,
+        st.Stage_name,
+        COUNT(v.log_id) AS total_viewers,
+        st.Seat_num AS theatre_capacity,
+        ROUND((COUNT(v.log_id) / st.Seat_num) * 100, 2) AS capacity_percent
+        FROM shows s
+        JOIN visitor_show_log v ON s.Show_ID = v.Show_ID
+        JOIN stages st ON s.Stage_ID = st.Stage_ID
+        WHERE 1=1`;
+        const params = [];
+        if(startDate){
+            query += ` AND v.watch_date >= ?`;
+            params.push(startDate);
+        }
+        if(endDate){
+            query += ` AND v.watch_date <= ?`;
+            params.push(endDate);
+        }
+        query += ` GROUP BY s.Show_ID, st.Stage_ID
+        ORDER BY capacity_percent DESC`;
+        const [rows] = await db.query(query, params);
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({message: `Server error while generating popular shows: ${error.message}`});
+    }
+};
+
+exports.getPopularShowToday = async (req, res) => {
+    try {
+        const [data] = await db.query(`
+            SELECT s.Show_name, DATE(v.watch_date) AS peak_date, COUNT(*) AS views
+            FROM shows s
+            JOIN visitor_show_log v ON s.Show_ID = v.Show_ID
+            GROUP BY s.Show_ID, peak_date
+            ORDER BY views DESC
+            LIMIT 1`);
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};

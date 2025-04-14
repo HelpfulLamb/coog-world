@@ -1,4 +1,5 @@
 const maintenanceModel = require('../models/maintenanceModel.js');
+const db = require('../config/db.js');
 
 exports.createMaintenance = async (req, res) => {
     try {
@@ -122,6 +123,58 @@ exports.deleteMaintenanceById = async (req, res) => {
     try {
         await maintenanceModel.deleteMaintenanceById(req.params.id);
         res.status(200).json({message: 'Maintenance deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+exports.getRideBreakdowns = async (req, res) => {
+    try {
+        const [ride] = await db.query(`
+            SELECT 
+            r.Ride_name,
+            COUNT(m.MaintID) AS num_breakdowns,
+            MAX(m.Maintenance_Date) AS last_breakdown_date
+            FROM maintenance m
+            JOIN rides r ON m.Maint_obj = 'ride' AND m.Maint_obj_ID = r.Ride_ID
+            WHERE m.Maint_Type = 'Emergency'
+            GROUP BY r.Ride_ID
+            ORDER BY num_breakdowns DESC;`);
+        res.status(200).json(ride);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+exports.getStageBreakdowns = async (req, res) => {
+    try {
+        const [stage] = await db.query(`
+            SELECT 
+                s.Stage_name,
+                COUNT(m.MaintID) AS emergency_count,
+                MAX(m.Maintenance_Date) AS last_emergency_date
+            FROM maintenance m
+            JOIN stages s ON m.Maint_obj = 'stage' AND m.Maint_obj_ID = s.Stage_ID
+            WHERE m.Maint_Type = 'Emergency'
+            GROUP BY s.Stage_ID
+            ORDER BY emergency_count DESC, last_emergency_date DESC;`);
+        res.status(200).json(stage);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+exports.getKioskBreakdowns = async (req, res) => {
+    try {
+        const [kiosk] = await db.query(`
+            SELECT 
+                k.Kiosk_name,
+                COUNT(m.MaintID) AS emergency_count,
+                MAX(m.Maintenance_Date) AS last_emergency_date
+            FROM maintenance m
+            JOIN kiosks k ON m.Maint_obj = 'kiosk' AND m.Maint_obj_ID = k.Kiosk_ID
+            WHERE m.Maint_Type = 'Emergency'
+            GROUP BY k.Kiosk_ID
+            ORDER BY emergency_count DESC, last_emergency_date DESC;`);
+        res.status(200).json(kiosk);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
