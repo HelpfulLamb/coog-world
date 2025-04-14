@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import TransactionTable from './TransactionTable.jsx';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -14,6 +15,7 @@ const TicketSalesTrends = () => {
   const [error, setError] = useState('');
   const [selectedTicketType, setSelectedTicketType] = useState('');
   const [minSales, setMinSales] = useState(0);
+  const [transactionData, setTransactionData] = useState([]);
 
   useEffect(() => {
     const fetchTrends = async () => {
@@ -26,6 +28,19 @@ const TicketSalesTrends = () => {
       }
     };
     fetchTrends();
+  }, []);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await axios.get('/api/reports/revenue-details');
+        console.log('📋 Transactions (Trends):', res.data);
+        setTransactionData(res.data || []);
+      } catch (err) {
+        console.error('Failed to load transactions for trends report');
+      }
+    };
+    fetchTransactions();
   }, []);
 
   const temp = {};
@@ -129,6 +144,7 @@ const TicketSalesTrends = () => {
           )}
         </BarChart>
       </ResponsiveContainer>
+      <TransactionTable transactions={transactionData} />
     </div>
   );
 };

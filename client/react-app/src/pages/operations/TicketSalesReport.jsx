@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import TransactionTable from './TransactionTable.jsx';
 
 const TicketSalesReport = () => {
   const [salesData, setSalesData] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [transactionData, setTransactionData] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await axios.get('/api/reports/revenue-details');
+        setTransactionData(res.data || []);
+      } catch (err) {
+        console.error('Failed to load transactions');
+      }
+    };
+    fetchTransactions();
+  }, []);
 
   useEffect(() => {
     const fetchSales = async () => {
@@ -46,6 +60,7 @@ const TicketSalesReport = () => {
           ))}
         </tbody>
       </table>
+      <TransactionTable transactions={transactionData} />
     </div>
   );
 };
