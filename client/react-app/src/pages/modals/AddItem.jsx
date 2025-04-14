@@ -1,4 +1,75 @@
 import { useState, useEffect } from "react";
+import './Modal.css';
+
+export function RestockItem({ isOpen, onClose, itemToRestock, onRestockItem }) {
+    const [restockAmount, setRestockAmount] = useState('');
+    const [message, setMessage] = useState({ error: '', success: '' });
+
+    if (!isOpen) return null;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!restockAmount || isNaN(restockAmount) || Number(restockAmount) <= 0) {
+            setMessage({ error: 'Please enter a valid restock amount.', success: '' });
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/inventory/restock/${itemToRestock.Inventory_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    restockAmount: Number(restockAmount),
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage({ success: 'Item restocked successfully.', error: '' });
+                if (onRestockItem) onRestockItem(data.item);
+                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+            } else {
+                setMessage({ error: data.message || 'Failed to restock item.', success: '' });
+            }
+        } catch (error) {
+            setMessage({ error: 'An error occurred. Please try again. Catch RestockItem', success: '' });
+        }
+    };
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal">
+                <h2>Restock Entry: {itemToRestock.Inventory_ID}</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-form-grid">
+                        <div className="modal-input-group">
+                            <label htmlFor="restockAmount">Restock Amount</label>
+                            <input
+                                type="number"
+                                id="restockAmount"
+                                name="restockAmount"
+                                value={restockAmount}
+                                onChange={(e) => setRestockAmount(e.target.value)}
+                                placeholder="e.g. 50"
+                                required
+                            />
+                        </div>
+                    </div>
+                    {message.error && <p className="error-message">{message.error}</p>}
+                    {message.success && <p className="success-message">{message.success}</p>}
+                    <div className="modal-buttons">
+                        <button type="submit">Confirm Restock</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
 
 export function UpdateItem({isOpen, onClose, itemToEdit, onUpdateItem}){
     const [formData, setFormData] = useState({

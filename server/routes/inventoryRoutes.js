@@ -10,6 +10,7 @@ inventoryRouter.post('/create-item', inventoryController.createItem);
 
 // update existing items and assignments
 inventoryRouter.put('/items/:id', inventoryController.updateItem);
+inventoryRouter.put('/restock/:id', inventoryController.restockItem);
 
 // mark trigger message as seen
 inventoryRouter.patch('/restock-alerts/:id/acknowledge', inventoryController.markMessageSeen);

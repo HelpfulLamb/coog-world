@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { AssignItem } from "../modals/AddItem";
+import { AssignItem, RestockItem } from "../modals/AddItem";
 
-function InventoryTable({inventoryInformation, setIsModalOpen, restockItem, onDeleteInventory}){
+function InventoryTable({inventoryInformation, setIsModalOpen, onRestockItem, onDeleteInventory}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
         return <div>No inventory data is available.</div>
     }
@@ -29,7 +29,7 @@ function InventoryTable({inventoryInformation, setIsModalOpen, restockItem, onDe
                             <td>${inventory.Item_shop_price}</td>
                             <td>{inventory.Kiosk_name}</td>
                             <td>
-                                <button onClick={() => restockItem(inventory)} className="action-btn edit-button">Restock</button>
+                                <button onClick={() => onRestockItem(inventory)} className="action-btn edit-button">Restock</button>
                                 <button onClick={() => onDeleteInventory(inventory.Inventory_ID)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
@@ -55,6 +55,10 @@ function Inventory(){
 
     const [items, setItems] = useState([]);
     const [kiosks, setKiosks] = useState([]);
+
+    //Restock
+    const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
+    const [itemToRestock, setItemToRestock] = useState(null);
 
     useEffect(() => {
         const fetchInventory = async () => {
@@ -154,6 +158,11 @@ function Inventory(){
             alert('An error occurred. Please try again.');
         }
     };
+    const handleRestockItem = (item) => {
+        console.log("Restock modal open?", isRestockModalOpen, itemToRestock);
+        setItemToRestock(item);
+        setIsRestockModalOpen(true);
+    };
     const resetFilters = () => {
         setItemNameFilter('');
         setItemTypeFilter('');
@@ -229,8 +238,20 @@ function Inventory(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Assign Item</button>
                 </div>
             </div>
-            <InventoryTable inventoryInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} />
+            <InventoryTable inventoryInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} onRestockItem={handleRestockItem} />
             <AssignItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAssignItem={handleAssignItem} />
+            <RestockItem 
+                isOpen={isRestockModalOpen} 
+                onClose={() => setIsRestockModalOpen(false)} 
+                itemToRestock={itemToRestock} 
+                onRestockSuccess={(updatedInventory) => {
+                // update the inventory state with the new restocked item
+                setInventoryInformation(prev => prev.map(inv =>
+                    inv.Inventory_ID === updatedInventory.Inventory_ID ? updatedInventory : inv
+                ));
+                setIsRestockModalOpen(false);
+                }} 
+            />
         </>
     )
 }
