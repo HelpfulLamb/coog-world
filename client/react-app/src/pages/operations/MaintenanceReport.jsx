@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AddMaintenance from "../modals/AddMaintenance.jsx";
+import toast from 'react-hot-toast';
 
 function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChange }) {
     const formatDate = (dateString) => {
@@ -33,8 +34,8 @@ function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChan
                             <td>
                                 {maintenance.Maint_Status !== 'Completed' && (
                                     <>
-                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'In Progress', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn edit-button">In Progress</button>
-                                        <button onClick={() => onStatusChange(maintenance.MaintID, 'Completed', maintenance.Maint_obj, maintenance.Maint_obj_ID)} className="action-btn delete-button">Complete</button>
+                                        <button onClick={() => onStatusChange(maintenance)} className="action-btn edit-button">In Progress</button>
+                                        <button onClick={() => onStatusChange(maintenance)} className="action-btn delete-button">Complete</button>
                                     </>
                                 )}
                              </td>
@@ -66,13 +67,16 @@ function Maintenance() {
     useEffect(() => {
         const fetchMaintenance = async () => {
             try {
+                const toastId = toast.loading('Loading maintenance data...');
                 const response = await fetch('/api/maintenance/info');
                 if (!response.ok) {
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const data = await response.json();
                 setMaintenanceInformation(data);
+                toast.success('Maintenance data loaded successfully!', { id: toastId });
             } catch (error) {
+                toast.error(error.message);
                 setError(error.message);
             } finally {
                 setLoading(false);
@@ -104,7 +108,9 @@ function Maintenance() {
 
         // Filter by object name
         if (objectNameFilter) {
-            filtered = filtered.filter(maintenance => maintenance.Maint_obj_name.toLowerCase().includes(objectNameFilter.toLowerCase()));
+            filtered = filtered.filter(maintenance => 
+                maintenance.Maint_obj_name.toLowerCase().includes(objectNameFilter.toLowerCase())
+            );
         }
 
         // Filter by status
@@ -114,40 +120,80 @@ function Maintenance() {
 
         // Filter by date range
         if (dateFromFilter) {
-            filtered = filtered.filter(maintenance => new Date(maintenance.Maintenance_Date) >= new Date(dateFromFilter));
+            filtered = filtered.filter(maintenance => 
+                new Date(maintenance.Maintenance_Date) >= new Date(dateFromFilter)
+            );
         }
         if (dateToFilter) {
-            filtered = filtered.filter(maintenance => new Date(maintenance.Maintenance_Date) <= new Date(dateToFilter));
+            filtered = filtered.filter(maintenance => 
+                new Date(maintenance.Maintenance_Date) <= new Date(dateToFilter)
+            );
         }
 
         setFilteredMaintenance(filtered);
-    }, [maintenanceInformation, costMinFilter, costMaxFilter, typeFilter, objectFilter, objectNameFilter, statusFilter, dateFromFilter, dateToFilter]);
+    }, [maintenanceInformation, costMinFilter, costMaxFilter, typeFilter, objectFilter, 
+        objectNameFilter, statusFilter, dateFromFilter, dateToFilter]);
 
     const handleAddMaintenance = (newMaintenance) => {
         setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
+        toast.success('Maintenance report added successfully!');
     };
 
-    const handleStatusUpdate = async (MaintID, Maint_Status, Maint_obj, Maint_obj_ID) => {
-        const confirmStatus = window.confirm(`Mark this status as '${Maint_Status}'?`);
-        if (!confirmStatus) return;
+    const handleStatusUpdate = (maintenance) => {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to change status to '{maintenance.Maint_Status === 'Pending' ? 'In Progress' : 'Completed'}'?</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            updateStatus(maintenance);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const updateStatus = async (maintenance) => {
+        const newStatus = maintenance.Maint_Status === 'Pending' ? 'In Progress' : 'Completed';
         try {
-            const response = await fetch(`/api/maintenance/status/${MaintID}`, {
+            const toastId = toast.loading(`Updating status to ${newStatus}...`);
+            const response = await fetch(`/api/maintenance/status/${maintenance.MaintID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({ Maint_Status, Maint_obj, Maint_obj_ID }),
+                body: JSON.stringify({ 
+                    Maint_Status: newStatus, 
+                    Maint_obj: maintenance.Maint_obj, 
+                    Maint_obj_ID: maintenance.Maint_obj_ID 
+                }),
             });
-            const data = await response.json();
+            
             if (response.ok) {
-                alert(`Maintenance status has been marked as '${Maint_Status}'!`);
-                setMaintenanceInformation((prev) => prev.filter((maint) => maint.MaintID !== MaintID));
-                setTimeout(() => { window.location.href = window.location.href; });
+                toast.success(`Status updated to '${newStatus}' successfully!`, { id: toastId });
+                setMaintenanceInformation(prev => 
+                    prev.filter(maint => maint.MaintID !== maintenance.MaintID)
+                );
             } else {
-                alert(data.message || 'Failed to update maintenance status.');
+                const data = await response.json();
+                toast.error(data.message || 'Failed to update maintenance status.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
 
@@ -160,14 +206,11 @@ function Maintenance() {
         setStatusFilter('');
         setDateFromFilter('');
         setDateToFilter('');
+        toast.success('Filters reset successfully!');
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <>
@@ -277,8 +320,16 @@ function Maintenance() {
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
                 </div>
             </div>
-            <MaintenanceTable maintenanceInformation={filteredMaintenance} setIsModalOpen={setIsModalOpen} onStatusChange={handleStatusUpdate} />
-            <AddMaintenance isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddMaintenance={handleAddMaintenance} />
+            <MaintenanceTable 
+                maintenanceInformation={filteredMaintenance} 
+                setIsModalOpen={setIsModalOpen} 
+                onStatusChange={handleStatusUpdate} 
+            />
+            <AddMaintenance 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onAddMaintenance={handleAddMaintenance} 
+            />
         </>
     );
 }

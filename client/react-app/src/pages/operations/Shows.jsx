@@ -1,6 +1,7 @@
 import AddShow, {UpdateShow} from "../modals/AddShow";
 import './Report.css';
 import { useState, useEffect } from "react";
+import toast from 'react-hot-toast';
 
 function ShowTable({showInformation, setIsModalOpen, onEditShow, onDeleteShow}){
     if(!showInformation || !Array.isArray(showInformation)){
@@ -62,9 +63,7 @@ function Show(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [filteredShows, setFilteredShows] = useState([]);
-
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedShow, setSelectedShow] = useState(null);
 
@@ -80,13 +79,16 @@ function Show(){
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [stages, shows] = await Promise.all([fetch('/api/stages/all'), fetch('/api/shows/info')]);
+                const [stages, shows] = await Promise.all([
+                    fetch('/api/stages/all'),
+                    fetch('/api/shows/info')
+                ]);
                 const stageData = await stages.json();
                 const showData = await shows.json();
                 setAllStages(stageData);
                 setAllShows(showData);
             } catch (error) {
-                setMessage({error: 'Failed to load stages or shows.', success: ''});
+                toast.error('Failed to load stages or shows data');
             }
         };
         fetchData();
@@ -104,6 +106,7 @@ function Show(){
                 setFilteredShows(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load shows: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -151,18 +154,51 @@ function Show(){
 
     const handleAddShow = (newShow) => {
         setShowInformation([...showInformation, newShow]);
+        toast.success('Show added successfully!');
     };
+    
     const handleEditShow = (show) => {
         setSelectedShow(show);
         setIsEditOpen(true);
     };
+    
     const handleUpdateShow = (updatedShow) => {
         setShowInformation(prev => prev.map(show => show.Show_ID === updatedShow.Show_ID ? updatedShow : show));
+        toast.success('Show updated successfully!');
     };
+    
     const handleDeleteShow = async (showID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this show? This action cannot be undone.');
-        if(!confirmDelete) return;
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this show?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteShow(showID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteShow = async (showID) => {
         try {
+            const toastId = toast.loading('Deleting show...');
             const response = await fetch('/api/shows/delete-selected', {
                 method: 'DELETE',
                 headers: {
@@ -171,30 +207,34 @@ function Show(){
                 body: JSON.stringify({Show_ID: showID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Show deleted successfully!');
+                toast.success('Show deleted successfully!', { id: toastId });
                 setShowInformation(prev => prev.filter(show => show.Show_ID !== showID));
-                setTimeout(() => {window.location.href = window.location.href;});
             } else {
-                alert(data.message || 'Failed to delete show.');
+                toast.error(data.message || 'Failed to delete show.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const resetFilters = () => {
         setShowNameFilter('');
         setStageNameFilter('');
         setStartDateFilter('');
         setEndDateFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
+
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>Error: {error}</div>
     }
+
     return(
         <>
             <div className="filter-controls">

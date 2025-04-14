@@ -74,3 +74,16 @@ exports.updateStage = async (req, res) => {
         res.status(500).json({ error: 'Failed to update stage' }); // Specific error for updating stage
     }
 };
+
+exports.deleteStage = async (req, res) => {
+    try {
+        const {Stage_ID} = req.body;
+        if(!Stage_ID){
+            res.status(400).json({message: 'Invalid stage ID.'});
+        }
+        await stageModel.deleteStage(Stage_ID);
+        res.status(200).json({message: 'Stage deleted successfully.'});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};

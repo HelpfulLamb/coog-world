@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AddWeather, {UpdateWeather} from "../modals/AddWeather.jsx";
+import toast from 'react-hot-toast';
 
 function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteWtr }){
     if(!weatherInformation || !Array.isArray(weatherInformation)){
@@ -32,7 +33,7 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
                             <td>{weather.Special_alerts}</td>
                             <td>
                                 <button onClick={() => onEditWtr(weather)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteWtr(weather.Wtr_ID)} className="action-btn delete-button">Delete</button>
+                                <button onClick={() => onDeleteWtr(weather)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -61,13 +62,16 @@ function Weather() {
 
     const fetchWeather = async () => {
         try {
+            const toastId = toast.loading('Loading weather data...');
             const response = await fetch('/api/weather/info');
             if(!response.ok){
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
             const data = await response.json();
             setWeatherInformation(data);
+            toast.success('Weather data loaded successfully!', { id: toastId });
         } catch (error) {
+            toast.error(error.message);
             setError(error.message);
         } finally {
             setLoading(false);
@@ -83,16 +87,24 @@ function Weather() {
             return new Date(date);
         };
         if (conditionFilter) {
-            filtered = filtered.filter(weather => weather.Wtr_cond.toLowerCase().includes(conditionFilter.toLowerCase()));
+            filtered = filtered.filter(weather => 
+                weather.Wtr_cond.toLowerCase().includes(conditionFilter.toLowerCase())
+            );
         }
         if (levelFilter) {
-            filtered = filtered.filter(weather => weather.Wtr_level.toLowerCase().includes(levelFilter.toLowerCase()));
+            filtered = filtered.filter(weather => 
+                weather.Wtr_level.toLowerCase().includes(levelFilter.toLowerCase())
+            );
         }
         if (dateFromFilter) {
-            filtered = filtered.filter(weather => toDateOnly(weather.Wtr_created) >= toDateOnly(dateFromFilter));
+            filtered = filtered.filter(weather => 
+                toDateOnly(weather.Wtr_created) >= toDateOnly(dateFromFilter)
+            );
         }
         if (dateToFilter) {
-            filtered = filtered.filter(weather => toDateOnly(weather.Wtr_created) <= toDateOnly(dateToFilter));
+            filtered = filtered.filter(weather => 
+                toDateOnly(weather.Wtr_created) <= toDateOnly(dateToFilter)
+            );
         }
         filtered.sort((a,b) => {
             switch (sortOption) {
@@ -113,52 +125,87 @@ function Weather() {
 
     const handleAddWeather = (newWeather) => {
         setWeatherInformation([...weatherInformation, newWeather]);
+        toast.success('Weather record added successfully!');
     };
+
     const handleEditWeather = (weather) => {
         setSelectedWeather(weather);
         setIsEditOpen(true);
     };
+
     const handleUpdateWeather = (updatedWeather) => {
-        setWeatherInformation(prev => prev.map(weather => weather.Wtr_ID === updatedWeather.Wtr_ID ? updatedWeather : weather));
+        setWeatherInformation(prev => 
+            prev.map(weather => weather.Wtr_ID === updatedWeather.Wtr_ID ? updatedWeather : weather)
+        );
+        toast.success('Weather record updated successfully!');
     };
-    const handleDeleteWeather = async (wtrID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this weather log? This action cannot be undone.');
-        if(!confirmDelete) return;
+
+    const handleDeleteWeather = (weather) => {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this weather log?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteWeather(weather);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteWeather = async (weather) => {
         try {
+            const toastId = toast.loading('Deleting weather record...');
             const response = await fetch('/api/weather/delete-selected', {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({Wtr_ID: wtrID}),
+                body: JSON.stringify({Wtr_ID: weather.Wtr_ID}),
             });
-            const data = await response.json();
+            
             if(response.ok){
-                alert('Weather deleted successfully!');
-                setWeatherInformation(prev => prev.filter(weather => weather.Wtr_ID !== wtrID));
-                fetchWeather();
+                toast.success('Weather record deleted successfully!', { id: toastId });
+                setWeatherInformation(prev => 
+                    prev.filter(w => w.Wtr_ID !== weather.Wtr_ID)
+                );
             } else {
-                alert(data.message || 'Failed to delete weather log.');
+                const data = await response.json();
+                toast.error(data.message || 'Failed to delete weather record.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
 
-    // Reset filters
     const resetFilters = () => {
         setConditionFilter('');
         setLevelFilter('');
         setDateFromFilter('');
         setDateToFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
     return (
         <>
             <div className="filter-controls">
@@ -166,7 +213,11 @@ function Weather() {
                 <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="Wtr_cond">Condition:</label>
-                        <select id="Wtr_cond" value={conditionFilter} onChange={(e) => setConditionFilter(e.target.value)}>
+                        <select 
+                            id="Wtr_cond" 
+                            value={conditionFilter} 
+                            onChange={(e) => setConditionFilter(e.target.value)}
+                        >
                             <option value="">-- Select a Condition --</option>
                             <option value="Sunny">Sunny</option>
                             <option value="Windy">Windy</option>
@@ -180,7 +231,11 @@ function Weather() {
                     </div>
                     <div className="filter-group">
                         <label htmlFor="Wtr_level">Water Level:</label>
-                        <select id="Wtr_level" value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}>
+                        <select 
+                            id="Wtr_level" 
+                            value={levelFilter} 
+                            onChange={(e) => setLevelFilter(e.target.value)}
+                        >
                             <option value="">-- Select a Level --</option>
                             <option value="Normal">Normal</option>
                             <option value="Severe">Severe</option>
@@ -188,15 +243,29 @@ function Weather() {
                     </div>
                     <div className="filter-group">
                         <label htmlFor="dateFrom">From Date:</label>
-                        <input type="date" id="dateFrom" value={dateFromFilter} onChange={(e) => setDateFromFilter(e.target.value)} />
+                        <input 
+                            type="date" 
+                            id="dateFrom" 
+                            value={dateFromFilter} 
+                            onChange={(e) => setDateFromFilter(e.target.value)} 
+                        />
                     </div>
                     <div className="filter-group">
                         <label htmlFor="dateTo">To Date:</label>
-                        <input type="date" id="dateTo" value={dateToFilter} onChange={(e) => setDateToFilter(e.target.value)} />
+                        <input 
+                            type="date" 
+                            id="dateTo" 
+                            value={dateToFilter} 
+                            onChange={(e) => setDateToFilter(e.target.value)} 
+                        />
                     </div>
                     <div className="filter-group">
                         <label htmlFor="sort">Sort By:</label>
-                        <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                        <select 
+                            id="sort" 
+                            value={sortOption} 
+                            onChange={(e) => setSortOption(e.target.value)}
+                        >
                             <option value="">-- Select a sort method --</option>
                             <option value="tempAsc">Temperature (Low to High)</option>
                             <option value="tempDesc">Temperature (High to Low)</option>
@@ -213,12 +282,34 @@ function Weather() {
             <div className="db-btn">
                 <h1>Weather Logs</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Weather</button>
+                    <button 
+                        className="add-button" 
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Add Weather
+                    </button>
                 </div>
             </div>
-            <WeatherTable weatherInformation={filteredWeather} setIsModalOpen={setIsModalOpen} onEditWtr={handleEditWeather} onDeleteWtr={handleDeleteWeather} />
-            <AddWeather isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddWeather={handleAddWeather} />
-            <UpdateWeather isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedWeather(null);}} wtrToEdit={selectedWeather} onUpdateWtr={handleUpdateWeather} />
+            <WeatherTable 
+                weatherInformation={filteredWeather} 
+                setIsModalOpen={setIsModalOpen} 
+                onEditWtr={handleEditWeather} 
+                onDeleteWtr={handleDeleteWeather} 
+            />
+            <AddWeather 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onAddWeather={handleAddWeather} 
+            />
+            <UpdateWeather 
+                isOpen={isEditOpen} 
+                onClose={() => {
+                    setIsEditOpen(false); 
+                    setSelectedWeather(null);
+                }} 
+                wtrToEdit={selectedWeather} 
+                onUpdateWtr={handleUpdateWeather} 
+            />
         </>
     );
 }

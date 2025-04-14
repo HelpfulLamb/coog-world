@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ConfirmationModal from './ConfirmationModal.jsx';
-import { AddStage, UpdateStage } from '../modals/AddStage.jsx'; 
+import { AddStage, UpdateStage } from '../modals/AddStage.jsx';
+import toast from 'react-hot-toast';
 
 const StageList = () => {
     const [stages, setStages] = useState([]);
@@ -15,9 +15,6 @@ const StageList = () => {
     const [dateFromFilter, setDateFromFilter] = useState('');
     const [dateToFilter, setDateToFilter] = useState('');
     const [isOperationalFilter, setIsOperationalFilter] = useState('');
-
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [stageToDelete, setStageToDelete] = useState(null);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -36,9 +33,11 @@ const StageList = () => {
                 setFilteredStages(data);
             } else {
                 setError('Failed to load stages.');
+                toast.error('Failed to load stages.');
             }
         } catch (err) {
             setError('Error fetching stages.');
+            toast.error('Error fetching stages.');
         } finally {
             setLoading(false);
         }
@@ -106,39 +105,54 @@ const StageList = () => {
         setIsEditModalOpen(true);
     };
 
-    const handleDeleteStage = (stage) => {
-        setStageToDelete(stage);
-        setIsDeleteModalOpen(true);
+    const handleDeleteStage = async (stage) => {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this stage?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteStage(stage);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
     };
 
-    const confirmDelete = async () => {
-        if (!stageToDelete) return;
-
+    const deleteStage = async (stage) => {
         try {
-            const response = await fetch(`/api/stages/delete/${stageToDelete.Stage_ID}`, {
+            const toastId = toast.loading('Deleting stage...');
+            const response = await fetch(`/api/stages/delete/${stage.Stage_ID}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
             });
 
             if (response.ok) {
-                alert('Stage deleted successfully!');
-                const updatedStages = stages.filter(stage => stage.Stage_ID !== stageToDelete.Stage_ID);
+                toast.success('Stage deleted successfully!', { id: toastId });
+                const updatedStages = stages.filter(s => s.Stage_ID !== stage.Stage_ID);
                 setStages(updatedStages);
                 setFilteredStages(updatedStages);
             } else {
-                alert('Failed to delete stage.');
+                toast.error('Failed to delete stage.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred while deleting the stage.');
-        } finally {
-            setIsDeleteModalOpen(false);
-            setStageToDelete(null);
+            toast.error('An error occurred while deleting the stage.');
         }
-    };
-
-    const cancelDelete = () => {
-        setIsDeleteModalOpen(false);
-        setStageToDelete(null);
     };
 
     const resetFilters = () => {
@@ -149,6 +163,7 @@ const StageList = () => {
         setDateFromFilter('');
         setDateToFilter('');
         setIsOperationalFilter('');
+        toast.success('Filters reset successfully!');
     };
 
     const formatDate = (dateString) => {
@@ -159,19 +174,16 @@ const StageList = () => {
     const handleAddStage = (newStage) => {
         setStages(prev => [...prev, newStage]);
         setFilteredStages(prev => [...prev, newStage]);
+        toast.success('Stage added successfully!');
         fetchStages();
-        setTimeout(() => {
-            console.log("Refreshing the page...");
-            window.location.reload(); 
-        }, 1500);
     };
 
     const handleUpdateStage = (updatedStage) => {
         const updatedList = stages.map(s => s.Stage_ID === updatedStage.Stage_ID ? updatedStage : s);
         setStages(updatedList);
         setFilteredStages(updatedList);
+        toast.success('Stage updated successfully!');
         fetchStages();
-        
     };
 
     if (loading) return <div>Loading...</div>;
@@ -295,7 +307,6 @@ const StageList = () => {
                 </table>
             </div>
 
-            {/* ✅ AddStage and UpdateStage Modals */}
             <AddStage
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
@@ -307,13 +318,6 @@ const StageList = () => {
                 stageToEdit={stageToEdit}
                 onUpdateStage={handleUpdateStage}
             />
-            {isDeleteModalOpen && (
-                <ConfirmationModal
-                    message="Are you sure you want to delete this stage?"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                />
-            )}
         </div>
     );
 };

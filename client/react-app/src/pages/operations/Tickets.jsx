@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import AddTicket, {UpdateTicket} from "../modals/AddTicket";
+import toast from 'react-hot-toast';
 
 function TicketTable({ticketInformation, setIsModalOpen, onEditTicket, onDeleteTicket}){
     if(!ticketInformation || !Array.isArray(ticketInformation)){
@@ -39,7 +40,6 @@ function TicketReport(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState(null);
     
@@ -52,11 +52,10 @@ function TicketReport(){
                 }
     
                 const data = await response.json();
-                console.log('Fetched tickets:', data);
-    
                 setTicketInformation(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load tickets: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -64,21 +63,55 @@ function TicketReport(){
     
         fetchTickets();
     }, []);    
+
     const handleAddTicket = (newTicket) => {
         setTicketInformation([...ticketInformation, newTicket]);
+        toast.success('Ticket added successfully!');
     };
+    
     const handleEditTicket = (ticket) => {
         setSelectedTicket(ticket);
         setIsEditOpen(true);
     };
+    
     const handleUpdateTicket = (updatedTicket) => {
         setTicketInformation(prev => prev.map(ticket => ticket.ticket_id === updatedTicket.ticket_id ? updatedTicket : ticket));
+        toast.success('Ticket updated successfully!');
     };
+    
     const handleDeleteTicket = async (ticketID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this ticket? This action cannot be undone.');
-        if(!confirmDelete) return;
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this ticket?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteTicket(ticketID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteTicket = async (ticketID) => {
         try {
-            const response = await fetch('/api/ticket-type/delete-selected',{
+            const toastId = toast.loading('Deleting ticket...');
+            const response = await fetch('/api/ticket-type/delete-selected', {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json',
@@ -86,23 +119,25 @@ function TicketReport(){
                 body: JSON.stringify({ticket_id: ticketID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Ticket deleted successfully!');
+                toast.success('Ticket deleted successfully!', { id: toastId });
                 setTicketInformation(prev => prev.filter(ticket => ticket.ticket_id !== ticketID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
             } else {
-                alert(data.message || 'Failed to delete ticket.');
+                toast.error(data.message || 'Failed to delete ticket.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>Error: {error}</div>
     }
+
     return(
         <>
             <div className="db-btn">
