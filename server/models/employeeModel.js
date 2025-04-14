@@ -27,7 +27,7 @@ exports.getAllEmployees = async () => {
 };
 
 exports.getEmployeeById = async (id) => {
-    const [employee] = await db.query('SELECT * FROM WHERE Emp_ID = ?', [id]);
+    const [employee] = await db.query('SELECT * FROM employees WHERE Emp_ID = ?', [id]);
     return employee[0];
 };
 
@@ -79,3 +79,14 @@ exports.deleteAllEmployees = async () => {
 exports.deleteEmployeeById = async (empid) => {
     await db.query('DELETE FROM employees WHERE Emp_ID = ?', [empid]);
 };
+exports.updateEmployeePassword = async (empId, newPassword) => {
+    const [result] = await db.query(
+        'UPDATE employees SET Emp_password = ? WHERE Emp_ID = ?',
+        [newPassword, empId]
+    );
+    return result;
+};
+exports.updatePassword = async (empId, newPassword) => {
+    await db.query('UPDATE employees SET Emp_password = ? WHERE Emp_ID = ?', [newPassword, empId]);
+  };
+  

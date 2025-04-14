@@ -7,6 +7,7 @@ employeeRouter.post('/create-employee', employeeController.createEmployee);
 employeeRouter.post('/login', employeeController.loginEmployee);
 employeeRouter.post('/attendance-report', employeeController.getEmployeeAttendanceReport);
 employeeRouter.post('/total-hours', employeeController.getTotalHoursWorked);
+employeeRouter.post('/change-password', employeeController.changePassword);
 
 // update existing employee
 employeeRouter.put('/:id', employeeController.updateEmployee);
