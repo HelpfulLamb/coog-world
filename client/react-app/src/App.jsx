@@ -62,6 +62,7 @@ function App() {
                     {!isEmployeeDashboard && <Header />}
                     <Routes>
                         <Route path='/' element={<Home />} />
+                        <Route path='/home' element={<Home />} />
                         <Route path='/about-us' element={<About />} />
                         <Route path='/tickets' element={<Tickets />} />
                         <Route path='/services' element={<Services />} />

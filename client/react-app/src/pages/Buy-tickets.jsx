@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext"; 
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function TicketCard({ title, price, description1, description2, ticketId }) {
     const { isAuthenticated, user } = useAuth();
@@ -10,63 +11,78 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     const [quantity, setQuantity] = useState(1);
     const [visitDate, setVisitDate] = useState('');
     const { addToCart } = useCart();
-    
+
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
 
     const handleAddToCart = async () => {
         if (!userId) {
-            alert('Please log in to purchase tickets.');
-            navigate('/login');
+            toast.error('Please log in to purchase tickets.', {
+                duration: 3000,
+                position: 'top-center'
+            });
+            setTimeout(() => navigate('/login'), 1000);
             return;
         }
 
         if (!visitDate) {
-            alert('Please select a visit date.');
+            toast.error('Please select a visit date.', {
+                duration: 3000,
+                position: 'top-center'
+            });
             return;
         }
 
+        const toastId = toast.loading('Adding ticket to cart...');
+
         try {
             const response = await fetch('/api/cart/add-item', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                Visitor_ID: userId,
-                Product_Type: 'Ticket',
-                Product_ID: ticketId,
-                Product_Name: title,
-                Visit_Date: visitDate,
-                Quantity: parseInt(quantity), 
-                Price: Number(parseFloat(price).toFixed(2))
-              })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    Visitor_ID: userId,
+                    Product_Type: 'Ticket',
+                    Product_ID: ticketId,
+                    Product_Name: title,
+                    Visit_Date: visitDate,
+                    Quantity: parseInt(quantity),
+                    Price: Number(parseFloat(price).toFixed(2))
+                })
             });
-    
-            console.log("Response status:", response.status);
-        
+
             if (!response.ok) {
-              throw new Error('Failed to add to cart');
+                throw new Error('Failed to add to cart');
             }
-        
-            // Optional: Update local cart state
+
             addToCart({
                 type: 'ticket',
                 ticketId,
                 title,
                 price,
                 quantity: parseInt(quantity),
-                visitDate, // ✅ required for checkout + analytics
+                visitDate,
             });
-        
-            alert('✅ Ticket added to cart!');
-    
-        
-          } catch (error) {
+
+            toast.success('✅ Ticket added to cart!', {
+                id: toastId,
+                duration: 3000,
+                position: 'top-center'
+            });
+
+        } catch (error) {
             console.error("Cart error:", error);
-            alert("❌ Failed to add item. Please try again.");
-          }
+            toast.error('❌ Failed to add item. Please try again.', {
+                id: toastId,
+                duration: 4000,
+                position: 'top-center'
+            });
+        }
     };
+
+    const today = new Date();
+    const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     return (
         <div className='price-card'>
@@ -79,7 +95,11 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
 
             <div style={{ marginBottom: '10px' }}>
                 <label>Quantity: </label>
-                <select value={quantity} onChange={(e) => setQuantity(e.target.value)} style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}>
+                <select 
+                    value={quantity} 
+                    onChange={(e) => setQuantity(e.target.value)} 
+                    style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ccc' }}
+                >
                     {[...Array(10).keys()].map(num => (
                         <option key={num + 1} value={num + 1}>{num + 1}</option>
                     ))}
@@ -94,9 +114,12 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                     onChange={(e) => setVisitDate(e.target.value)}
                     style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
                     required
-                    min={new Date().toLocaleDateString('en-CA')} />
+                    min={minDate}
+                />
             </div>
+
             <div><strong>Total: ${(price * quantity).toFixed(2)}</strong></div>
+
             <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );
@@ -112,40 +135,45 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
 
     const handleAddParking = async () => {
         if (!userId || !ticketId) {
-            alert("Please log in to add a parking pass.");
-            navigate("/login");
+            toast.error('Please log in to add a parking pass.', {
+                duration: 3000,
+                position: 'top-center'
+            });
+            setTimeout(() => navigate('/login'), 1000);
             return;
         }
 
         if (!visitDate) {
-            alert("Please select a visit date for the parking pass.");
+            toast.error('Please select a visit date for the parking pass.', {
+                duration: 3000,
+                position: 'top-center'
+            });
             return;
         }
 
+        const toastId = toast.loading('Adding parking pass to cart...');
+
         try {
             const response = await fetch('/api/cart/add-item', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                Visitor_ID: userId,
-                Product_Type: 'Ticket',
-                Product_ID: ticketId,
-                Product_Name: title,
-                Visit_Date: visitDate,
-                Quantity: 1, 
-                Price: Number(parseFloat(price).toFixed(2))
-              })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    Visitor_ID: userId,
+                    Product_Type: 'Ticket',
+                    Product_ID: ticketId,
+                    Product_Name: title,
+                    Visit_Date: visitDate,
+                    Quantity: 1,
+                    Price: Number(parseFloat(price).toFixed(2))
+                })
             });
-    
-            console.log("Response status:", response.status);
-        
+
             if (!response.ok) {
-              throw new Error('Failed to add to cart');
+                throw new Error('Failed to add to cart');
             }
-        
-            // Optional: Update local cart state
+
             addToCart({
                 type: 'ticket',
                 ticketId,
@@ -154,15 +182,25 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
                 quantity: 1,
                 visitDate
             });
-        
-            alert("✅ Parking pass added to cart!");
-    
-        
-          } catch (error) {
+
+            toast.success('✅ Parking pass added to cart!', {
+                id: toastId,
+                duration: 3000,
+                position: 'top-center'
+            });
+
+        } catch (error) {
             console.error("Cart error:", error);
-            alert("❌ Failed to add item. Please try again.");
-          }
+            toast.error('❌ Failed to add item. Please try again.', {
+                id: toastId,
+                duration: 4000,
+                position: 'top-center'
+            });
+        }
     };
+
+    const today = new Date();
+    const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     return (
         <div className='price-card parking-card'>
@@ -180,14 +218,13 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
                     onChange={(e) => setVisitDate(e.target.value)}
                     style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
                     required
-                    min={new Date().toLocaleDateString('en-CA')}
+                    min={minDate}
                 />
             </div>
             <button className='fancy' onClick={handleAddParking}>Add Parking</button>
         </div>
     );
 }
-
 
 function Tickets() {
     const [ticketOptions, setTicketOptions] = useState([]);
@@ -226,6 +263,7 @@ function Tickets() {
                 setTicketOptions(ticketsWithDesc);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load tickets: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -254,13 +292,12 @@ function Tickets() {
             <div className='price-container'>
                 {ticketOptions.length > 3 && (
                     <ParkingCard
-                    title={ticketOptions[3].ticket_type}
-                    price={ticketOptions[3].price}
-                    description1={ticketOptions[3].description1}
-                    description2={ticketOptions[3].description2}
-                    ticketId={ticketOptions[3].ticket_id}
-                />
-                
+                        title={ticketOptions[3].ticket_type}
+                        price={ticketOptions[3].price}
+                        description1={ticketOptions[3].description1}
+                        description2={ticketOptions[3].description2}
+                        ticketId={ticketOptions[3].ticket_id}
+                    />
                 )}
             </div>
         </>

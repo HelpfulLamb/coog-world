@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AddEmployee, {UpdateEmployee} from "../modals/AddEmployee.jsx";
+import toast from 'react-hot-toast';
 
 function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDeleteEmp}){
     if (!employeeInformation || !Array.isArray(employeeInformation)) {
@@ -73,6 +74,7 @@ function Employee(){
                 setEmployeeInformation(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load employees: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -123,18 +125,51 @@ function Employee(){
 
     const handleAddEmployee = (newEmployee) => {
         setEmployeeInformation([...employeeInformation, newEmployee]);
+        toast.success('Employee added successfully!');
     };
+    
     const handleEditEmp = (employee) => {
         setSelectedEmp(employee);
         setIsEditOpen(true);
     };
+    
     const handleUpdateEmp = (updatedEmp) => {
-        setEmployeeInformation(prev => prev.map(employee => employee.Emp_ID === updatedEmp.Emp_ID ? UpdateEmployee : employee));
+        setEmployeeInformation(prev => prev.map(employee => employee.Emp_ID === updatedEmp.Emp_ID ? updatedEmp : employee));
+        toast.success('Employee updated successfully!');
     };
+    
     const handleDelete = async (empID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this employee? This action cannot be undone.');
-        if(!confirmDelete) return;
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this employee?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteEmployee(empID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity, // Stays until dismissed
+            position: 'top-center',
+        });
+    };
+
+    const deleteEmployee = async (empID) => {
         try {
+            const toastId = toast.loading('Deleting employee...');
             const response = await fetch('/api/employees/delete-selected',{
                 method: 'DELETE',
                 headers: {
@@ -143,17 +178,18 @@ function Employee(){
                 body: JSON.stringify({Emp_ID: empID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Employee deleted successfully!');
+                toast.success('Employee deleted successfully!', { id: toastId });
                 setEmployeeInformation(prev => prev.filter(emp => emp.Emp_ID !== empID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
             } else {
-                alert(data.message || 'Failed to delete employee.');
+                toast.error(data.message || 'Failed to delete employee.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const resetFilters = () => {
         setEmpFirstNameFilter('');
         setEmpLastNameFilter('');
@@ -161,6 +197,7 @@ function Employee(){
         setEmpOccFilter('');
         setSalaryRangeFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
 
     if(loading){
@@ -258,6 +295,7 @@ export function EmployeeNumbers(){
                 setData(result);
             } catch (error) {
                 console.error('Error fetching employee numbers: ', error);
+                toast.error('Failed to load employee statistics');
             }
         };
         fetchEmpNum();
