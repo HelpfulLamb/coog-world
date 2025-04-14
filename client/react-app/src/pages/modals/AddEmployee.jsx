@@ -74,7 +74,7 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
                         {['First_name', 'Last_name', 'Emp_phone', 'Emp_email','Emp_salary', 'End_date'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
-                                    {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
+                                    {field === 'End_date' ? 'Start Date' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
                                 <input 
                                 id={field}

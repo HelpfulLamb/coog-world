@@ -1,6 +1,7 @@
 import AddKiosk, {UpdateKiosk} from "../modals/AddKiosk";
 import './Report.css';
 import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 
 function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKiosk}){
     if(!kioskInformation || !Array.isArray(kioskInformation)){
@@ -67,7 +68,7 @@ function Kiosk(){
                 const kioskData = await kiosks.json();
                 setAllKiosks(kioskData);
             } catch (error) {
-                setMessage({error: 'Failed to load stages or shows.', success: ''});
+                toast.error('Failed to load kiosk data');
             }
         };
         fetchData();
@@ -84,6 +85,7 @@ function Kiosk(){
                 setKioskInformation(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load kiosks: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -93,9 +95,6 @@ function Kiosk(){
 
     useEffect(() => {
         let filtered = [...kioskInformation];
-        const toDateOnly = (date) => {
-            return new Date(date).toISOString().split('T')[0];
-        };
         if(kioskNameFilter){
             filtered = filtered.filter(kiosk => kiosk.Kiosk_name.toLowerCase().includes(kioskNameFilter.toLowerCase()));
         }
@@ -133,18 +132,51 @@ function Kiosk(){
 
     const handleAddKiosk = (newKiosk) => {
         setKioskInformation([...kioskInformation, newKiosk]);
+        toast.success('Kiosk added successfully!');
     };
+    
     const handleEditKiosk = (kiosk) => {
         setSelectedKiosk(kiosk);
         setIsEditOpen(true);
     };
+    
     const handleUpdateKiosk = (updatedKiosk) => {
         setKioskInformation(prev => prev.map(kiosk => kiosk.Kiosk_ID === updatedKiosk.Kiosk_ID ? updatedKiosk : kiosk));
+        toast.success('Kiosk updated successfully!');
     };
+    
     const handleDeleteKiosk = async (kioskID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this kiosk? This action cannot be undone.');
-        if(!confirmDelete) return;
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this kiosk?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteKiosk(kioskID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteKiosk = async (kioskID) => {
         try {
+            const toastId = toast.loading('Deleting kiosk...');
             const response = await fetch('/api/kiosks/delete-selected', {
                 method: 'DELETE',
                 headers: {
@@ -153,24 +185,27 @@ function Kiosk(){
                 body: JSON.stringify({Kiosk_ID: kioskID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Kiosk deleted successfully!');
+                toast.success('Kiosk deleted successfully!', { id: toastId });
                 setKioskInformation(prev => prev.filter(kiosk => kiosk.Kiosk_ID !== kioskID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
             } else {
-                alert(data.message || 'Failed to delete kiosk.');
+                toast.error(data.message || 'Failed to delete kiosk.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const resetFilters = () => {
         setKioskNameFilter('');
         setKioskTypeFilter('');
         setKioskLocationFilter('');
         setCostRangeFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
+
     if(loading){
         return <div>Loading...</div>
     }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AssignItem, RestockItem } from "../modals/AddItem";
+import toast from 'react-hot-toast';
 
 function InventoryTable({inventoryInformation, setIsModalOpen, onRestockItem, onDeleteInventory}){
     if(!inventoryInformation || !Array.isArray(inventoryInformation)){
@@ -71,6 +72,7 @@ function Inventory(){
                 setInventoryInformation(data);
             } catch (error) {
                 setError(error.message);
+                toast.error(`Failed to load inventory: ${error.message}`);
             } finally {
                 setLoading(false);
             }
@@ -120,13 +122,16 @@ function Inventory(){
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [itemRes, kioskRes] = await Promise.all([fetch('/api/inventory/items'), fetch('/api/kiosks')]);
+                const [itemRes, kioskRes] = await Promise.all([
+                    fetch('/api/inventory/items'), 
+                    fetch('/api/kiosks')
+                ]);
                 const itemsData = await itemRes.json();
                 const kioskData = await kioskRes.json();
                 setItems(itemsData);
                 setKiosks(kioskData);
             } catch (error) {
-                setMessage({ error: 'Failed to load items or kiosks.', success: '' });
+                toast.error('Failed to load items or kiosks.');
             }
         }
         fetchData();
@@ -134,12 +139,42 @@ function Inventory(){
 
     const handleAssignItem = (newAssignment) => {
         setInventoryInformation([...inventoryInformation, newAssignment]);
+        toast.success('Item assigned successfully!');
     };
-    const handldeDeleteInventory = async (invID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this assignment? This action cannot be undone.');
-        if(!confirmDelete) return;
+
+    const handleDeleteInventory = async (invID) => {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this assignment?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteInventoryItem(invID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteInventoryItem = async (invID) => {
         try {
-            const response = await fetch('/api/inventory/delete-selected',{
+            const toastId = toast.loading('Deleting inventory assignment...');
+            const response = await fetch('/api/inventory/delete-selected', {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json',
@@ -147,35 +182,39 @@ function Inventory(){
                 body: JSON.stringify({Inventory_ID: invID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Assignment deleted successfully!');
+                toast.success('Assignment deleted successfully!', { id: toastId });
                 setInventoryInformation(prev => prev.filter(inv => inv.Inventory_ID !== invID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
             } else {
-                alert(data.message || 'Failed to delete item assignment.');
+                toast.error(data.message || 'Failed to delete item assignment.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const handleRestockItem = (item) => {
-        console.log("Restock modal open?", isRestockModalOpen, itemToRestock);
         setItemToRestock(item);
         setIsRestockModalOpen(true);
     };
+
     const resetFilters = () => {
         setItemNameFilter('');
         setItemTypeFilter('');
         setItemLocationFilter('');
         setQuantityRangeFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
+
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>Error: {error}</div>
     }
+
     return(
         <>
             <div className="filter-controls">
@@ -238,18 +277,27 @@ function Inventory(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Assign Item</button>
                 </div>
             </div>
-            <InventoryTable inventoryInformation={filteredItems} setIsModalOpen={setIsModalOpen} onDeleteInventory={handldeDeleteInventory} onRestockItem={handleRestockItem} />
-            <AssignItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAssignItem={handleAssignItem} />
+            <InventoryTable 
+                inventoryInformation={filteredItems} 
+                setIsModalOpen={setIsModalOpen} 
+                onDeleteInventory={handleDeleteInventory} 
+                onRestockItem={handleRestockItem} 
+            />
+            <AssignItem 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onAssignItem={handleAssignItem} 
+            />
             <RestockItem 
                 isOpen={isRestockModalOpen} 
                 onClose={() => setIsRestockModalOpen(false)} 
                 itemToRestock={itemToRestock} 
                 onRestockSuccess={(updatedInventory) => {
-                // update the inventory state with the new restocked item
-                setInventoryInformation(prev => prev.map(inv =>
-                    inv.Inventory_ID === updatedInventory.Inventory_ID ? updatedInventory : inv
-                ));
-                setIsRestockModalOpen(false);
+                    setInventoryInformation(prev => prev.map(inv =>
+                        inv.Inventory_ID === updatedInventory.Inventory_ID ? updatedInventory : inv
+                    ));
+                    toast.success('Item restocked successfully!');
+                    setIsRestockModalOpen(false);
                 }} 
             />
         </>

@@ -17,7 +17,6 @@ const DashboardNav = () => {
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
     };
-
     const toggleInvDropdown = () => {
         setIsInvDropdownOpen(prev => !prev);
     };
@@ -51,7 +50,6 @@ const DashboardNav = () => {
                             {isEmpDropdownOpen && (
                                 <ul>
                                     <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
-                                    {/* <li><Link to={'/employee-dashboard/attendance-report'}>Attendance Logs</Link></li> */}
                                     <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
                                 </ul>
                             )}
@@ -82,7 +80,9 @@ const DashboardNav = () => {
                             )}
                         </li>
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
-                        <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
+                        {(role === 'admin') && (
+                            <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
+                        )}
                         <li className="dropdown">
                             <button onClick={toggleInvDropdown}>
                                 Inventory
@@ -143,8 +143,9 @@ const DashboardNav = () => {
                     <>
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
-                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance</Link></li>
+                        <li><Link to={'/employee-dashboard/park-maintenance'}>Park Maintenance</Link></li>
                     </>
                 )}
             </ul>
