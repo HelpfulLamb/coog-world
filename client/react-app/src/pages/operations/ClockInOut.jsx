@@ -21,8 +21,8 @@ function formatUTCToCentralTime(mysqlDatetime) {
 function formatAttendanceDate(attendanceCreated) {
     if (!attendanceCreated) return 'N/A';
 
-    const date = new Date(attendanceCreated);  
-    
+    const date = new Date(attendanceCreated);
+
     if (isNaN(date)) {
         return 'Invalid Date';
     }
@@ -69,22 +69,22 @@ const ClockInOut = () => {
 
     const fetchTodayAttendance = useCallback(async () => {
         if (!empId) return;
-    
+
         const todayDate = new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago' });
-    
+
         setLoading(true);
-    
+
         try {
             const res = await fetch(`/api/attendance/today/${empId}`);
             const data = await res.json();
-    
+
             if (res.ok) {
                 const convertedData = {
                     ...data,
                     clock_in: data.clock_in ? formatUTCToCentralTime(data.clock_in) : null,
                     clock_out: data.clock_out ? formatUTCToCentralTime(data.clock_out) : null,
                 };
-    
+
                 localStorage.setItem('attendance', JSON.stringify(convertedData));
                 setAttendance(convertedData);
             } else {
@@ -94,13 +94,13 @@ const ClockInOut = () => {
         } catch (err) {
             console.error(err);
             setStatus('Error fetching attendance. Trying cached version...');
-    
+
             const cached = localStorage.getItem('attendance');
             if (cached) {
                 const parsed = JSON.parse(cached);
                 const parsedDate = new Date(parsed.clock_in || parsed.clock_out || parsed.Attendance_created);
                 const cachedDate = parsedDate.toLocaleDateString('en-US', { timeZone: 'America/Chicago' });
-    
+
                 if (cachedDate === todayDate) {
                     setAttendance(parsed);
                 } else {

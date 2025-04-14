@@ -37,6 +37,41 @@ exports.getEmployeeInfo = async () => {
     return info;
 }
 
+exports.getEmployeeProfile = async (empId) => {
+    const [rows] = await db.query(`
+        SELECT 
+            e.Emp_ID, 
+            e.First_name, 
+            e.Last_name, 
+            e.Emp_email, 
+            e.Emp_salary, 
+            e.Start_date, 
+            s.area_name AS sector, 
+            o.Occ_name AS position,
+            (
+                SELECT clock_in 
+                FROM attendance 
+                WHERE Emp_ID = e.Emp_ID 
+                ORDER BY Attendance_created DESC 
+                LIMIT 1
+            ) AS clock_in,
+            (
+                SELECT clock_out 
+                FROM attendance 
+                WHERE Emp_ID = e.Emp_ID 
+                ORDER BY Attendance_created DESC 
+                LIMIT 1
+            ) AS clock_out
+        FROM employees e
+        JOIN sectors s ON e.Emp_sec = s.area_id
+        JOIN occupation o ON e.Emp_pos = o.Occ_ID
+        WHERE e.Emp_ID = ?
+        LIMIT 1
+    `, [empId]);
+
+    return rows[0];
+};
+
 exports.deleteAllEmployees = async () => {
     await db.query('DELETE FROM employees');
 };
