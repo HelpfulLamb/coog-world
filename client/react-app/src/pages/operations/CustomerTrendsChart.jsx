@@ -4,11 +4,25 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // ✅ Proper import
+import autoTable from 'jspdf-autotable'; // ✅ Proper import'
+import TransactionTable from './TransactionTable.jsx';
 
 const CustomerTrendsChart = () => {
   const [data, setData] = useState({ daily: [], weekly: [], monthly: [], yearly: [] });
   const [activeView, setActiveView] = useState('daily');
+  const [transactionData, setTransactionData] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await axios.get('/api/reports/revenue-details');
+        setTransactionData(res.data || []);
+      } catch (err) {
+        console.error('Failed to load transactions');
+      }
+    };
+    fetchTransactions();
+  }, []);
 
   useEffect(() => {
     axios.get('/api/reports/customer-counts')
@@ -88,6 +102,7 @@ const CustomerTrendsChart = () => {
           />
         </LineChart>
       </ResponsiveContainer>
+      <TransactionTable transactions={transactionData} />
     </div>
   );
 };
