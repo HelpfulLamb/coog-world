@@ -105,3 +105,39 @@ exports.getTopRidePerMonth = async () => {
       throw new Error('Error fetching monthly ride data: ' + error.message);
     }
 };  
+exports.getTicketsSoldToday = async () => {
+  const query = `
+    SELECT SUM(quantity_sold) AS total_tickets
+    FROM product_purchases
+    WHERE product_type = 'Ticket'
+      AND DATE(purchase_created) = CURDATE();
+  `;
+  const [results] = await db.query(query);
+  return results[0].total_tickets || 0;
+};
+
+exports.getTicketSalesTrends = async () => {
+  const query = `
+    SELECT
+      tt.ticket_type,
+      DATE_FORMAT(pp.purchase_created, '%Y-%m-%d') AS day,
+      DATE_FORMAT(pp.purchase_created, '%Y-%u') AS week,
+      DATE_FORMAT(pp.purchase_created, '%Y-%m') AS month,
+      DATE_FORMAT(pp.purchase_created, '%Y') AS year,
+      SUM(pp.quantity_sold) AS total_sold
+    FROM product_purchases pp
+    JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+    WHERE pp.product_type = 'Ticket'
+    GROUP BY tt.ticket_type, day, week, month, year
+    ORDER BY day;
+  `;
+  const [results] = await db.query(query);
+  return results;
+};
+
+// exports.getTotalVisitorsToday() = async () => {
+//     const [data] = await db.query(
+//         'SELECT COUNT(*) FROM product_purchases WHERE visit_date = CURDATE()');
+//     return data;
+// };
+

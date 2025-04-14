@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx'; 
 import './Login.css';
 
+// Login.jsx
 export const Logout = (navigate) => {
-    localStorage.removeItem('user');            // clear saved user object
-    localStorage.removeItem('isAuthenticated'); // optional flag
-    localStorage.removeItem('userType');        // optional if you're using it
-    navigate('/login');                         // redirect to login
-};
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userType');
+    window.location.href = '/login'; // full reload to clear memory
+  };  
 
 const Login = () => {
     const { setIsAuthenticated } = useAuth();

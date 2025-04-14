@@ -14,7 +14,7 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (!userId) {
             alert('Please log in to purchase tickets.');
             navigate('/login');
@@ -26,16 +26,46 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
             return;
         }
 
-        addToCart({
-            type: 'ticket',
-            ticketId,
-            title,
-            price,
-            quantity: parseInt(quantity),
-            visitDate, // ✅ required for checkout + analytics
-        });
-
-        alert('✅ Ticket added to cart!');
+        try {
+            const response = await fetch('/api/cart/add-item', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                Visitor_ID: userId,
+                Product_Type: 'Ticket',
+                Product_ID: ticketId,
+                Product_Name: title,
+                Visit_Date: visitDate,
+                Quantity: parseInt(quantity), 
+                Price: Number(parseFloat(price).toFixed(2))
+              })
+            });
+    
+            console.log("Response status:", response.status);
+        
+            if (!response.ok) {
+              throw new Error('Failed to add to cart');
+            }
+        
+            // Optional: Update local cart state
+            addToCart({
+                type: 'ticket',
+                ticketId,
+                title,
+                price,
+                quantity: parseInt(quantity),
+                visitDate, // ✅ required for checkout + analytics
+            });
+        
+            alert('✅ Ticket added to cart!');
+    
+        
+          } catch (error) {
+            console.error("Cart error:", error);
+            alert("❌ Failed to add item. Please try again.");
+          }
     };
 
     return (
@@ -78,22 +108,60 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
     const userId = user?.id || storedUser?.id || storedUser?.Visitor_ID;
     const { addToCart } = useCart();
     const navigate = useNavigate();
+    const [visitDate, setVisitDate] = useState('');
 
-    const handleAddParking = () => {
+    const handleAddParking = async () => {
         if (!userId || !ticketId) {
             alert("Please log in to add a parking pass.");
             navigate("/login");
             return;
         }
 
-        addToCart({
-            ticketId,
-            title,
-            price,
-            quantity: 1, 
-        });
+        if (!visitDate) {
+            alert("Please select a visit date for the parking pass.");
+            return;
+        }
 
-        alert("✅ Parking pass added to cart!");
+        try {
+            const response = await fetch('/api/cart/add-item', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                Visitor_ID: userId,
+                Product_Type: 'Ticket',
+                Product_ID: ticketId,
+                Product_Name: title,
+                Visit_Date: visitDate,
+                Quantity: 1, 
+                Price: Number(parseFloat(price).toFixed(2))
+              })
+            });
+    
+            console.log("Response status:", response.status);
+        
+            if (!response.ok) {
+              throw new Error('Failed to add to cart');
+            }
+        
+            // Optional: Update local cart state
+            addToCart({
+                type: 'ticket',
+                ticketId,
+                title,
+                price,
+                quantity: 1,
+                visitDate
+            });
+        
+            alert("✅ Parking pass added to cart!");
+    
+        
+          } catch (error) {
+            console.error("Cart error:", error);
+            alert("❌ Failed to add item. Please try again.");
+          }
     };
 
     return (
@@ -104,6 +172,17 @@ function ParkingCard({ title, price, description1, description2, ticketId }) {
                 <li>{description1}</li>
                 <li>{description2}</li>
             </ul>
+            <div style={{ marginBottom: '10px' }}>
+                <label>Visit Date: </label>
+                <input
+                    type="date"
+                    value={visitDate}
+                    onChange={(e) => setVisitDate(e.target.value)}
+                    style={{ padding: '6px', borderRadius: '6px', border: '1px solid #ccc' }}
+                    required
+                    min={new Date().toLocaleDateString('en-CA')}
+                />
+            </div>
             <button className='fancy' onClick={handleAddParking}>Add Parking</button>
         </div>
     );
