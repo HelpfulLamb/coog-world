@@ -23,7 +23,7 @@ const DashboardNav = () => {
     const toggleEmpDropdown = () => {
         setIsEmpDropdownOpen(prev => !prev);
     };
-    const toggleReportsDropdown = () => { 
+    const toggleReportsDropdown = () => {
         setIsReportsDropdownOpen(prev => !prev);
     };
     const toggleShowDropdown = () => {
@@ -95,6 +95,10 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
+                    </>
+                )}
+                {role === 'admin' && (
+                    <>
                         <li className="dropdown">
                             <button onClick={toggleMaintDropdown}>
                                 Maintenance
@@ -107,10 +111,6 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
-                    </>
-                )}
-                {role === 'admin' && (
-                    <>
                         <li className="dropdown">
                             <button onClick={toggleWeatherDropdown} className="dropdown-btn">
                                 Weather
@@ -119,7 +119,7 @@ const DashboardNav = () => {
                             {isWeatherDropdownOpen && (
                                 <ul className="dropdown-menu">
                                     <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
-                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainout Report</Link></li>
+                                    <li><Link to={'/employee-dashboard/rainout-report'}>Rainout Summary</Link></li>
                                 </ul>
                             )}
                         </li>
