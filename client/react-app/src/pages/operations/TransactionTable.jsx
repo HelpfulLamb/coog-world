@@ -2,8 +2,8 @@ import React from 'react';
 
 const TransactionTable = ({ transactions }) => {
   return (
-    <div style={{ marginTop: '2rem' }}>
-      <h3>📋 All Transactions</h3>
+    <div>
+
       <table className="table">
         <thead>
           <tr>

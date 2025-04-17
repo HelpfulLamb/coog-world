@@ -13,101 +13,117 @@ const Home = () => {
   const [weatherAlert, setWeatherAlert] = useState([]);
   const [restockAlert, setRestockAlert] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem('user'));
+  const role = user?.role?.toLowerCase();
+
   useEffect(() => {
     // Track if we've already shown alerts
     const hasShownAlerts = { weather: false, restock: false };
-  
+
     const fetchAndShowAlerts = async () => {
       if (hasShownAlerts.weather) return;
-      
+
       // Weather alerts
       const weatherRes = await fetch('/api/weather/weather-alerts');
       const weatherData = await weatherRes.json();
       setWeatherAlert(weatherData);
       weatherData.forEach(alert => {
         toast.custom((t) => (
-          <div style={{background: '#fff',
-            padding: '1rem 1.5rem',
-            borderRadius: '10px',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-            color: '#333',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-            minWidth: '260px',}}>
-            <strong>🌩️ Weather Alert</strong>
-            <div>{alert.Message}</div>
-            <button
-            style={{alignSelf: 'flex-end',
-                background: '#c8102e',
-                color: '#fff',
-                border: 'none',
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                cursor: 'pointer'}}
-              onClick={() => {
-                acknowledge('weather', alert.Alert_ID);
-                toast.dismiss(t.id);
-              }}
-            >
-              OK
-            </button>
-          </div>
+          (role === 'admin') && (
+            <div style={{
+              background: '#fff',
+              padding: '1rem 1.5rem',
+              borderRadius: '10px',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              minWidth: '260px',
+            }}>
+              <strong>🌩️ Weather Alert</strong>
+              <div>{alert.Message}</div>
+              <button
+                style={{
+                  alignSelf: 'flex-end',
+                  background: '#c8102e',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  acknowledge('weather', alert.Alert_ID);
+                  toast.dismiss(t.id);
+                }}
+              >
+                OK
+              </button>
+            </div>
+          )
         ));
       });
       hasShownAlerts.weather = true;
-  
+
       // Restock alerts
       if (hasShownAlerts.restock) return;
-      
+
       const restockRes = await fetch('/api/inventory/restock-alerts');
       const restockData = await restockRes.json();
       setRestockAlert(restockData);
       restockData.forEach(alert => {
         toast.custom((t) => (
-          <div style={{background: '#fff',
-            padding: '1rem 1.5rem',
-            borderRadius: '10px',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-            color: '#333',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-            minWidth: '260px',}}>
-            <strong>📦 Restock Alert</strong>
-            <div>{alert.Message}</div>
-            <button
-            style={{alignSelf: 'flex-end',
-                background: '#c8102e',
-                color: '#fff',
-                border: 'none',
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                cursor: 'pointer'}}
-              onClick={() => {
-                acknowledge('restock', alert.Notification_ID);
-                toast.dismiss(t.id);
-              }}
-            >
-              OK
-            </button>
-          </div>
+          (role === 'admin' || role === 'manager') && (
+            <div style={{
+              background: '#fff',
+              padding: '1rem 1.5rem',
+              borderRadius: '10px',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              minWidth: '260px',
+            }}>
+              <strong>📦 Restock Alert</strong>
+              <div>{alert.Message}</div>
+              <button
+                style={{
+                  alignSelf: 'flex-end',
+                  background: '#c8102e',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+
+                onClick={() => {
+                  acknowledge('restock', alert.Notification_ID);
+                  toast.dismiss(t.id);
+                }}
+              >
+                OK
+              </button>
+            </div>
+          )
         ));
       });
       hasShownAlerts.restock = true;
     };
-  
+
     fetchAndShowAlerts();
   }, []);
   const acknowledge = async (type, id) => {
-    const url = type === 'weather' 
-    ? `/api/weather/weather-alerts/${id}/acknowledge`
-    : `/api/inventory/restock-alerts/${id}/acknowledge`;
-    await fetch(url, {method: 'PATCH'});
-    if(type === 'weather'){
-        setWeatherAlert(prev => prev.filter(a => a.Alert_ID !== id));
+    const url = type === 'weather'
+      ? `/api/weather/weather-alerts/${id}/acknowledge`
+      : `/api/inventory/restock-alerts/${id}/acknowledge`;
+    await fetch(url, { method: 'PATCH' });
+    if (type === 'weather') {
+      setWeatherAlert(prev => prev.filter(a => a.Alert_ID !== id));
     } else {
-        setRestockAlert(prev => prev.filter(a => a.Notification_ID !== id));
+      setRestockAlert(prev => prev.filter(a => a.Notification_ID !== id));
     }
   };
 
@@ -116,19 +132,19 @@ const Home = () => {
       try {
         const response = await axios.get('/api/reports/revenue-summary');
         console.log("📊 Revenue Summary Response:", response.data);
-  
+
         const formattedRevenue = `$${Number(response.data.totalRevenue).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`;
-  
+
         setRevenue(formattedRevenue);
       } catch (error) {
         console.error("Error fetching revenue:", error);
         setRevenue('Error loading data');
       }
     };
-  
+
     const fetchTicketsSoldToday = async () => {
       try {
         const response = await axios.get('/api/reports/tickets-today');
@@ -138,7 +154,7 @@ const Home = () => {
         setTicketCount('Error');
       }
     };
-  
+
     const fetchVisitorsToday = async () => {
       try {
         const response = await axios.get('/api/reports/visitors-today');
@@ -151,33 +167,33 @@ const Home = () => {
       }
     };
     const fetchOpenMaintenance = async () => {
-        try {
-          const res = await axios.get('/api/maintenance/pending');
-          setMaintenanceCount(res.data.openCount ?? 'N/A');
-        } catch (err) {
-          console.error("Error fetching maintenance:", err);
-          setMaintenanceCount('Error');
-        }
-      };
-    
-      const fetchLatestWeather = async () => {
-        try {
-          const res = await axios.get('/api/weather/today');
-          const { Wtr_cond, temperature } = res.data;
-          setCurrentWeather(`${Wtr_cond}, ${temperature}`);
-        } catch (err) {
-          console.error("Error fetching weather:", err);
-          setCurrentWeather('Error');
-        }
-      };
-  
+      try {
+        const res = await axios.get('/api/maintenance/pending');
+        setMaintenanceCount(res.data.openCount ?? 'N/A');
+      } catch (err) {
+        console.error("Error fetching maintenance:", err);
+        setMaintenanceCount('Error');
+      }
+    };
+
+    const fetchLatestWeather = async () => {
+      try {
+        const res = await axios.get('/api/weather/today');
+        const { Wtr_cond, temperature } = res.data;
+        setCurrentWeather(`${Wtr_cond}, ${temperature}`);
+      } catch (err) {
+        console.error("Error fetching weather:", err);
+        setCurrentWeather('Error');
+      }
+    };
+
     fetchRevenue();
     fetchTicketsSoldToday();
     fetchVisitorsToday();
     fetchOpenMaintenance();
     fetchLatestWeather();
     setLastUpdated(new Date().toLocaleTimeString());
-  }, []);  
+  }, []);
 
   const cardStyle = {
     backgroundColor: 'white',
@@ -206,50 +222,72 @@ const Home = () => {
 
   return (
     <>
-        <div style={{ padding: '2rem', color: 'white' }}>
-            <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
-                🎡 CoogWorld Admin Overview
-            </h1>
-
-            {/* Top Cards */}
-            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                <div style={cardStyle}>
+      <div style={{ padding: '2rem', color: 'white' }}>
+        {role === 'admin' && (
+          <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
+            🎡 CoogWorld Admin Overview
+          </h1>
+        )}
+        {role === 'manager' && (
+          <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
+            🎡 CoogWorld Manager Overview
+          </h1>
+        )}
+        {role === 'maintenance' && (
+          <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
+            🎡 CoogWorld Maintenance Overview
+          </h1>
+        )}
+        {(role !== 'admin' && role !== 'manager' && role !== 'maintenance') && (
+          <h1 style={{ color: '#c8102e', marginBottom: '2rem', fontSize: '2.5rem' }}>
+            🎡 CoogWorld Employee Overview
+          </h1>
+        )}
+        {/* Top Cards */}
+        {(role === 'admin' || role === 'manager') && (
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            {role === 'admin' && (
+              <div style={cardStyle}>
                 💰 Total Revenue
                 <div style={valueStyle}>{revenue}</div>
                 <Link
-                    to="/employee-dashboard/revenue-report"
-                    style={{ fontSize: '0.9rem', marginTop: '0.5rem', textDecoration: 'underline', color: '#444' }}
+                  to="/employee-dashboard/revenue-report"
+                  style={{ fontSize: '0.9rem', marginTop: '0.5rem', textDecoration: 'underline', color: '#444' }}
                 >
-                    Click to view full report
+                  Click to view full report
                 </Link>
                 {lastUpdated && (
-                    <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.3rem' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.3rem' }}>
                     Last updated at {lastUpdated}
-                    </div>
+                  </div>
                 )}
-                </div>
-                <div style={cardStyle}>
-                🎟️ Tickets Sold Today
-                <div style={valueStyle}>{ticketCount}</div>
-                </div>
-                <div style={cardStyle}>
-                📈 Visitors Today
-                <div style={valueStyle}>{visitorCount}</div>
-                </div>
-            </div>
+              </div>
+            )}
 
-            {/* Bottom Cards */}
-            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem' }}>
-                <div style={cardStyle}>
-                🛠️ Open Maintenance Requests
-                <div style={valueStyle}>{maintenanceCount}</div>
-                </div>
-                <div style={cardStyle}>
-                🌤️ Current Weather
-                <div style={valueStyle}>{currentWeather}°F</div>
-                </div>
+            <div style={cardStyle}>
+              🎟️ Tickets Sold Today
+              <div style={valueStyle}>{ticketCount}</div>
             </div>
+            <div style={cardStyle}>
+              📈 Visitors Today
+              <div style={valueStyle}>{visitorCount}</div>
+            </div>
+          </div>
+        )}
+        {/* Bottom Cards */}
+        <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem' }}>
+          {(role === 'admin' || role === 'maintenance') && (
+            <div style={cardStyle}>
+              🛠️ Open Maintenance Requests
+              <div style={valueStyle}>{maintenanceCount}</div>
+            </div>
+          )}
+          <div style={cardStyle}>
+            🌤️ Current Weather
+            <div style={valueStyle}>{currentWeather}°F</div>
+          </div>
         </div>
+      </div>
     </>
   );
 };

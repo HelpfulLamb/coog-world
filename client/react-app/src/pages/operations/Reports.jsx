@@ -53,9 +53,7 @@ const RevenueReport = () => {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <div className="table-container">
-      <h2 style={{ padding: '1rem', color: 'black' }}>💵 Revenue Report</h2>
-
+    <div>
       <button
         onClick={toggleFilter}
         style={{
@@ -114,27 +112,31 @@ const RevenueReport = () => {
           )}
         </div>
       )}
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Total Revenue ($)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>🎟️ Tickets</td><td>${calcTotal('Ticket').toFixed(2)}</td></tr>
+            <tr><td>🛍️ Merchandise</td><td>${calcTotal('Merchandise').toFixed(2)}</td></tr>
+            <tr><td>🍔 Food</td><td>${calcTotal('Food').toFixed(2)}</td></tr>
+            <tr><td>🛎️ Services</td><td>${calcTotal('Service').toFixed(2)}</td></tr>
+            <tr style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
+              <td>Total</td>
+              <td>${total.toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>📋 All Transactions</h3>
+      <div className="table-container">
+        <TransactionTable transactions={filteredData} />
+      </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Source</th>
-            <th>Total Revenue ($)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>🎟️ Tickets</td><td>${calcTotal('Ticket').toFixed(2)}</td></tr>
-          <tr><td>🛍️ Merchandise</td><td>${calcTotal('Merchandise').toFixed(2)}</td></tr>
-          <tr><td>🍔 Food</td><td>${calcTotal('Food').toFixed(2)}</td></tr>
-          <tr><td>🛎️ Services</td><td>${calcTotal('Service').toFixed(2)}</td></tr>
-          <tr style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
-            <td>Total</td>
-            <td>${total.toFixed(2)}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <TransactionTable transactions={filteredData} />
     </div>
   );
 };
@@ -291,7 +293,7 @@ const Reports = () => {
         <RevenueReport />
         <TicketSalesReportInline />
         <TicketSalesTrends />
-        <CustomerStatsReport /> 
+        <CustomerStatsReport />
         <CustomerTrendsChart />
       </section>
     </div>
