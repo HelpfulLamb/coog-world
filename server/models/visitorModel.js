@@ -1,7 +1,7 @@
 const db = require('../config/db.js');
 
-exports.findUserByEmail = async (email) => {
-    const [user] = await db.query('SELECT * FROM visitors WHERE email = ?', [email]);
+exports.findUserByEmail = async (email, phone) => {
+    const [user] = await db.query('SELECT * FROM visitors WHERE email = ? OR phone = ?', [email, phone]);
     return user[0];
 };
 

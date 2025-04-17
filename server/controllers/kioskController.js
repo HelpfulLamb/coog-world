@@ -1,10 +1,17 @@
 const kioskModel = require('../models/kioskModel.js');
 
 exports.createKiosk = async (req, res) => {
+    const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = req.body;
+    if(!Kiosk_name || !Kiosk_type || !Kiosk_cost || !Kiosk_loc || !Staff_num){
+        return res.status(400).json({message: 'All fields are required! Somethings missing.'});
+    }
     try {
-        const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = req.body;
-        const kioskId = await kioskModel.createKiosk({Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num});
-        res.status(201).json({id: kioskId, Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num});
+        const existingKiosk = await kioskModel.findKioskByName(Kiosk_name);
+        if(existingKiosk){
+            return res.status(400).json({message: 'A Kiosk with that name already exists. Please try again.'});
+        }
+        await kioskModel.createKiosk({Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num});
+        res.status(201).json({message: 'New Kiosk Created Successfully.'});
     } catch (error) {
         res.status(500).json({message: error.message});
     }
