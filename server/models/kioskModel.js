@@ -1,5 +1,10 @@
 const db = require('../config/db.js');
 
+exports.findKioskByName = async (name) => {
+    const [kiosk] = await db.query('SELECT Kiosk_name FROM kiosks WHERE Kiosk_name = ?', [name]);
+    return kiosk[0];
+};
+
 exports.createKiosk = async (userData) => {
     const {Kiosk_name, Kiosk_type, Kiosk_cost, Kiosk_loc, Staff_num} = userData;
     await db.query(

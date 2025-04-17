@@ -77,13 +77,13 @@ exports.updateStage = async (req, res) => {
 
 exports.deleteStage = async (req, res) => {
     try {
-        const {Stage_ID} = req.body;
+        const Stage_ID = req.params.id;
         if(!Stage_ID){
-            res.status(400).json({message: 'Invalid stage ID.'});
+            return res.status(400).json({message: 'Invalid stage ID.'});
         }
         await stageModel.deleteStage(Stage_ID);
-        res.status(200).json({message: 'Stage deleted successfully.'});
+        return res.status(200).json({message: 'Stage deleted successfully.'});
     } catch (error) {
-        res.status(500).json({message: error.message});
+        return res.status(500).json({message: error.message});
     }
 };

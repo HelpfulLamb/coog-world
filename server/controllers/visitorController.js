@@ -8,9 +8,9 @@ exports.registerUser = async (req, res) => {
         return res.status(400).json({message: 'All fields are required!'});
     }
     try {
-        const existingUser = await userModel.findUserByEmail(email);
+        const existingUser = await userModel.findUserByEmail(email, phone);
         if(existingUser){
-            return res.status(400).json({message: 'An account with that email already exists. Log in or try again.'});
+            return res.status(400).json({message: 'An account with that email or phone already exists. Log in or try again.'});
         }
         await userModel.createUsers({first_name, last_name, email, password, phone, address});
         res.status(201).json({message: 'User registered successfully.'});

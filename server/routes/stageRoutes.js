@@ -11,6 +11,6 @@ stageRouter.post('/add', stageController.addStage);
 // Route to update an existing stage
 stageRouter.put('/update/:id', stageController.updateStage);
 
-stageRouter.delete('/delete', stageController.deleteStage);
+stageRouter.delete('/delete/:id', stageController.deleteStage);
 
 module.exports = { stageRouter };
