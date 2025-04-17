@@ -3,7 +3,7 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { CartProvider } from './context/CartContext.jsx';
-import {Toaster} from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 // Navigation Components
 import Header from './pages/navigation/Header.jsx';
@@ -46,19 +46,21 @@ import TicketSalesTrends from './pages/operations/TicketSalesTrends.jsx';
 import CustomerTrendsChart from './pages/operations/CustomerTrendsChart.jsx';
 import PopularShows from './pages/reports/ShowsReport.jsx';
 import Attendance from './pages/operations/Attendance.jsx';
-import Stage from './pages/operations/Stage.jsx'; 
+import Stage from './pages/operations/Stage.jsx';
 import RideFrequencyReport from './pages/reports/RideFrequency.jsx';
 import ParkMaintenanceReport from './pages/reports/MaintLog.jsx';
 
 function App() {
-  const location = useLocation();
-  const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
+    const location = useLocation();
+    const isEmployeeDashboard = location.pathname.startsWith('/employee-dashboard');
 
-  return (
-    <AuthProvider>
+    return (
+        <AuthProvider>
             <CartProvider> {/* ✅ wrap inside AuthProvider */}
                 <div className="app-container">
-                    <Toaster position='top-right' reverseOrder={false} />
+                    <Toaster position='top-right' containerStyle={{
+                        top: '75px'
+                    }} reverseOrder={false} />
                     {!isEmployeeDashboard && <Header />}
                     <Routes>
                         <Route path='/' element={<Home />} />
@@ -77,7 +79,7 @@ function App() {
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/employee-dashboard' element={<Dashboard />}>
                             <Route index element={<AdminHome />} />
-                            <Route path='employee-profile' element={<EmployeeProfile/>}/>
+                            <Route path='employee-profile' element={<EmployeeProfile />} />
                             <Route path='employees' element={<Employee />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='ride-frequency' element={<RideFrequencyReport />} />
@@ -92,11 +94,11 @@ function App() {
                             <Route path='park-maintenance' element={<ParkMaintenanceReport />} />
                             <Route path='weather-report' element={<Weather />} />
                             <Route path='report' element={<Reports />} />
-                            <Route path='rainout-report' element={<Rainout />}/>
-                            <Route path='hours' element={<ClockInOut />}/>
-                            <Route path='attendance' element={<Attendance />}/>
+                            <Route path='rainout-report' element={<Rainout />} />
+                            <Route path='hours' element={<ClockInOut />} />
+                            <Route path='attendance' element={<Attendance />} />
                             <Route path='attendance-report' element={<AttendanceReport />} />
-                            <Route path='revenue-report' element={<Revenue />}/>
+                            <Route path='revenue-report' element={<Revenue />} />
                             <Route path='ticket-sales-trends' element={<TicketSalesTrends />} />
                             <Route path='customer-trends-report' element={<CustomerTrendsChart />} />
 
