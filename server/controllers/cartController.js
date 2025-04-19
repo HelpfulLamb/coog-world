@@ -1,28 +1,29 @@
 const cartModel = require('../models/cartModel.js');
-const db = require('../config/db.js');
+const url = require('url');
 
 exports.getCartInfo = async (req, res) => {
-    const { Visitor_ID } = req.query;
-  
+    const {query} = url.parse(req.url, true);
+    const { Visitor_ID } = query;
     if (!Visitor_ID) {
-      return res.status(400).json({ error: 'Visitor_ID is required in query parameters.' });
+        res.writeHead(400, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({ error: 'Visitor_ID is required in query parameters.' }));
     }
-  
     try {
       const cartItems = await cartModel.getCartInfo(Visitor_ID);
-  
       if (!cartItems || cartItems.length === 0) {
-        return res.status(404).json({ error: 'No cart items found for this visitor.' });
+        res.writeHead(404, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({ error: 'No cart items found for this visitor.' }));
       }
-  
-      return res.status(200).json({ message: 'Cart items retrieved successfully.', cart: cartItems });
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({ message: 'Cart items retrieved successfully.', cart: cartItems }));
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Error retrieving cart info.' });
+      res.writeHead(500, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({ error: 'Error retrieving cart info.' }));
     }
 };
 
-exports.addCartItem = async (req, res) => {
+exports.addCartItem = async (req, res, body) => {
     const {
       Visitor_ID,
       Product_Type,
@@ -31,13 +32,12 @@ exports.addCartItem = async (req, res) => {
       Visit_Date,
       Quantity,
       Price
-    } = req.body;
-  
-    console.log({ Visitor_ID, Product_Type, Product_ID, Product_Name, Quantity, Price });
+    } = body;
 
     // Validate required fields
     if (!Visitor_ID || !Product_Type || !Product_ID || !Product_Name || !Quantity || !Price) {
-      return res.status(400).json({ error: 'Missing required fields in request body.' });
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({ error: 'Missing required fields in request body.' }));
     }
   
     try {
@@ -50,14 +50,15 @@ exports.addCartItem = async (req, res) => {
         Quantity,
         Price
       });
-  
-      return res.status(201).json({
+      res.writeHead(201, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({
         message: 'Item added to cart successfully.',
         cartId: result.insertId
-      });
+      }));
     } catch (err) {
       console.error('Add to Cart Error:', err);
-      return res.status(500).json({ error: 'Failed to add item to cart. Check server.' });
+      res.writeHead(500, {'Content-Type': 'application/json'});
+      return res.end(JSON.stringify({ error: 'Failed to add item to cart. Check server.' }));
     }
   };
   

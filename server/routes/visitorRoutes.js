@@ -1,22 +1,59 @@
-const db = require('../config/db');
 const visitorController = require('../controllers/visitorController.js');
-const express = require('express');
-const visitorRouter = express.Router();
+const url = require('url');
 
-// create new user
-visitorRouter.post('/register', visitorController.registerUser);
-visitorRouter.post('/login', visitorController.loginUser);
-
-// retrieve users (all or specific)
-visitorRouter.get('/', visitorController.getAllUsers);
-visitorRouter.get('/:id', visitorController.getUserById);
-
-// delete users (all or specific)
-visitorRouter.delete('/', visitorController.deleteAllUsers);
-visitorRouter.delete('/:id', visitorController.deleteUserById);
-
-visitorRouter.put('/:id', visitorController.updateVisitor); 
-
-module.exports = {
-    visitorRouter
+function parseBody(req){
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', chunk => (body += chunk));
+        req.on('end', () => {
+            try {
+                resolve(JSON.parse(body));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
 }
+
+module.exports = async function visitorRouter(req, res){
+    const parsedUrl = url.parse(req.url, true);
+    const {pathname} = parsedUrl;
+    try {
+        if(req.method === 'POST'){
+            if(pathname.endsWith('/register')){
+                const body = await parseBody(req);
+                return visitorController.registerUser(req, res, body);
+            } else if(pathname.endsWith('/login')){
+                const body = await parseBody(req);
+                return visitorController.loginUser(req, res, body);
+            }
+        }
+        if(req.method === 'PUT' && /^\/api\/users\/\d+$/.test(pathname)){
+            const body = await parseBody(req);
+            const id = pathname.split('/').pop();
+            return visitorController.updateVisitor(req, res, id, body)
+        }
+        if(req.method === 'GET'){
+            if(pathname === '/api/users'){
+                return visitorController.getAllUsers(req, res);
+            } else if(/\/api\/users\/\d+$/.test(pathname)){
+                const id = pathname.split('/').pop();
+                return visitorController.getUserById(req, res, id);
+            }
+        }
+        if(req.method === 'DELETE'){
+            if(pathname === '/api/users'){
+                return visitorController.deleteAllUsers(req, res);
+            } else if(/\/api\/users\/\d+$/.test(pathname)){
+                const id = pathname.split('/').pop();
+                return visitorController.deleteUserById(req, res, id);
+            }
+        }
+        res.writeHead(404, {'Content-Type': 'application/json'});
+        res.end('Visitor Route Not Found');
+    } catch (error) {
+        console.error('Error in visitorRoutes: ', error);
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'Internal Server Error'}));
+    }
+};

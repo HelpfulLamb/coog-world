@@ -1,8 +1,6 @@
 const db = require('../config/db');
 
-exports.getUserShopPurchases = async (req, res) => {
-    const userId = req.params.userId;
-
+exports.getUserShopPurchases = async (req, res, id) => {
     try {
         const [purchases] = await db.query(`
             SELECT 
@@ -17,11 +15,12 @@ exports.getUserShopPurchases = async (req, res) => {
                 SELECT Transaction_ID FROM transactions WHERE Visitor_ID = ?
             ) AND pp.product_type = 'Merchandise'
             ORDER BY pp.purchase_created DESC
-        `, [userId]);        
-
-        res.status(200).json({ purchases });
+        `, [id]);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ purchases }));
     } catch (error) {
         console.error('Error fetching shop purchases:', error);
-        res.status(500).json({ message: 'Error fetching purchases' });
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Error fetching purchases' }));
     }
 };

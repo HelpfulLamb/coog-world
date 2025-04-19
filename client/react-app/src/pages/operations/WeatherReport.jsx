@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import AddWeather, {UpdateWeather} from "../modals/AddWeather.jsx";
 import toast from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext.jsx";
 
-function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteWtr }){
+function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteWtr, user}){
     if(!weatherInformation || !Array.isArray(weatherInformation)){
         return <div>No weather information data is available.</div>
     }
@@ -10,6 +11,7 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
+    const isAuthorized = user && (user.role === 'admin' || user.role === 'manager');
     return(
         <div className="table-container">
             <table className="table">
@@ -20,7 +22,7 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
                         <th>Condition</th>
                         <th>Water Level</th>
                         <th>Alerts</th>
-                        <th></th>
+                        {isAuthorized && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +33,12 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
                             <td>{weather.Wtr_cond}</td>
                             <td>{weather.Wtr_level}</td>
                             <td>{weather.Special_alerts}</td>
-                            <td>
-                                <button onClick={() => onEditWtr(weather)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteWtr(weather)} className="action-btn delete-button">Delete</button>
-                            </td>
+                            {isAuthorized && (
+                                <td>
+                                    <button onClick={() => onEditWtr(weather)} className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onDeleteWtr(weather)} className="action-btn delete-button">Delete</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -44,6 +48,7 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
 }
 
 function Weather() {
+    const {user} = useAuth();
     const [weatherInformation, setWeatherInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -205,7 +210,7 @@ function Weather() {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-
+    const isAuthorized = user && (user.role === 'admin' || user.role === 'manager');
     return (
         <>
             <div className="filter-controls">
@@ -282,25 +287,21 @@ function Weather() {
             <div className="db-btn">
                 <h1>Weather Logs</h1>
                 <div>
-                    <button 
-                        className="add-button" 
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        Add Weather
-                    </button>
+                    {isAuthorized && (
+                        <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Weather</button>
+                    )}
                 </div>
             </div>
             <WeatherTable 
                 weatherInformation={filteredWeather} 
                 setIsModalOpen={setIsModalOpen} 
                 onEditWtr={handleEditWeather} 
-                onDeleteWtr={handleDeleteWeather} 
-            />
+                onDeleteWtr={handleDeleteWeather}
+                user={user} />
             <AddWeather 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                onAddWeather={handleAddWeather} 
-            />
+                onAddWeather={handleAddWeather} />
             <UpdateWeather 
                 isOpen={isEditOpen} 
                 onClose={() => {

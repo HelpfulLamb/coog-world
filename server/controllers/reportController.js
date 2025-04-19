@@ -1,33 +1,37 @@
 const reportModel = require('../models/reportModel.js');
-const { Parser } = require('json2csv'); 
 const db = require('../config/db.js');
 
 exports.getRainoutsReport = async (req, res) => {
   try {
     const data = await reportModel.getRainoutsPerMonth();
-
-    return res.status(200).json(data);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    return res.end(JSON.stringify(data));
   } catch (error) {
     console.error("Error fetching rainout data:", error);
-    return res.status(500).json({ message: 'Server error: ' + error.message });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    return res.end(JSON.stringify({ message: 'Server error: ' + error.message }));
   }
 };
 
 exports.getRainoutRows = async (req, res) => {
   try {
     const data = await reportModel.getRainoutRows();
-    return res.status(200).json(data);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    return res.end(JSON.stringify(data));
   } catch (error) {
-    return res.status(500).json({ message: 'Server error: ' + error.message });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    return res.end(JSON.stringify({ message: 'Server error: ' + error.message }));
   }
 };
 
 exports.getRevenueReport = async (req, res) => {
   try {
     const data = await reportModel.getRevenueSummary();
-    res.status(200).json(data);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(data));
   } catch (error) {
-    return res.status(500).json({ message: 'Server error: ' + error.message });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    return res.end(JSON.stringify({ message: 'Server error: ' + error.message }));
   }
 };
 
@@ -42,20 +46,24 @@ exports.getRevenueDetails = async (req, res) => {
         purchase_created 
       FROM product_purchases
     `);
-    res.status(200).json(results);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(results));
   } catch (error) {
     console.error("Error fetching revenue details:", error);
-    res.status(500).json({ message: "Failed to retrieve revenue details." });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ message: "Failed to retrieve revenue details." }));
   }
 };
 
 exports.getRevenueSummary = async (req, res) => {
   try {
     const summary = await reportModel.getRevenueSummary();
-    res.status(200).json(summary);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(summary));
   } catch (error) {
     console.error("Error generating revenue summary:", error);
-    res.status(500).json({ message: "Failed to retrieve revenue summary." });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ message: "Failed to retrieve revenue summary." }));
   }
 };
 exports.getOpenMaintenanceCount = async (req, res) => {
@@ -63,188 +71,192 @@ exports.getOpenMaintenanceCount = async (req, res) => {
     const [result] = await db.query(
       "SELECT COUNT(*) AS count FROM maintenance WHERE Maint_Status = 'In Progress'"
     );
-    res.status(200).json({ count: result[0].count });
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ count: result[0].count }));
   } catch (error) {
     console.error("Error fetching open maintenance count:", error);
-    res.status(500).json({ message: 'Failed to fetch open maintenance count' });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ message: 'Failed to fetch open maintenance count' }));
   }
 };
 exports.getTicketsSoldToday = async (req, res) => {
   try {
     const total = await reportModel.getTicketsSoldToday();
-    res.status(200).json({ total });
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ total }));
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch tickets sold today.' });
+    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify({ message: 'Failed to fetch tickets sold today.' }));
   }
 };
 
 exports.getTotalVisitorsToday = async (req, res) => {
     try {
         const visitors = await reportModel.getTotalVisitorsToday();
-        res.status(200).json(visitors);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(visitors));
     } catch (error) {
-        res.status(500).json({message: 'Failed to get total visitors for today'});
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'Failed to get total visitors for today'}));
     }
 };
 
 exports.getTicketSalesReport = async (req, res) => {
-  try {
-    const [results] = await db.query(`
-      SELECT 
-  tt.ticket_type AS ticket_type,
-  SUM(pp.quantity_sold) AS total_sold,
-  ROUND(AVG(pp.quantity_sold), 2) AS monthly_avg
-FROM product_purchases pp
-JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-WHERE pp.product_type = 'Ticket'
-GROUP BY tt.ticket_type;
-    `);
-    res.json(results);
-  } catch (err) {
-    console.error('Ticket sales report error:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    try {
+        const [results] = await db.query(`
+            SELECT 
+            tt.ticket_type AS ticket_type,
+            SUM(pp.quantity_sold) AS total_sold,
+            ROUND(AVG(pp.quantity_sold), 2) AS monthly_avg
+            FROM product_purchases pp
+            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY tt.ticket_type;
+        `);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(results));
+    } catch (err) {
+        console.error('Ticket sales report error:', err);
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Internal server error' }));
+    }
 };
 
 exports.getTicketSalesTrends = async (req, res) => {
-  try {
-    const [daily] = await db.query(`
-      SELECT 
-        DATE(purchase_created) AS label,
-        ticket_type,
-        SUM(quantity_sold) AS total
-      FROM product_purchases pp
-      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY label, ticket_type
-      ORDER BY label;
-    `);
-
-    const [weekly] = await db.query(`
-      SELECT 
-        YEARWEEK(purchase_created, 1) AS label,
-        ticket_type,
-        SUM(quantity_sold) AS total
-      FROM product_purchases pp
-      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY label, ticket_type
-      ORDER BY label;
-    `);
-
-    const [monthly] = await db.query(`
-      SELECT 
-        DATE_FORMAT(purchase_created, '%Y-%m') AS label,
-        ticket_type,
-        SUM(quantity_sold) AS total
-      FROM product_purchases pp
-      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY label, ticket_type
-      ORDER BY label;
-    `);
-
-    const [yearly] = await db.query(`
-      SELECT 
-        YEAR(purchase_created) AS label,
-        ticket_type,
-        SUM(quantity_sold) AS total
-      FROM product_purchases pp
-      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY label, ticket_type
-      ORDER BY label;
-    `);
-
-    res.status(200).json({ daily, weekly, monthly, yearly });
-  } catch (err) {
-    console.error('Error fetching ticket sales trends:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    try {
+        const [daily] = await db.query(`
+            SELECT 
+            DATE(purchase_created) AS label,
+            ticket_type,
+            SUM(quantity_sold) AS total
+            FROM product_purchases pp
+            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY label, ticket_type
+            ORDER BY label;
+        `);
+        const [weekly] = await db.query(`
+            SELECT 
+            YEARWEEK(purchase_created, 1) AS label,
+            ticket_type,
+            SUM(quantity_sold) AS total
+            FROM product_purchases pp
+            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY label, ticket_type
+            ORDER BY label;
+        `);
+        const [monthly] = await db.query(`
+            SELECT 
+            DATE_FORMAT(purchase_created, '%Y-%m') AS label,
+            ticket_type,
+            SUM(quantity_sold) AS total
+            FROM product_purchases pp
+            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY label, ticket_type
+            ORDER BY label;
+        `);
+        const [yearly] = await db.query(`
+            SELECT 
+            YEAR(purchase_created) AS label,
+            ticket_type,
+            SUM(quantity_sold) AS total
+            FROM product_purchases pp
+            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY label, ticket_type
+            ORDER BY label;
+        `);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ daily, weekly, monthly, yearly }));
+    } catch (err) {
+        console.error('Error fetching ticket sales trends:', err);
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Internal server error' }));
+    }
 };
 
 exports.getCustomerStats = async (req, res) => {
-  try {
-    const [monthly] = await db.query(`
-      SELECT 
-        DATE_FORMAT(purchase_created, '%Y-%m') AS month,
-        SUM(quantity_sold) AS customers
-      FROM product_purchases
-      WHERE product_type = 'Ticket'
-      GROUP BY month
-      ORDER BY month ASC
-    `);
-
-    const [averageResult] = await db.query(`
-      SELECT ROUND(AVG(monthly_total), 2) AS average
-      FROM (
-        SELECT 
-          SUM(quantity_sold) AS monthly_total
-        FROM product_purchases
-        WHERE product_type = 'Ticket'
-        GROUP BY DATE_FORMAT(purchase_created, '%Y-%m')
-      ) AS monthly_data
-    `);
-
-    res.status(200).json({
-      monthly,
-      average: averageResult[0].average
-    });
-  } catch (error) {
-    console.error('Customer stats report error:', error);
-    res.status(500).json({ message: 'Failed to fetch customer stats.' });
-  }
+    try {
+        const [monthly] = await db.query(`
+            SELECT 
+            DATE_FORMAT(purchase_created, '%Y-%m') AS month,
+            SUM(quantity_sold) AS customers
+            FROM product_purchases
+            WHERE product_type = 'Ticket'
+            GROUP BY month
+            ORDER BY month ASC
+        `);
+        const [averageResult] = await db.query(`
+            SELECT ROUND(AVG(monthly_total), 2) AS average
+            FROM (
+            SELECT 
+            SUM(quantity_sold) AS monthly_total
+            FROM product_purchases
+            WHERE product_type = 'Ticket'
+            GROUP BY DATE_FORMAT(purchase_created, '%Y-%m')
+            ) AS monthly_data
+        `);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({
+        monthly,
+        average: averageResult[0].average
+        }));
+    } catch (error) {
+        console.error('Customer stats report error:', error);
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Failed to fetch customer stats.' }));
+    }
 };
 
 exports.getCustomerCounts = async (req, res) => {
-  try {
-    const [daily] = await db.query(`
-      SELECT 
-        DATE(t.Transaction_date) AS date,
-        SUM(pp.quantity_sold) AS customers
-      FROM product_purchases pp
-      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY date
-      ORDER BY date;
-    `);
-
-    const [weekly] = await db.query(`
-      SELECT 
-        YEARWEEK(t.Transaction_date, 1) AS week,
-        SUM(pp.quantity_sold) AS customers
-      FROM product_purchases pp
-      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY week
-      ORDER BY week;
-    `);
-
-    const [monthly] = await db.query(`
-      SELECT 
-        DATE_FORMAT(t.Transaction_date, '%Y-%m') AS month,
-        SUM(pp.quantity_sold) AS customers
-      FROM product_purchases pp
-      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY month
-      ORDER BY month;
-    `);
-
-    const [yearly] = await db.query(`
-      SELECT 
-        YEAR(t.Transaction_date) AS year,
-        SUM(pp.quantity_sold) AS customers
-      FROM product_purchases pp
-      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
-      WHERE pp.product_type = 'Ticket'
-      GROUP BY year
-      ORDER BY year;
-    `);
-
-    res.status(200).json({ daily, weekly, monthly, yearly });
-  } catch (error) {
-    console.error('Error fetching customer counts:', error);
-    res.status(500).json({ message: 'Failed to fetch customer stats.' });
-  }
+    try {
+        const [daily] = await db.query(`
+            SELECT 
+            DATE(t.Transaction_date) AS date,
+            SUM(pp.quantity_sold) AS customers
+            FROM product_purchases pp
+            JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY date
+            ORDER BY date;
+        `);
+        const [weekly] = await db.query(`
+            SELECT 
+            YEARWEEK(t.Transaction_date, 1) AS week,
+            SUM(pp.quantity_sold) AS customers
+            FROM product_purchases pp
+            JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY week
+            ORDER BY week;
+        `);
+        const [monthly] = await db.query(`
+            SELECT 
+            DATE_FORMAT(t.Transaction_date, '%Y-%m') AS month,
+            SUM(pp.quantity_sold) AS customers
+            FROM product_purchases pp
+            JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY month
+            ORDER BY month;
+        `);
+        const [yearly] = await db.query(`
+            SELECT 
+            YEAR(t.Transaction_date) AS year,
+            SUM(pp.quantity_sold) AS customers
+            FROM product_purchases pp
+            JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+            WHERE pp.product_type = 'Ticket'
+            GROUP BY year
+            ORDER BY year;
+        `);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ daily, weekly, monthly, yearly }));
+    } catch (error) {
+        console.error('Error fetching customer counts:', error);
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Failed to fetch customer stats.' }));
+    }
 };

@@ -2,8 +2,9 @@ import AddRide, {UpdateRide} from "../modals/AddRide";
 import './Report.css'
 import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext";
 
-function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
+function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide, user}){
     if(!rideInformation || !Array.isArray(rideInformation)){
         return <div>No ride data is available.</div>
     }
@@ -11,6 +12,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <div className="table-container">
             <table className="table">
@@ -23,7 +25,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
                         <th>Ride Cost</th>
                         <th>Operational Status</th>
                         <th>Date Added</th>
-                        <th></th>
+                        {isAuthorized && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -34,12 +36,14 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
                             <td>{ride.area_name}</td>
                             <td>{formatDate(ride.Ride_maint)}</td>
                             <td>${Number(ride.Ride_cost).toLocaleString()}</td>
-                            <td>{ride.Is_operate ? 'Operational' : 'Under Maintenance'}</td>
+                            <td>{ride.Is_operate === 1 ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(ride.Ride_created)}</td>
-                            <td>
-                                <button onClick={() => onEditRide(ride)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteRide(ride.Ride_ID)} className="action-btn delete-button">Delete</button>
-                            </td>
+                            {isAuthorized && (
+                                <td>
+                                    <button onClick={() => onEditRide(ride)} className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onDeleteRide(ride.Ride_ID)} className="action-btn delete-button">Delete</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -49,6 +53,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
 }
 
 function Ride(){
+    const {user} = useAuth();
     const [rideInformation, setRideInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -206,7 +211,7 @@ function Ride(){
     if(error){
         return <div>Error: {error}</div>
     }
-
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <>
             <div className="filter-controls">
@@ -269,10 +274,12 @@ function Ride(){
             <div className="db-btn">
                 <h1>Coog World Rides</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                    {isAuthorized && (
+                        <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                    )}
                 </div>
             </div>
-            <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} />
+            <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} user={user} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
             <UpdateRide isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedRide(null);}} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
         </>

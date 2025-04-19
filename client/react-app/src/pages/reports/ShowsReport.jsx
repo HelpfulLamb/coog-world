@@ -27,7 +27,7 @@ function PopularShows(){
             const response = await fetch('/api/shows/top-shows', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(filters),
             });

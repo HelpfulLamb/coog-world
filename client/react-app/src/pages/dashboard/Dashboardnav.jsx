@@ -146,6 +146,7 @@ const DashboardNav = () => {
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
                         <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
                         <li><Link to={'/employee-dashboard/park-maintenance'}>Park Maintenance</Link></li>
+                        <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
                     </>
                 )}
             </ul>
