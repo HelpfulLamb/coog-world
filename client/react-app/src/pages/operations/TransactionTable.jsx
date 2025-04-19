@@ -12,7 +12,7 @@ const TransactionTable = ({ transactions }) => {
             <th>Quantity</th>
             <th>Price</th>
             <th>Total</th>
-            <th>Date</th>
+            <th>Transaction Date</th>
           </tr>
         </thead>
         <tbody>
