@@ -1,5 +1,6 @@
 import './Shops.css';
 import React, { useEffect, useState } from 'react';
+import defaultImage from '../../images/IMG_2392.png';
 import shirtImage from '../../images/shirt1.webp';
 import magnetImage from '../../images/magnet.png';
 import sunglassesImage from '../../images/sunglasses.png';
@@ -87,11 +88,12 @@ function MerchCard({ title, price, description, inventoryId, quantity, itemId })
   
     const getImageForTitle = (title) => {
       if (title.toLowerCase().includes("magnet")) return magnetImage;
+      if (title.toLowerCase().includes("tee")) return shirtImage;
       if (title.toLowerCase().includes("pencil")) return pencilImage;
       if (title.toLowerCase().includes("sunglasses")) return sunglassesImage;
       if (title.toLowerCase().includes("plush")) return plushImage;
       if (title.toLowerCase().includes("popcorn")) return popcornImage;
-      return shirtImage;
+      return defaultImage;
     };
   
     const merchImage = getImageForTitle(title);
