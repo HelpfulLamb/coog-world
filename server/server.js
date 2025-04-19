@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const url = require('url');
 
+// Routers
 const rideRouter = require('./routes/rideRoutes.js');
 const ticketRouter = require('./routes/ticketRoutes');
 const visitorRouter = require('./routes/visitorRoutes.js');
@@ -20,6 +21,26 @@ const stageRouter = require('./routes/stageRoutes.js');
 
 const PORT = process.env.PORT || 3000;
 
+const mimeTypes = {
+    '.html': 'text/html',
+    '.js': 'application/javascript',
+    '.mjs': 'application/javascript',
+    '.jsx': 'application/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf',
+    '.eot': 'application/vnd.ms-fontobject'
+};
+
+const staticPath = path.join(__dirname, 'client'); // client contains your built frontend
+
 const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
@@ -29,43 +50,7 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    // 🌐 Serve frontend static assets (including /assets/, /favicon.ico, etc.)
-    const staticPath = path.join(__dirname, 'client');
-    const filePath = path.join(staticPath, pathname === '/' ? 'index.html' : pathname);
-    const extname = path.extname(filePath);
-
-    const mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'application/javascript',
-        '.mjs': 'application/javascript',
-        '.jsx': 'application/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
-        '.jpeg': 'image/jpeg',
-        '.svg': 'image/svg+xml',
-        '.ico': 'image/x-icon',
-        '.woff': 'font/woff',
-        '.woff2': 'font/woff2',
-        '.ttf': 'font/ttf',
-        '.eot': 'application/vnd.ms-fontobject'
-    };
-
-    if (req.method === 'GET' && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-        const contentType = mimeTypes[extname] || 'application/octet-stream';
-        fs.readFile(filePath, (err, data) => {
-            if (err) {
-                res.writeHead(500);
-                return res.end('Internal Server Error');
-            }
-            res.writeHead(200, { 'Content-Type': contentType });
-            return res.end(data);
-        });
-        return;
-    }
-
-    // 🧭 API routes
+    // ✅ API routing
     const routeMap = {
         '/api/rides': rideRouter,
         '/api/ticket-type': ticketRouter,
@@ -88,21 +73,49 @@ const server = http.createServer((req, res) => {
         return routeMap[matchedRoute](req, res);
     }
 
-    // 🧾 Fallback to index.html for client-side routing (React Router, etc.)
+    // ✅ Static file and frontend handling
     if (req.method === 'GET') {
-        const fallbackPath = path.join(staticPath, 'index.html');
-        fs.readFile(fallbackPath, (err, data) => {
+        let filePath;
+
+        if (pathname === '/') {
+            filePath = path.join(staticPath, 'index.html');
+        } else if (pathname.startsWith('/assets/') || pathname === '/favicon.ico') {
+            filePath = path.join(staticPath, pathname);
+        } else {
+            // React Router fallback
+            filePath = path.join(staticPath, 'index.html');
+        }
+
+        const extname = path.extname(filePath);
+        const contentType = mimeTypes[extname] || 'application/octet-stream';
+
+        fs.readFile(filePath, (err, data) => {
             if (err) {
-                res.writeHead(404);
-                return res.end('Not Found');
+                if (pathname.startsWith('/assets/')) {
+                    res.writeHead(404);
+                    return res.end('Not Found');
+                }
+                // fallback for unknown route
+                fs.readFile(path.join(staticPath, 'index.html'), (fallbackErr, fallbackData) => {
+                    if (fallbackErr) {
+                        res.writeHead(404);
+                        return res.end('Not Found');
+                    }
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    return res.end(fallbackData);
+                });
+            } else {
+                res.writeHead(200, { 'Content-Type': contentType });
+                return res.end(data);
             }
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            return res.end(data);
         });
-    } else {
-        res.writeHead(404);
-        res.end('Not Found');
+
+        return;
     }
+
+    // Default 404
+    res.writeHead(404);
+    res.end('Not Found');
 });
 
 server.listen(PORT, () => {
