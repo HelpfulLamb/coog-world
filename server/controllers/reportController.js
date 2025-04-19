@@ -57,7 +57,7 @@ exports.getRevenueDetails = async (req, res) => {
       LEFT JOIN ticket_type tt ON pp.product_type = 'Ticket' AND pp.product_id = tt.ticket_id
       ORDER BY pp.purchase_created DESC;
     `);
-    
+    const results = await reportModel.getRevenueDetails();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
   } catch (error) {

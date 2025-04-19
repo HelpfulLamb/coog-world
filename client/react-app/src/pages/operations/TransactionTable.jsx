@@ -17,11 +17,9 @@ const TransactionTable = ({ transactions }) => {
         </thead>
         <tbody>
           {transactions.map((entry, idx) => {
-            const fullName =
-              entry.First_name && entry.Last_name
-                ? `${entry.First_name} ${entry.Last_name}`
-                : 'N/A';
-
+            const fullName = entry.First_name && entry.Last_name
+              ? `${entry.First_name} ${entry.Last_name}`
+              : 'N/A';
             return (
               <tr key={idx}>
                 <td>{fullName}</td>
