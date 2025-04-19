@@ -5,6 +5,8 @@ const showRouter = express.Router();
 // create new shows
 showRouter.post('/create-show', showController.createShow);
 showRouter.post('/log', showController.logVisitorShow);
+
+// For show report
 showRouter.post('/top-shows', showController.getTopShows);
 
 // update existing show

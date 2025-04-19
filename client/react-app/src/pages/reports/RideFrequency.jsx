@@ -103,6 +103,13 @@ function RideFrequencyReport() {
         }
       };
 
+    //For date formatting
+    const formatDate = (dateString) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+
     return (
         <div className="ride-frequency-report">
             <h2>Ride Frequency Report</h2>
@@ -160,6 +167,7 @@ function RideFrequencyReport() {
                                     <th>Times Ridden</th>
                                     <th>Top Rider</th>
                                     <th>Top Rider's Count</th>
+                                    <th>Latest Log</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -169,6 +177,7 @@ function RideFrequencyReport() {
                                         <td>{ride.total_rides}</td>
                                         <td>{ride.top_rider}</td>
                                         <td>{ride.top_rides}</td>
+                                        <td>{formatDate(ride.late_log)}</td>
                                     </tr>
                                 ))}
                             </tbody>
