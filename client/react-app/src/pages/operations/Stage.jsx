@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AddStage, UpdateStage } from '../modals/AddStage.jsx';
 import toast from 'react-hot-toast';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 const StageList = () => {
+    const {user} = useAuth();
     const [stages, setStages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -188,7 +190,7 @@ const StageList = () => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return (
         <div>
             <div className="filter-controls">
@@ -263,7 +265,7 @@ const StageList = () => {
                         >
                             <option value="">-- Select Operational Status --</option>
                             <option value="1">Operational</option>
-                            <option value="0">Not Operational</option>
+                            <option value="0">Under Maintenance</option>
                         </select>
                     </div>
                     <button onClick={resetFilters} className="reset-button">Reset Filters</button>
@@ -272,7 +274,9 @@ const StageList = () => {
 
             <div className="db-btn">
                 <h1>Stage List</h1>
-                <button className="add-button" onClick={() => setIsAddModalOpen(true)}>Add New Stage</button>
+                {isAuthorized && (
+                    <button className="add-button" onClick={() => setIsAddModalOpen(true)}>Add New Stage</button>
+                )}
             </div>
 
             <div className="table-container">
@@ -284,8 +288,8 @@ const StageList = () => {
                             <th>Last Maintained</th>
                             <th>Staff Number</th>
                             <th>Seat Number</th>
-                            <th>Is Operating</th>
-                            <th>Actions</th>
+                            <th>Status</th>
+                            {isAuthorized && <th>Actions</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -296,11 +300,13 @@ const StageList = () => {
                                 <td>{formatDate(stage.Stage_maint)}</td>
                                 <td>{stage.Staff_num}</td>
                                 <td>{stage.Seat_num}</td>
-                                <td>{stage.Is_operate === 1 ? 'Yes' : 'No'}</td>
-                                <td>
-                                    <button onClick={() => handleEditStage(stage)} className="action-btn edit-button">Edit</button>
-                                    <button onClick={() => handleDeleteStage(stage)} className="action-btn delete-button">Delete</button>
-                                </td>
+                                <td>{stage.Is_operate === 1 ? 'Operational' : 'Under Maintenance'}</td>
+                                {isAuthorized && (
+                                    <td>
+                                        <button onClick={() => handleEditStage(stage)} className="action-btn edit-button">Edit</button>
+                                        <button onClick={() => handleDeleteStage(stage)} className="action-btn delete-button">Delete</button>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>

@@ -195,7 +195,7 @@ const ClockInOut = () => {
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 2500);
+                }, 2000);
             }
         } catch (err) {
             console.error(err);

@@ -2,8 +2,9 @@ import AddKiosk, {UpdateKiosk} from "../modals/AddKiosk";
 import './Report.css';
 import { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext";
 
-function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKiosk}){
+function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKiosk, user}){
     if(!kioskInformation || !Array.isArray(kioskInformation)){
         return <div>No kiosk data is available.</div>
     }
@@ -11,6 +12,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <div className="table-container">
             <table className="table">
@@ -20,8 +22,9 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
                         <th>Kiosk Type</th>
                         <th>Location</th>
                         <th>Cost</th>
+                        <th>Status</th>
                         <th>Date Added</th>
-                        <th></th>
+                        {isAuthorized && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -31,11 +34,14 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
                             <td>{kiosk.Kiosk_type}</td>
                             <td>{kiosk.area_name}</td>
                             <td>${Number(kiosk.Kiosk_cost).toLocaleString()}</td>
+                            <td>{kiosk.Kiosk_operate === 1 ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(kiosk.Kiosk_created)}</td>
-                            <td>
-                                <button onClick={() => onEditKiosk(kiosk)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteKiosk(kiosk.Kiosk_ID)} className="action-btn delete-button">Delete</button>
-                            </td>
+                            {isAuthorized && (
+                                <td>
+                                    <button onClick={() => onEditKiosk(kiosk)} className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onDeleteKiosk(kiosk.Kiosk_ID)} className="action-btn delete-button">Delete</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -45,6 +51,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
 }
 
 function Kiosk(){
+    const {user} = useAuth();
     const [kioskInformation, setKioskInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -212,7 +219,7 @@ function Kiosk(){
     if(error){
         return <div>Error: {error}</div>
     }
-
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <>
             <div className="filter-controls">
@@ -285,10 +292,12 @@ function Kiosk(){
             <div className="db-btn">
                 <h1>Coog World Kiosks</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
+                    {isAuthorized && (
+                        <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Kiosk</button>
+                    )}
                 </div>
             </div>
-            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} onEditKiosk={handleEditKiosk} onDeleteKiosk={handleDeleteKiosk} />
+            <KioskTable kioskInformation={filteredKiosks} setIsModalOpen={setIsModalOpen} onEditKiosk={handleEditKiosk} onDeleteKiosk={handleDeleteKiosk} user={user} />
             <AddKiosk isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddKiosk={handleAddKiosk} />
             <UpdateKiosk isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedKiosk(null);}} kioskToEdit={selectedKiosk} onUpdateKiosk={handleUpdateKiosk} />
         </>
