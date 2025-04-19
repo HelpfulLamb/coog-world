@@ -54,10 +54,10 @@ exports.getRevenueDetails = async (req, res) => {
       FROM product_purchases pp
       JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
       JOIN visitors v ON t.Visitor_ID = v.Visitor_ID
-      LEFT JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-      ORDER BY pp.purchase_created DESC
+      LEFT JOIN ticket_type tt ON pp.product_type = 'Ticket' AND pp.product_id = tt.ticket_id
+      ORDER BY pp.purchase_created DESC;
     `);
-
+    
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
   } catch (error) {
@@ -188,6 +188,35 @@ exports.getTicketSalesTrends = async (req, res) => {
       console.error('Error fetching ticket sales trends:', err);
       res.writeHead(500, {'Content-Type': 'application/json'});
       res.end(JSON.stringify({ message: 'Internal server error' }));
+  }
+};
+
+exports.getTicketPurchaseDetails = async (req, res) => {
+  try {
+    const [results] = await db.query(`
+      SELECT 
+        pp.product_type,
+        pp.product_id,
+        pp.quantity_sold,
+        pp.purchase_price,
+        pp.total_amount,
+        pp.purchase_created,
+        v.First_name,
+        v.Last_name,
+        tt.ticket_type
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      JOIN visitors v ON t.Visitor_ID = v.Visitor_ID
+      JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+      WHERE pp.product_type = 'Ticket'
+      ORDER BY pp.purchase_created DESC
+    `);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(results));
+  } catch (error) {
+    console.error("Error fetching ticket purchase details:", error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: "Failed to retrieve ticket purchase details." }));
   }
 };
 

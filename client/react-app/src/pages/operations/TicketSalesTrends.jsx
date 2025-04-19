@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import TransactionTable from './TransactionTable.jsx';
+import TicketTransactionTable from './TicketTransactionTable.jsx';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -33,12 +33,12 @@ const TicketSalesTrends = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await axios.get('/api/reports/revenue-details');
+        const res = await axios.get('/api/reports/ticket-purchases'); 
         setTransactionData(res.data || []);
       } catch (err) {
-        console.error('Failed to load transactions for trends report');
+        console.error('Failed to load ticket purchase transactions');
       }
-    };
+    };    
     fetchTransactions();
   }, []);  
 
@@ -89,7 +89,7 @@ const TicketSalesTrends = () => {
   return (
     <div style={{ marginTop: '3rem' }}>
       <h2 style={{ padding: '1rem', color: '#c8102e', fontWeight: 'bold' }}>
-        📊 Ticket Sales Trends ({view.toUpperCase()})
+        📊 Ticket Sales Report ({view.toUpperCase()})
       </h2>
 
       <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
@@ -152,7 +152,7 @@ const TicketSalesTrends = () => {
           )}
         </BarChart>
       </ResponsiveContainer>
-      <TransactionTable transactions={filteredTransactions} />
+      <TicketTransactionTable transactions={filteredTransactions} />
     </div>
   );
 };
