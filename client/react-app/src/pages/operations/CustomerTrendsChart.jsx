@@ -4,8 +4,8 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // ✅ Proper import'
-import TransactionTable from './TransactionTable.jsx';
+import autoTable from 'jspdf-autotable';
+
 
 const CustomerTrendsChart = () => {
   const [data, setData] = useState({ daily: [], weekly: [], monthly: [], yearly: [] });
@@ -43,7 +43,7 @@ const CustomerTrendsChart = () => {
   // ✅ PDF export
   const handleExportPDF = () => {
     const doc = new jsPDF();
-    doc.text(`Customer Trends Report - ${activeView.toUpperCase()}`, 14, 16);
+    doc.text(`Park Attendance Summary - ${activeView.toUpperCase()}`, 14, 16);
     autoTable(doc, {
       head: [['Date', 'Customers']],
       body: currentData.map(row => [row.label, row.customers]),
@@ -55,7 +55,7 @@ const CustomerTrendsChart = () => {
   return (
     <div style={{ marginTop: '3rem' }}>
       <h2 style={{ color: '#c8102e', fontWeight: 'bold', marginBottom: '1rem' }}>
-        📊 Customer Trends Report
+      🎡 Park Attendance Summary
       </h2>
 
       <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.75rem' }}>
@@ -78,7 +78,6 @@ const CustomerTrendsChart = () => {
         ))}
       </div>
 
-      {/* ✅ Export button */}
       <div style={{ marginBottom: '1.5rem' }}>
         <button onClick={handleExportPDF} className="export-btn">Export PDF</button>
       </div>
@@ -102,7 +101,7 @@ const CustomerTrendsChart = () => {
           />
         </LineChart>
       </ResponsiveContainer>
-      <TransactionTable transactions={transactionData} />
+      
     </div>
   );
 };

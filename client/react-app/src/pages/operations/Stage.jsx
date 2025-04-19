@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const StageList = () => {
-    const {user} = useAuth();
+    const { user } = useAuth();
     const [stages, setStages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -17,6 +17,7 @@ const StageList = () => {
     const [dateFromFilter, setDateFromFilter] = useState('');
     const [dateToFilter, setDateToFilter] = useState('');
     const [isOperationalFilter, setIsOperationalFilter] = useState('');
+    const [stageCostFilter, setStageCostFilter] = useState('');
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -90,6 +91,12 @@ const StageList = () => {
             );
         }
 
+        if (stageCostFilter) {
+            filtered = filtered.filter(stage =>
+                stage.Stage_cost.toString().includes(stageCostFilter)
+            );
+        }
+
         setFilteredStages(filtered);
     }, [
         stageNameFilter,
@@ -99,6 +106,7 @@ const StageList = () => {
         dateFromFilter,
         dateToFilter,
         isOperationalFilter,
+        stageCostFilter,
         stages,
     ]);
 
@@ -113,7 +121,7 @@ const StageList = () => {
                 <p>Are you sure you want to delete this stage?</p>
                 <p>This action cannot be undone.</p>
                 <div className="toast-buttons">
-                    <button 
+                    <button
                         onClick={() => {
                             deleteStage(stage);
                             toast.dismiss(t.id);
@@ -122,7 +130,7 @@ const StageList = () => {
                     >
                         Confirm
                     </button>
-                    <button 
+                    <button
                         onClick={() => toast.dismiss(t.id)}
                         className="toast-cancel"
                     >
@@ -165,6 +173,7 @@ const StageList = () => {
         setDateFromFilter('');
         setDateToFilter('');
         setIsOperationalFilter('');
+        setStageCostFilter('');
         toast.success('Filters reset successfully!');
     };
 
@@ -217,6 +226,16 @@ const StageList = () => {
                         />
                     </div>
                     <div className="filter-group">
+                        <label htmlFor="stageCost">Stage Cost:</label>
+                        <input
+                            type="number"
+                            id="stageCost"
+                            value={stageCostFilter}
+                            onChange={(e) => setStageCostFilter(e.target.value)}
+                            placeholder="Enter stage cost"
+                        />
+                    </div>
+                    <div className="filter-group">
                         <label htmlFor="staffNumber">Staff Number:</label>
                         <input
                             type="number"
@@ -236,6 +255,9 @@ const StageList = () => {
                             placeholder="Enter seat number"
                         />
                     </div>
+
+                </div>
+                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="dateFrom">From Date:</label>
                         <input
@@ -254,8 +276,6 @@ const StageList = () => {
                             onChange={(e) => setDateToFilter(e.target.value)}
                         />
                     </div>
-                </div>
-                <div className="filter-row">
                     <div className="filter-group">
                         <label htmlFor="isOperational">Operational Status:</label>
                         <select
@@ -285,6 +305,7 @@ const StageList = () => {
                         <tr>
                             <th>Stage Name</th>
                             <th>Area Name</th>
+                            <th>Stage Cost</th>
                             <th>Last Maintained</th>
                             <th>Staff Number</th>
                             <th>Seat Number</th>
@@ -297,6 +318,7 @@ const StageList = () => {
                             <tr key={stage.Stage_ID}>
                                 <td>{stage.Stage_name}</td>
                                 <td>{stage.area_name}</td>
+                                <td>{stage.Stage_cost}</td>
                                 <td>{formatDate(stage.Stage_maint)}</td>
                                 <td>{stage.Staff_num}</td>
                                 <td>{stage.Seat_num}</td>

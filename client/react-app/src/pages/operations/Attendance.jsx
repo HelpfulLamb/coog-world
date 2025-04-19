@@ -153,8 +153,6 @@ const AllAttendance = () => {
                 <th>Date</th>
                 <th>Clock In</th>
                 <th>Clock Out</th>
-                <th>Created At</th>
-                <th>Updated At</th>
               </tr>
             </thead>
             <tbody>
@@ -164,8 +162,6 @@ const AllAttendance = () => {
                   <td>{formatDate(record.Attendance_created)}</td>
                   <td>{formatTime(record.clock_in)}</td>
                   <td>{formatTime(record.clock_out)}</td>
-                  <td>{formatDate(record.Attendance_created)}</td>
-                  <td>{formatDate(record.Attendance_updated)}</td>
                 </tr>
               ))}
             </tbody>

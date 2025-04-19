@@ -22,6 +22,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
                         <th>Occupation</th>
                         <th>Salary</th>
                         <th>Start Date</th>
+                        <th>End Date</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -35,6 +36,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
                             <td>{employee.Occ_name}</td>
                             <td>${Number(employee.Emp_salary).toLocaleString()}</td>
                             <td>{formatDate(employee.Start_date)}</td>
+                            <td>{employee.End_date ? formatDate(employee.End_date) : 'No End Date'}</td>
                             <td>
                                 <button onClick={() => onEditEmp(employee)} className="action-btn edit-button">Edit</button>
                                 <button onClick={() => onDeleteEmp(employee.Emp_ID)} className="action-btn delete-button">Delete</button>
@@ -132,6 +134,9 @@ function Employee(){
         setSelectedEmp(employee);
         setIsEditOpen(true);
     };
+
+    useEffect(() => {
+    }, [selectedEmp]);
     
     const handleUpdateEmp = (updatedEmp) => {
         setEmployeeInformation(prev => prev.map(employee => employee.Emp_ID === updatedEmp.Emp_ID ? updatedEmp : employee));

@@ -2,11 +2,31 @@ import { useEffect, useState } from "react";
 import rideImg from "../images/ride1.jpg";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
+import normalImg from "../images/ride_types/normal.jpg";
+import waterImg from "../images/ride_types/water.webp";
+import thrillImg from "../images/ride_types/thrill.jpg";
+import familyImg from "../images/ride_types/family.jpg";
+import spinningImg from "../images/ride_types/spinning.jpg";
+import waterCoasterImg from "../images/ride_types/water_coaster.jpg";
+import extremeImg from "../images/ride_types/extreme.jpg";
+
+const getImageForRideType = (type) => {
+  switch (type.toLowerCase()) {
+    case 'normal': return normalImg;
+    case 'water': return waterImg;
+    case 'thrill': return thrillImg;
+    case 'family': return familyImg;
+    case 'spinning': return spinningImg;
+    case 'water coaster': return waterCoasterImg;
+    case 'extreme': return extremeImg;
+    default: return rideImg; // fallback image
+  }
+};
 
 function RideCard({ ride, onRideClick }) {
     return (
       <div className="ride-card">
-        <img src={rideImg} alt="ride image" draggable="false" />
+        <img src={getImageForRideType(ride.Ride_type)} alt={`${ride.Ride_type} ride`} draggable="false" />
         <h3>{ride.Ride_name}</h3>
         <p>Located in: {ride.area_name}</p>
         <p>{ride.Ride_type} Ride</p>
