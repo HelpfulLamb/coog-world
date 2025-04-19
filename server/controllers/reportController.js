@@ -37,20 +37,12 @@ exports.getRevenueReport = async (req, res) => {
 
 exports.getRevenueDetails = async (req, res) => {
   try {
-    const [results] = await db.query(`
-      SELECT 
-        product_type, 
-        quantity_sold, 
-        purchase_price, 
-        total_amount, 
-        purchase_created 
-      FROM product_purchases
-    `);
-    res.writeHead(200, {'Content-Type': 'application/json'});
+    const results = await reportModel.getRevenueDetails();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
   } catch (error) {
     console.error("Error fetching revenue details:", error);
-    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ message: "Failed to retrieve revenue details." }));
   }
 };
