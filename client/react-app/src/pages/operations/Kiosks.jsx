@@ -22,6 +22,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
                         <th>Kiosk Type</th>
                         <th>Location</th>
                         <th>Cost</th>
+                        <th>Staff Number</th>
                         <th>Status</th>
                         <th>Date Added</th>
                         {isAuthorized && <th>Actions</th>}
@@ -34,6 +35,7 @@ function KioskTable({kioskInformation, setIsModalOpen, onEditKiosk, onDeleteKios
                             <td>{kiosk.Kiosk_type}</td>
                             <td>{kiosk.area_name}</td>
                             <td>${Number(kiosk.Kiosk_cost).toLocaleString()}</td>
+                            <td>{kiosk.Staff_num}</td>
                             <td>{kiosk.Kiosk_operate === 1 ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(kiosk.Kiosk_created)}</td>
                             {isAuthorized && (
@@ -63,6 +65,7 @@ function Kiosk(){
     const [kioskNameFilter, setKioskNameFilter] = useState('');
     const [kioskTypeFilter, setKioskTypeFilter] = useState('');
     const [kioskLocationFilter, setKioskLocationFilter] = useState('');
+    const [staffNumberFilter, setStaffNumberFilter] = useState('');
     const [costRangeFilter, setCostRangeFilter] = useState('');
     const [sortOption, setSortOption] = useState('');
 
@@ -111,6 +114,11 @@ function Kiosk(){
         if(kioskLocationFilter){
             filtered = filtered.filter(kiosk => kiosk.area_name.toLowerCase().includes(kioskLocationFilter.toLowerCase()));
         }
+        if (staffNumberFilter) {
+            filtered = filtered.filter(kiosk =>
+                kiosk.Staff_num.toString().includes(staffNumberFilter)
+            );
+        }
         if(costRangeFilter){
             const [min, max] = costRangeFilter.split('-').map(Number);
             filtered = filtered.filter(kiosk => {
@@ -135,7 +143,7 @@ function Kiosk(){
             }
         });
         setFilteredKiosks(filtered);
-    }, [kioskInformation, kioskNameFilter, kioskTypeFilter, kioskLocationFilter, costRangeFilter, sortOption]);
+    }, [kioskInformation, kioskNameFilter, kioskTypeFilter, kioskLocationFilter, staffNumberFilter, costRangeFilter, sortOption]);
 
     const handleAddKiosk = (newKiosk) => {
         setKioskInformation([...kioskInformation, newKiosk]);
@@ -147,6 +155,9 @@ function Kiosk(){
         setIsEditOpen(true);
     };
     
+    useEffect(() => {
+    }, [selectedKiosk]);
+
     const handleUpdateKiosk = (updatedKiosk) => {
         setKioskInformation(prev => prev.map(kiosk => kiosk.Kiosk_ID === updatedKiosk.Kiosk_ID ? updatedKiosk : kiosk));
         toast.success('Kiosk updated successfully!');
@@ -208,6 +219,7 @@ function Kiosk(){
         setKioskNameFilter('');
         setKioskTypeFilter('');
         setKioskLocationFilter('');
+        setStaffNumberFilter('');
         setCostRangeFilter('');
         setSortOption('');
         toast.success('Filters reset successfully!');
@@ -260,6 +272,19 @@ function Kiosk(){
                         </select>
                     </div>
                     <div className="filter-group">
+                        <label htmlFor="staffNumber">Staff Number:</label>
+                        <input
+                            type="number"
+                            id="staffNumber"
+                            value={staffNumberFilter}
+                            onChange={(e) => setStaffNumberFilter(e.target.value)}
+                            placeholder="Enter staff number"
+                        />
+                    </div>
+                    
+                </div>
+                <div className="filter-row">
+                <div className="filter-group">
                         <label htmlFor="costRange">Cost Range:</label>
                         <select 
                         id="costRange"
@@ -283,8 +308,6 @@ function Kiosk(){
                             <option value="costDesc">Cost (High to Low)</option>
                         </select>
                     </div>
-                </div>
-                <div className="filter-row">
                     <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
                 </div>
             </div>

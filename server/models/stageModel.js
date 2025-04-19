@@ -6,7 +6,9 @@ exports.getAllStages = async () => {
         SELECT 
             Stage_ID, 
             Stage_name, 
-            s.area_name, 
+            st.area_ID,  
+            s.area_name,
+            Stage_cost, 
             Stage_maint, 
             Staff_num, 
             Seat_num, 
@@ -25,15 +27,15 @@ exports.getAllStages = async () => {
 
 
 exports.addStage = async (stageData) => {
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by } = stageData;
+    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by} = stageData;
 
     const query = `
-        INSERT INTO stages (area_ID, Stage_name, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created, Stage_created_by)
+        INSERT INTO stages (area_ID, Stage_name, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created, Stage_created_by)
         VALUES (?, ?, ?, ?, ?, ?, NOW(), ?);
     `;
 
     try {
-        const [result] = await db.query(query, [area_ID, Stage_name, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by]);
+        const [result] = await db.query(query, [area_ID, Stage_name, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by]);
         return result.insertId;  
     } catch (err) {
         throw new Error('Error adding stage: ' + err.message); 
@@ -42,16 +44,16 @@ exports.addStage = async (stageData) => {
 
 
 exports.updateStage = async (stageID, stageData) => {
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = stageData;
+    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = stageData;
 
     const query = `
         UPDATE stages
-        SET Stage_name = ?, area_ID = ?, Stage_maint = ?, Staff_num = ?, Seat_num = ?, Is_operate = ?, Stage_updated = NOW(), Stage_updated_by = ?
+        SET Stage_name = ?, area_ID = ?, Stage_cost = ?, Stage_maint = ?, Staff_num = ?, Seat_num = ?, Is_operate = ?, Stage_updated = NOW(), Stage_updated_by = ?
         WHERE Stage_ID = ?;
     `;
 
     try {
-        const [result] = await db.query(query, [Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by, stageID]);
+        const [result] = await db.query(query, [Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by, stageID]);
         return result.affectedRows > 0;  
     } catch (err) {
         throw new Error('Error updating stage: ' + err.message); 
@@ -64,7 +66,8 @@ exports.getStageById = async (stageID) => {
         SELECT 
             Stage_ID, 
             Stage_name, 
-            s.area_name, 
+            s.area_name,
+            Stage_cost, 
             Stage_maint, 
             Staff_num, 
             Seat_num, 
@@ -88,7 +91,8 @@ exports.getAllStagesWithEmployeeInfo = async () => {
         SELECT 
             Stage_ID, 
             Stage_name, 
-            s.area_name, 
+            s.area_name,
+            Stage_cost, 
             Stage_maint, 
             Staff_num, 
             Seat_num, 

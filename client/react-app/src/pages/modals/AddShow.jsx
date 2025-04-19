@@ -172,7 +172,6 @@ function AddShow({isOpen, onClose, onAddShow}){
                 body: JSON.stringify(newShow),
             });
             const data = await response.json();
-            console.log('Backend response: ', data);
             if(response.ok){
                 setMessage({success: 'Show added successfully.', error: ''});
                 setNewShow({

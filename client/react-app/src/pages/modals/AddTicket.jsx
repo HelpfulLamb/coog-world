@@ -87,7 +87,6 @@ function AddTicket({isOpen, onClose, onAddTicket}){
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting ticket data: ', newTicket);
         if(!ticket_type || !price){
             setMessage({error: 'All fields are required!', success: ''});
             return;
@@ -105,7 +104,6 @@ function AddTicket({isOpen, onClose, onAddTicket}){
                 body: JSON.stringify(newTicket),
             });
             const data = await response.json();
-            console.log('Backend Response: ', data);
             if(response.ok){
                 setMessage({success: 'New Ticket added successfully!', error: ''});
                 setNewTicket({
