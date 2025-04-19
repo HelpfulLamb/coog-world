@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // ✅ Correct import for PDF export
+import autoTable from 'jspdf-autotable';
 
 const COLORS = ['#c8102e', '#0088FE', '#00C49F', '#FFBB28'];
 
@@ -34,14 +34,17 @@ const TicketSalesTrends = () => {
     const fetchTransactions = async () => {
       try {
         const res = await axios.get('/api/reports/revenue-details');
-        console.log('📋 Transactions (Trends):', res.data);
         setTransactionData(res.data || []);
       } catch (err) {
         console.error('Failed to load transactions for trends report');
       }
     };
     fetchTransactions();
-  }, []);
+  }, []);  
+
+  const filteredTransactions = transactionData.filter(
+    (entry) => entry.product_type === 'Ticket'
+  );
 
   const temp = {};
   trends[view]?.forEach(row => {
@@ -68,15 +71,20 @@ const TicketSalesTrends = () => {
   );
 
   const handleExportPDF = () => {
+    if (filteredTransformed.length === 0) {
+      alert("No data to export.");
+      return;
+    }
+  
     const doc = new jsPDF();
     doc.text(`Ticket Sales Report - ${view.toUpperCase()}`, 14, 16);
     autoTable(doc, {
-      head: [Object.keys(filteredTransformed[0] || {})],
+      head: [Object.keys(filteredTransformed[0])],
       body: filteredTransformed.map(obj => Object.values(obj)),
       startY: 24
     });
     doc.save(`ticket_sales_${view}.pdf`);
-  };
+  };  
 
   return (
     <div style={{ marginTop: '3rem' }}>
@@ -144,7 +152,7 @@ const TicketSalesTrends = () => {
           )}
         </BarChart>
       </ResponsiveContainer>
-      <TransactionTable transactions={transactionData} />
+      <TransactionTable transactions={filteredTransactions} />
     </div>
   );
 };

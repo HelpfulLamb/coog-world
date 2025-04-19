@@ -1,13 +1,13 @@
 import React from 'react';
+import './Report.css'; 
 
 const TransactionTable = ({ transactions }) => {
   return (
-    <div>
-
+    <div className="table-container">
       <table className="table">
         <thead>
           <tr>
-            <th>Product Type</th>
+            <th>Ticket Type</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Total</th>
@@ -17,7 +17,7 @@ const TransactionTable = ({ transactions }) => {
         <tbody>
           {transactions.map((entry, idx) => (
             <tr key={idx}>
-              <td>{entry.product_type}</td>
+              <td>{entry.ticket_type || '—'}</td>
               <td>{entry.quantity_sold}</td>
               <td>${Number(entry.purchase_price || 0).toFixed(2)}</td>
               <td>${Number(entry.total_amount || 0).toFixed(2)}</td>
@@ -30,4 +30,4 @@ const TransactionTable = ({ transactions }) => {
   );
 };
 
-export default TransactionTable;
+export default TransactionTable; 

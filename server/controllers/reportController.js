@@ -39,12 +39,21 @@ exports.getRevenueDetails = async (req, res) => {
   try {
     const [results] = await db.query(`
       SELECT 
-        product_type, 
-        quantity_sold, 
-        purchase_price, 
-        total_amount, 
-        purchase_created 
-      FROM product_purchases
+  pp.product_type,
+  pp.product_id,
+  CASE 
+    WHEN pp.product_id = 1 THEN 'Day Pass'
+    WHEN pp.product_id = 2 THEN 'VIP'
+    WHEN pp.product_id = 3 THEN 'Season Pass'
+    WHEN pp.product_id = 4 THEN 'Parking'
+    ELSE 'Unknown'
+  END AS ticket_type,
+  pp.quantity_sold,
+  pp.purchase_price,
+  pp.total_amount,
+  pp.purchase_created
+FROM product_purchases pp
+WHERE pp.product_type = 'Ticket';
     `);
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(results));
@@ -123,59 +132,61 @@ exports.getTicketSalesReport = async (req, res) => {
 };
 
 exports.getTicketSalesTrends = async (req, res) => {
-    try {
-        const [daily] = await db.query(`
-            SELECT 
-            DATE(purchase_created) AS label,
-            ticket_type,
-            SUM(quantity_sold) AS total
-            FROM product_purchases pp
-            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-            WHERE pp.product_type = 'Ticket'
-            GROUP BY label, ticket_type
-            ORDER BY label;
-        `);
-        const [weekly] = await db.query(`
-            SELECT 
-            YEARWEEK(purchase_created, 1) AS label,
-            ticket_type,
-            SUM(quantity_sold) AS total
-            FROM product_purchases pp
-            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-            WHERE pp.product_type = 'Ticket'
-            GROUP BY label, ticket_type
-            ORDER BY label;
-        `);
-        const [monthly] = await db.query(`
-            SELECT 
-            DATE_FORMAT(purchase_created, '%Y-%m') AS label,
-            ticket_type,
-            SUM(quantity_sold) AS total
-            FROM product_purchases pp
-            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-            WHERE pp.product_type = 'Ticket'
-            GROUP BY label, ticket_type
-            ORDER BY label;
-        `);
-        const [yearly] = await db.query(`
-            SELECT 
-            YEAR(purchase_created) AS label,
-            ticket_type,
-            SUM(quantity_sold) AS total
-            FROM product_purchases pp
-            JOIN ticket_type tt ON pp.product_id = tt.ticket_id
-            WHERE pp.product_type = 'Ticket'
-            GROUP BY label, ticket_type
-            ORDER BY label;
-        `);
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({ daily, weekly, monthly, yearly }));
-    } catch (err) {
-        console.error('Error fetching ticket sales trends:', err);
-        res.writeHead(500, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({ message: 'Internal server error' }));
-    }
+  try {
+      const [daily] = await db.query(`
+          SELECT 
+          DATE(purchase_created) AS label,
+          tt.ticket_type,
+          SUM(quantity_sold) AS total
+          FROM product_purchases pp
+          JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+          WHERE pp.product_type = 'Ticket'
+          GROUP BY label, tt.ticket_type
+          ORDER BY label;
+      `);
+      const [weekly] = await db.query(`
+          SELECT 
+          YEARWEEK(purchase_created, 1) AS label,
+          tt.ticket_type,
+          SUM(quantity_sold) AS total
+          FROM product_purchases pp
+          JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+          WHERE pp.product_type = 'Ticket'
+          GROUP BY label, tt.ticket_type
+          ORDER BY label;
+      `);
+      const [monthly] = await db.query(`
+          SELECT 
+          DATE_FORMAT(purchase_created, '%Y-%m') AS label,
+          tt.ticket_type,
+          SUM(quantity_sold) AS total
+          FROM product_purchases pp
+          JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+          WHERE pp.product_type = 'Ticket'
+          GROUP BY label, tt.ticket_type
+          ORDER BY label;
+      `);
+      const [yearly] = await db.query(`
+          SELECT 
+          YEAR(purchase_created) AS label,
+          tt.ticket_type,
+          SUM(quantity_sold) AS total
+          FROM product_purchases pp
+          JOIN ticket_type tt ON pp.product_id = tt.ticket_id
+          WHERE pp.product_type = 'Ticket'
+          GROUP BY label, tt.ticket_type
+          ORDER BY label;
+      `);
+
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify({ daily, weekly, monthly, yearly }));
+  } catch (err) {
+      console.error('Error fetching ticket sales trends:', err);
+      res.writeHead(500, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify({ message: 'Internal server error' }));
+  }
 };
+
 
 exports.getCustomerStats = async (req, res) => {
     try {
