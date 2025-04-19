@@ -150,7 +150,6 @@ const TicketSalesReportInline = () => {
     const fetchSales = async () => {
       try {
         const res = await axios.get('/api/reports/ticket-sales');
-        console.log("🎟️ Ticket Sales Response:", res.data);
         setSalesData(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         setError('Failed to load ticket sales data.');

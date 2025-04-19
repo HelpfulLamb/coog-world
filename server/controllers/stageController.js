@@ -15,12 +15,12 @@ exports.getStages = async (req, res) => {
 
 // Add a new stage
 exports.addStage = async (req, res, body) => {
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by } = body;
+    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by } = body;
 
     // Check if the required fields are provided
-    if (!Stage_name || !area_ID || !Stage_maint || !Staff_num || !Seat_num || !Stage_created_by) {
+    if (!Stage_name || !area_ID || !Stage_cost || !Stage_maint || !Staff_num || !Seat_num || !Stage_created_by) {
         res.writeHead(400, {'Content-Type': 'application/json'});
-        return res.end(JSON.stringify({error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_created_by'}));
+        return res.end(JSON.stringify({error: 'Missing required fields: Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by'}));
     }
 
     try {
@@ -28,10 +28,10 @@ exports.addStage = async (req, res, body) => {
         const newStageID = await stageModel.addStage({
             Stage_name,
             area_ID,
+            Stage_cost,
             Stage_maint,
             Staff_num,
             Seat_num,
-            Is_operate,
             Stage_created_by,
         });
 
@@ -47,12 +47,12 @@ exports.addStage = async (req, res, body) => {
 
 // Update an existing stage
 exports.updateStage = async (req, res, id, body) => {
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = body;
+    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = body;
 
     // Check if the required fields are provided
-    if (!Stage_name || !area_ID || !Stage_maint || !Staff_num || !Seat_num || !Stage_updated_by) {
+    if (!Stage_name || !area_ID || !Stage_cost || !Stage_maint || !Staff_num || !Seat_num || !Stage_updated_by) {
         res.writeHead(400, {'Content-Type': 'application/json'});
-        return res.end(JSON.stringify({ error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_updated_by' }));
+        return res.end(JSON.stringify({ error: 'Missing required fields: Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_updated_by' }));
     }
 
     try {
@@ -60,6 +60,7 @@ exports.updateStage = async (req, res, id, body) => {
         const updated = await stageModel.updateStage(id, {
             Stage_name,
             area_ID,
+            Stage_cost,
             Stage_maint,
             Staff_num,
             Seat_num,

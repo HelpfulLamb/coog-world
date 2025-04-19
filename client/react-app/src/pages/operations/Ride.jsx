@@ -1,11 +1,11 @@
-import AddRide, {UpdateRide} from "../modals/AddRide";
+import AddRide, { UpdateRide } from "../modals/AddRide";
 import './Report.css'
 import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { useAuth } from "../../context/AuthContext";
 
-function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide, user}){
-    if(!rideInformation || !Array.isArray(rideInformation)){
+function RideTable({ rideInformation, setIsModalOpen, onEditRide, onDeleteRide, user }) {
+    if (!rideInformation || !Array.isArray(rideInformation)) {
         return <div>No ride data is available.</div>
     }
     const formatDate = (dateString) => {
@@ -13,7 +13,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide, u
         return date.toLocaleDateString();
     };
     const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
-    return(
+    return (
         <div className="table-container">
             <table className="table">
                 <thead>
@@ -52,8 +52,8 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide, u
     );
 }
 
-function Ride(){
-    const {user} = useAuth();
+function Ride() {
+    const { user } = useAuth();
     const [rideInformation, setRideInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -72,7 +72,7 @@ function Ride(){
     const fetchRides = async () => {
         try {
             const response = await fetch('/api/rides/info');
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
             const data = await response.json();
@@ -91,26 +91,31 @@ function Ride(){
 
     useEffect(() => {
         let filtered = [...rideInformation];
-        if(rideNameFilter){
+        if (rideNameFilter) {
             filtered = filtered.filter(ride => ride.Ride_name.toLowerCase().includes(rideNameFilter.toLowerCase()));
         }
-        if(rideTypeFilter){
+        if (rideTypeFilter) {
             filtered = filtered.filter(ride => ride.Ride_type.toLowerCase().includes(rideTypeFilter.toLowerCase()));
         }
-        if(rideLocationFilter){
+        if (rideLocationFilter) {
             filtered = filtered.filter(ride => ride.area_name.toLowerCase().includes(rideLocationFilter.toLowerCase()));
         }
-        if(rideStatusFilter){
+        if (rideStatusFilter) {
             filtered = filtered.filter(ride => ride.Is_operate.toString().toLowerCase().includes(rideStatusFilter.toLowerCase()));
         }
-        if(costRangeFilter){
+        if (rideStatusFilter !== '') {
+            filtered = filtered.filter(
+                ride => ride.Is_operate === (rideStatusFilter === '1' ? 1 : 0)
+            );
+        }
+        if (costRangeFilter) {
             const [min, max] = costRangeFilter.split('-').map(Number);
             filtered = filtered.filter(ride => {
                 const cost = Number(ride.Ride_cost);
                 return cost >= min && (isNaN(max) || cost <= max);
             });
         }
-        filtered.sort((a,b) => {
+        filtered.sort((a, b) => {
             switch (sortOption) {
                 case 'nameAsc':
                     return a.Ride_name.localeCompare(b.Ride_name);
@@ -131,24 +136,24 @@ function Ride(){
         setRideInformation([...rideInformation, newRide]);
         toast.success('Ride added successfully!');
     };
-    
+
     const handleEditRide = (ride) => {
         setSelectedRide(ride);
         setIsEditOpen(true);
     };
-    
+
     const handleUpdateRide = (updatedRide) => {
         setRideInformation(prev => prev.map(ride => ride.Ride_ID === updatedRide.Ride_ID ? updatedRide : ride));
         toast.success('Ride updated successfully!');
     };
-    
+
     const handleDeleteRide = async (rideID) => {
         toast.custom((t) => (
             <div className="custom-toast">
                 <p>Are you sure you want to delete this ride?</p>
                 <p>This action cannot be undone.</p>
                 <div className="toast-buttons">
-                    <button 
+                    <button
                         onClick={() => {
                             deleteRide(rideID);
                             toast.dismiss(t.id);
@@ -157,7 +162,7 @@ function Ride(){
                     >
                         Confirm
                     </button>
-                    <button 
+                    <button
                         onClick={() => toast.dismiss(t.id)}
                         className="toast-cancel"
                     >
@@ -179,11 +184,11 @@ function Ride(){
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({Ride_ID: rideID}),
+                body: JSON.stringify({ Ride_ID: rideID }),
             });
             const data = await response.json();
-            
-            if(response.ok){
+
+            if (response.ok) {
                 toast.success('Ride deleted successfully!', { id: toastId });
                 setRideInformation(prev => prev.filter(ride => ride.Ride_ID !== rideID));
                 fetchRides();
@@ -205,14 +210,14 @@ function Ride(){
         toast.success('Filters reset successfully!');
     };
 
-    if(loading){
+    if (loading) {
         return <div>Loading...</div>
     }
-    if(error){
+    if (error) {
         return <div>Error: {error}</div>
     }
     const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
-    return(
+    return (
         <>
             <div className="filter-controls">
                 <h2>Filter Rides</h2>
@@ -256,6 +261,21 @@ function Ride(){
                         </select>
                     </div>
                     <div className="filter-group">
+                        <label htmlFor="isOperational">Operational Status:</label>
+                        <select
+                            id="isOperational"
+                            value={rideStatusFilter}
+                            onChange={(e) => setRideStatusFilter(e.target.value)}
+                        >
+                            <option value="">-- Select Operational Status --</option>
+                            <option value="1">Operational</option>
+                            <option value="0">Under Maintenance</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div className="filter-row">
+                    <div className="filter-group">
                         <label htmlFor="sort">Sort By:</label>
                         <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                             <option value="">-- Sort Method --</option>
@@ -265,8 +285,6 @@ function Ride(){
                             <option value="costDesc">Cost (High to Low)</option>
                         </select>
                     </div>
-                </div>
-                <div className="filter-row">
                     <button className="reset-button" onClick={resetFilters}>Reset Filters</button>
                 </div>
             </div>
@@ -281,7 +299,7 @@ function Ride(){
             </div>
             <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} user={user} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
-            <UpdateRide isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedRide(null);}} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
+            <UpdateRide isOpen={isEditOpen} onClose={() => { setIsEditOpen(false); setSelectedRide(null); }} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
         </>
     )
 }

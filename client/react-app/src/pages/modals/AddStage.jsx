@@ -8,12 +8,12 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
         Stage_maint: '',
         Staff_num: '',
         Seat_num: '',
-        Is_operate: ''
+        Is_operate: '',
+        Stage_cost: '' 
     });
 
     const [message, setMessage] = useState({ error: '', success: '' });
 
-    
     useEffect(() => {
         if (stageToEdit) {
             setFormData({
@@ -23,11 +23,12 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
                 Staff_num: stageToEdit.Staff_num?.toString() || '',
                 Seat_num: stageToEdit.Seat_num?.toString() || '',
                 Is_operate: stageToEdit.Is_operate?.toString() || '0',
+                Stage_cost: stageToEdit.Stage_cost?.toString() || '' 
             });
         }
+        setMessage({ error: '', success: '' });
     }, [stageToEdit]);
 
-    
     const getUserId = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -58,6 +59,7 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
             Staff_num: formData.Staff_num,
             Seat_num: formData.Seat_num,
             Is_operate: formData.Is_operate,
+            Stage_cost: formData.Stage_cost, 
             Stage_updated_by: userId,
         };
 
@@ -74,8 +76,8 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
             if (response.ok) {
                 setMessage({ success: 'Stage updated successfully!', error: '' });
                 setTimeout(() => {
-                    onUpdateStage(data.stage); 
-                    onClose(); 
+                    onUpdateStage(data.stage);
+                    onClose();
                 }, 1500);
             } else {
                 setMessage({ error: data.message || 'Failed to update stage.', success: '' });
@@ -93,7 +95,7 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
                 <h2>Edit Stage #{stageToEdit.Stage_ID}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="modal-form-grid">
-                        {['Stage_name', 'Stage_maint', 'Staff_num', 'Seat_num'].map((field) => (
+                        {['Stage_name', 'Stage_cost', 'Stage_maint', 'Staff_num', 'Seat_num'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
                                 <input
@@ -143,12 +145,11 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
         Stage_maint: new Date().toISOString().split('T')[0], 
         Staff_num: '',
         Seat_num: '',
-        Is_operate: '1'
+        Stage_cost: '' 
     });
 
     const [message, setMessage] = useState({ success: '', error: '' });
 
-    
     const getUserId = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -165,32 +166,29 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        console.log("Form submission started");
-    
+
         const userId = getUserId();
         if (!userId) {
             setMessage({ error: 'User is not logged in. Please log in to add a stage.', success: '' });
             return;
         }
-    
+
         const payload = {
             Stage_name: newStage.Stage_name,
             area_ID: parseInt(newStage.area_ID, 10),
+            Stage_cost: parseFloat(newStage.Stage_cost),
             Stage_maint: newStage.Stage_maint,
             Staff_num: parseInt(newStage.Staff_num, 10),
             Seat_num: parseInt(newStage.Seat_num, 10),
-            Is_operate: parseInt(newStage.Is_operate, 10),
             Stage_created_by: userId,
         };
-    
-        if (!payload.Stage_name || !payload.area_ID || !payload.Stage_maint || !payload.Staff_num || !payload.Seat_num) {
+
+        if (!payload.Stage_name || !payload.area_ID || !payload.Stage_maint || !payload.Staff_num || !payload.Seat_num || !payload.Stage_cost) {
             setMessage({ error: 'All fields are required.', success: '' });
             return;
         }
-    
+
         try {
-            console.log("Sending the API request...");
             const response = await fetch('/api/stages/add', {
                 method: 'POST',
                 headers: {
@@ -198,40 +196,34 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
                 },
                 body: JSON.stringify(payload),
             });
-    
+
             const data = await response.json();
-            console.log("API response received:", data);
-    
-            if (response.ok && data.Stage_ID) {  
+
+            if (response.ok && data.Stage_ID) {
                 setMessage({ success: data.message || 'Stage added successfully!', error: '' });
-    
                 setNewStage({
                     Stage_name: '',
                     area_ID: '',
+                    Stage_cost: '',
                     Stage_maint: new Date().toISOString().split('T')[0],
                     Staff_num: '',
                     Seat_num: '',
-                    Is_operate: '1',
+                     
                 });
-    
-                
+
                 const updatedStage = { ...payload, Stage_ID: data.Stage_ID };
-                onAddStage(updatedStage);  
-    
-                
+                onAddStage(updatedStage);
+
                 setTimeout(() => {
-                    console.log("Refreshing the page...");
-                    window.location.reload(); 
+                    window.location.reload();
                 }, 1500);
             } else {
                 setMessage({ error: data.message || 'Failed to add stage.', success: '' });
             }
         } catch (err) {
-            console.error("Error during API call:", err);
             setMessage({ error: 'An error occurred while adding the stage.', success: '' });
         }
     };
-    
 
     if (!isOpen) return null;
 
@@ -241,12 +233,12 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
                 <h2>Add New Stage</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="modal-form-grid">
-                        {['Stage_name', 'Stage_maint', 'Staff_num', 'Seat_num'].map((field) => (
+                        {['Stage_name', 'Stage_cost', 'Stage_maint', 'Staff_num', 'Seat_num'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
                                 <input
                                     id={field}
-                                    type={field === 'Stage_maint' ? 'date' : 'text'}
+                                    type={field === 'Stage_cost' ? 'number': field === 'Stage_maint' ? 'date' : 'text'}
                                     name={field}
                                     value={newStage[field]}
                                     onChange={handleChange}
@@ -262,13 +254,6 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
                                 <option value="2">Splash Central</option>
                                 <option value="3">Highrise Coogs</option>
                                 <option value="4">Lowball City</option>
-                            </select>
-                        </div>
-                        <div className="modal-input-group">
-                            <label htmlFor="Is_operate">Operating?</label>
-                            <select name="Is_operate" value={newStage.Is_operate} onChange={handleChange}>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
                             </select>
                         </div>
                     </div>

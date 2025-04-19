@@ -103,6 +103,13 @@ export function UpdateRide({isOpen, onClose, rideToEdit, onUpdateRide}){
                                 <option value="4">Lowball City</option>
                             </select>
                         </div>
+                        <div className="modal-input-group">
+                            <label htmlFor="Is_operate">Operating?</label>
+                            <select name="Is_operate" value={formData.Is_operate} onChange={handleInputChange}>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
                     </div>
                     {message.error && <p className="error-message">{message.error}</p>}
                     {message.success && <p className="success-message">{message.success}</p>}
@@ -131,7 +138,6 @@ function AddRide({isOpen, onClose, onAddRide}){
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting ride data: ', newRide);
         if(!newRide.Ride_name || !newRide.Ride_type || !newRide.Ride_loc || !newRide.Ride_cost || !newRide.Ride_staff){
             setMessage({error: 'All fields are required.', success: ''});
             return;
@@ -149,7 +155,6 @@ function AddRide({isOpen, onClose, onAddRide}){
                 body: JSON.stringify(newRide),
             });
             const data = await response.json();
-            console.log('Backend repsonse: ', data);
             if(response.ok){
                 setMessage({success: 'Ride added successfully!', error: ''});
                 setNewRide({
