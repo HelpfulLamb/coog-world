@@ -73,7 +73,8 @@ exports.getRideStatsByMonth = async (month) => {
             r.ride_name,
             IFNULL(COUNT(vrl.ride_id), 0) AS total_rides,
             COALESCE(v_top.visitor_name, 'No Riders') AS top_rider,
-            COALESCE(v_top.ride_count, 0) AS top_rides
+            COALESCE(v_top.ride_count, 0) AS top_rides,
+            DATE(MAX(vrl.ride_date)) AS late_log
         FROM 
             rides r
         LEFT JOIN 
