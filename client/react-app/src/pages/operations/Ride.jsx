@@ -1,8 +1,10 @@
 import AddRide, {UpdateRide} from "../modals/AddRide";
 import './Report.css'
 import React, { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext";
 
-function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
+function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide, user}){
     if(!rideInformation || !Array.isArray(rideInformation)){
         return <div>No ride data is available.</div>
     }
@@ -10,6 +12,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <div className="table-container">
             <table className="table">
@@ -22,7 +25,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
                         <th>Ride Cost</th>
                         <th>Operational Status</th>
                         <th>Date Added</th>
-                        <th></th>
+                        {isAuthorized && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -33,12 +36,14 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
                             <td>{ride.area_name}</td>
                             <td>{formatDate(ride.Ride_maint)}</td>
                             <td>${Number(ride.Ride_cost).toLocaleString()}</td>
-                            <td>{ride.Is_operate ? 'Operational' : 'Under Maintenance'}</td>
+                            <td>{ride.Is_operate === 1 ? 'Operational' : 'Under Maintenance'}</td>
                             <td>{formatDate(ride.Ride_created)}</td>
-                            <td>
-                                <button onClick={() => onEditRide(ride)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteRide(ride.Ride_ID)} className="action-btn delete-button">Delete</button>
-                            </td>
+                            {isAuthorized && (
+                                <td>
+                                    <button onClick={() => onEditRide(ride)} className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onDeleteRide(ride.Ride_ID)} className="action-btn delete-button">Delete</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -48,6 +53,7 @@ function RideTable({rideInformation, setIsModalOpen, onEditRide, onDeleteRide}){
 }
 
 function Ride(){
+    const {user} = useAuth();
     const [rideInformation, setRideInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -66,11 +72,14 @@ function Ride(){
     const fetchRides = async () => {
         try {
             const response = await fetch('/api/rides/info');
-            if(!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            if(!response.ok) {
+                throw new Error(`HTTP Error! Status: ${response.status}`);
+            }
             const data = await response.json();
             setRideInformation(data);
         } catch (error) {
             setError(error.message);
+            toast.error(`Failed to load rides: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -82,9 +91,6 @@ function Ride(){
 
     useEffect(() => {
         let filtered = [...rideInformation];
-        const toDateOnly = (date) => {
-            return new Date(date).toISOString().split('T')[0];
-        };
         if(rideNameFilter){
             filtered = filtered.filter(ride => ride.Ride_name.toLowerCase().includes(rideNameFilter.toLowerCase()));
         }
@@ -95,7 +101,7 @@ function Ride(){
             filtered = filtered.filter(ride => ride.area_name.toLowerCase().includes(rideLocationFilter.toLowerCase()));
         }
         if(rideStatusFilter){
-            filtered = filtered.filter(ride => ride.Is_operate.toLowerCase().includes(rideStatusFilter.toLowerCase()));
+            filtered = filtered.filter(ride => ride.Is_operate.toString().toLowerCase().includes(rideStatusFilter.toLowerCase()));
         }
         if(costRangeFilter){
             const [min, max] = costRangeFilter.split('-').map(Number);
@@ -123,18 +129,51 @@ function Ride(){
 
     const handleAddRide = (newRide) => {
         setRideInformation([...rideInformation, newRide]);
+        toast.success('Ride added successfully!');
     };
+    
     const handleEditRide = (ride) => {
         setSelectedRide(ride);
         setIsEditOpen(true);
     };
+    
     const handleUpdateRide = (updatedRide) => {
         setRideInformation(prev => prev.map(ride => ride.Ride_ID === updatedRide.Ride_ID ? updatedRide : ride));
+        toast.success('Ride updated successfully!');
     };
+    
     const handleDeleteRide = async (rideID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this ride? This action cannot be undone.');
-        if(!confirmDelete) return;
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this ride?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteRide(rideID);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteRide = async (rideID) => {
         try {
+            const toastId = toast.loading('Deleting ride...');
             const response = await fetch('/api/rides/delete-selected', {
                 method: 'DELETE',
                 headers: {
@@ -143,17 +182,19 @@ function Ride(){
                 body: JSON.stringify({Ride_ID: rideID}),
             });
             const data = await response.json();
+            
             if(response.ok){
-                alert('Ride deleted Successfully');
+                toast.success('Ride deleted successfully!', { id: toastId });
                 setRideInformation(prev => prev.filter(ride => ride.Ride_ID !== rideID));
                 fetchRides();
             } else {
-                alert(data.message || 'Failed to delete ride.');
+                toast.error(data.message || 'Failed to delete ride.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const resetFilters = () => {
         setRideNameFilter('');
         setRideTypeFilter('');
@@ -161,14 +202,16 @@ function Ride(){
         setRideStatusFilter('');
         setCostRangeFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
+
     if(loading){
         return <div>Loading...</div>
     }
     if(error){
         return <div>Error: {error}</div>
     }
-
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <>
             <div className="filter-controls">
@@ -231,10 +274,12 @@ function Ride(){
             <div className="db-btn">
                 <h1>Coog World Rides</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                    {isAuthorized && (
+                        <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Ride</button>
+                    )}
                 </div>
             </div>
-            <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} />
+            <RideTable rideInformation={filteredRides} setIsModalOpen={setIsModalOpen} onEditRide={handleEditRide} onDeleteRide={handleDeleteRide} user={user} />
             <AddRide isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddRide={handleAddRide} />
             <UpdateRide isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedRide(null);}} rideToEdit={selectedRide} onUpdateRide={handleUpdateRide} />
         </>

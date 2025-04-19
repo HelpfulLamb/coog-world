@@ -27,7 +27,7 @@ function PopularShows(){
             const response = await fetch('/api/shows/top-shows', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(filters),
             });
@@ -62,6 +62,13 @@ function PopularShows(){
             title: { display: true, text: 'Total Viewers by Show' }
         }
     };
+
+    //For date formatting
+    const formatDate = (dateString) => {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
     return(
         <>
             <div>
@@ -86,6 +93,7 @@ function PopularShows(){
                                 <th>Total Viewers</th>
                                 <th>Capacity</th>
                                 <th>Capacity Percent</th>
+                                <th>Latest Log</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +105,7 @@ function PopularShows(){
                                         <td>{row.total_viewers}</td>
                                         <td>{row.theatre_capacity}</td>
                                         <td>{row.capacity_percent}</td>
+                                        <td>{formatDate(row.late_log)}</td>
                                     </tr>
                                 ))
                             ) : (

@@ -1,116 +1,129 @@
 const db = require('../config/db.js');
 const userModel = require('../models/visitorModel.js');
 
-exports.registerUser = async (req, res) => {
-    const {first_name, last_name, email, password, phone, address} = req.body;
-    console.log('Request Body: ', req.body)
+exports.registerUser = async (req, res, body) => {
+    const {first_name, last_name, email, password, phone, address} = body;
     if(!first_name || !last_name || !email || !password || !phone || !address){
-        return res.status(400).json({message: 'All fields are required!'});
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({message: 'All fields are required!'}));
     }
     try {
-        const existingUser = await userModel.findUserByEmail(email);
+        const existingUser = await userModel.findUserByEmail(email, phone);
         if(existingUser){
-            return res.status(400).json({message: 'An account with that email already exists. Log in or try again.'});
+            res.writeHead(400, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: 'An account with that email or phone already exists. Log in or try again.'}));
         }
         await userModel.createUsers({first_name, last_name, email, password, phone, address});
-        res.status(201).json({message: 'User registered successfully.'});
+        res.writeHead(201, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'User registered successfully.'}));
     } catch (error) {
         console.error('Error registering user: ', error);
-        res.status(500).json({message: 'An error occurred. Please try again.'});
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'An error occurred. Please try again.'}));
     }
 };
 
-exports.loginUser = async (req, res) => {
-    const {email, password} = req.body;
+exports.loginUser = async (req, res, body) => {
+    const {email, password} = body;
     try {
         const user = await userModel.findUserByEmail(email);
         if(!user){
-            return res.status(404).json({message: 'User not found.'});
+            res.writeHead(404, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: 'User not found.'}));
         }
         if(user.Password !== password){
-            return res.status(401).json({message: 'Incorrect Password.'});
+            res.writeHead(401, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: 'Incorrect Password.'}));
         }
-        res.status(200).json({
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({
             id: user.Visitor_ID,
             first_name: user.First_name,
             last_name: user.Last_name,
             email: user.Email,
             phone: user.Phone,
             address: user.Address
-        });
+        }));
         
     } catch (error) {
         console.error('Error during user login: ', error);
-        res.status(500).json({message: 'An error occurred. Please try again.'});
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'An error occurred. Please try again.'}));
     }
 };
 
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await userModel.getAllUsers();
-        res.status(200).json(users);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(users));
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
     }
 };
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, id) => {
     try {
-        const user = await userModel.getUserById(req.params.id);
+        const user = await userModel.getUserById(id);
         if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
+            res.writeHead(404, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: 'User not found.'}));
         }
-        res.status(200).json(user);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(user));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: err.message}));
     }
 };
 
 exports.deleteAllUsers = async (req, res) => {
     try {
         await userModel.deleteAllUsers();
-        res.status(200).json({ message: 'All users deleted successfully.' });
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'All users deleted successfully.'}));
     } catch (error) {
-        res.status(500).json({message: error.message});
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: err.message}));
     }
 };
 
-exports.deleteUserById = async (req, res) => {
+exports.deleteUserById = async (req, res, id) => {
     try {
-        await userModel.deleteUserById(req.params.id);
-        res.status(200).json({ message: 'User deleted successfully.' });
+        await userModel.deleteUserById(id);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'User deleted successfully.'}));
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: err.message}));
     }
 };
-exports.updateVisitor = async (req, res) => {
-    const visitorId = req.params.id;
-    const { first_name, last_name, email, phone, address } = req.body;
-
+exports.updateVisitor = async (req, res, id, body) => {
+    const { first_name, last_name, email, phone, address } = body;
     try {
         await db.query(
             `UPDATE visitors 
              SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ? 
              WHERE Visitor_ID = ?`,
-            [first_name, last_name, email, phone, address, visitorId]
+            [first_name, last_name, email, phone, address, id]
         );
-
         const [updated] = await db.query(
             'SELECT * FROM visitors WHERE Visitor_ID = ?',
-            [visitorId]
+            [id]
         );
-
-        res.status(200).json({
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({
             id: updated[0].Visitor_ID,
             first_name: updated[0].First_name,
             last_name: updated[0].Last_name,
             email: updated[0].Email,
             phone: updated[0].Phone,
             address: updated[0].Address
-        });
-        
+        }));
     } catch (error) {
         console.error('Error updating visitor:', error);
-        res.status(500).json({ message: 'Update failed' });
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'Update failed'}));
     }
 };

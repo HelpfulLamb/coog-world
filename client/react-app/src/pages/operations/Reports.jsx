@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Report.css';
 import CustomerTrendsChart from './CustomerTrendsChart';
 import TicketSalesTrends from './TicketSalesTrends.jsx';
+import TransactionTable from './TransactionTable.jsx';
 
 const RevenueReport = () => {
   const [revenueData, setRevenueData] = useState(null);
@@ -52,9 +53,7 @@ const RevenueReport = () => {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <div className="table-container">
-      <h2 style={{ padding: '1rem', color: 'black' }}>💵 Revenue Report</h2>
-
+    <div>
       <button
         onClick={toggleFilter}
         style={{
@@ -113,51 +112,31 @@ const RevenueReport = () => {
           )}
         </div>
       )}
-
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Source</th>
-            <th>Total Revenue ($)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>🎟️ Tickets</td><td>${calcTotal('Ticket').toFixed(2)}</td></tr>
-          <tr><td>🛍️ Merchandise</td><td>${calcTotal('Merchandise').toFixed(2)}</td></tr>
-          <tr><td>🍔 Food</td><td>${calcTotal('Food').toFixed(2)}</td></tr>
-          <tr><td>🛎️ Services</td><td>${calcTotal('Service').toFixed(2)}</td></tr>
-          <tr style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
-            <td>Total</td>
-            <td>${total.toFixed(2)}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3>📋 All Transactions</h3>
+      <div className="table-container">
         <table className="table">
           <thead>
             <tr>
-              <th>Product Type</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Total</th>
-              <th>Date</th>
+              <th>Source</th>
+              <th>Total Revenue ($)</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((entry, idx) => (
-              <tr key={idx}>
-                <td>{entry.product_type}</td>
-                <td>{entry.quantity_sold}</td>
-                <td>${Number(entry.purchase_price || 0).toFixed(2)}</td>
-                <td>${Number(entry.total_amount || 0).toFixed(2)}</td>
-                <td>{new Date(entry.purchase_created).toISOString().slice(0, 10)}</td>
-              </tr>
-            ))}
+            <tr><td>🎟️ Tickets</td><td>${calcTotal('Ticket').toFixed(2)}</td></tr>
+            <tr><td>🛍️ Merchandise</td><td>${calcTotal('Merchandise').toFixed(2)}</td></tr>
+            <tr><td>🍔 Food</td><td>${calcTotal('Food').toFixed(2)}</td></tr>
+            <tr><td>🛎️ Services</td><td>${calcTotal('Service').toFixed(2)}</td></tr>
+            <tr style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
+              <td>Total</td>
+              <td>${total.toFixed(2)}</td>
+            </tr>
           </tbody>
         </table>
       </div>
+      <h3>📋 All Transactions</h3>
+      <div className="table-container">
+        <TransactionTable transactions={filteredData} />
+      </div>
+
     </div>
   );
 };
@@ -226,6 +205,7 @@ const TicketSalesReportInline = () => {
           </tbody>
         </table>
       </div>
+      <TransactionTable transactions={transactionData} />
     </div>
   );
 };
@@ -296,7 +276,9 @@ const CustomerStatsReport = () => {
             ))}
           </tbody>
         </table>
+        <TransactionTable transactions={transactionData} />
       </div>
+      <TransactionTable transactions={transactionData} />
     </div>
   );
 };
@@ -311,7 +293,7 @@ const Reports = () => {
         <RevenueReport />
         <TicketSalesReportInline />
         <TicketSalesTrends />
-        <CustomerStatsReport /> 
+        <CustomerStatsReport />
         <CustomerTrendsChart />
       </section>
     </div>

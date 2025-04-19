@@ -28,6 +28,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
 
     useEffect(() => {
         if(showToEdit){
+            const formattedDate = showToEdit.Show_date ? new Date(showToEdit.Show_date).toISOString().split('T')[0] : '';
             setFormData({
                 Stage_ID: showToEdit.Stage_ID || '',
                 Show_ID: showToEdit.Show_ID || '',
@@ -35,7 +36,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                 Show_cost: showToEdit.Show_cost || '',
                 Show_start: showToEdit.Show_start || '',
                 Show_end: showToEdit.Show_end || '',
-                Show_date: showToEdit.Show_date || '',
+                Show_date: formattedDate,
                 Perf_num: showToEdit.Perf_num || '',
             });
         }
@@ -82,7 +83,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                 <form onSubmit={handleSubmit}>
                     <div className="modal-form-group">
                         {['Show_name', 'Show_cost', 'Show_start', 'Show_end', 'Show_date', 'Perf_num'].map((field) => (
-                            <div className="modal-input-group">
+                            <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>
                                     {field === 'Perf_num' ? 'Performers' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
@@ -103,7 +104,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                             <select name="Stage_ID" id="Stage_ID" required value={formData.Stage_ID} onChange={handleInputChange}>
                                 <option value="">-- Select a Stage --</option>
                                 {allStages.map(stage => (
-                                    <option key={stage.Stage_ID} value={stage.Stage_name}>{stage.Stage_name}</option>
+                                    <option key={stage.Stage_ID} value={stage.Stage_ID}>{stage.Stage_name}</option>
                                 ))}
                             </select>
                         </div>

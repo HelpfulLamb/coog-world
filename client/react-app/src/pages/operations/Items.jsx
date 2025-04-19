@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AddItem, { UpdateItem } from "../modals/AddItem";
+import toast from 'react-hot-toast';
 
 function ItemTable({itemInformation, setIsModalOpen, onEditItem, onDeleteItem}){
     if(!itemInformation || !Array.isArray(itemInformation)){
@@ -28,7 +29,7 @@ function ItemTable({itemInformation, setIsModalOpen, onEditItem, onDeleteItem}){
                             <td>${item.Item_supply_price}</td>
                             <td>
                                 <button onClick={() => onEditItem(item)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteItem(item.Item_ID)} className="action-btn delete-button">Delete</button>
+                                <button onClick={() => onDeleteItem(item)} className="action-btn delete-button">Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -47,20 +48,24 @@ function Item(){
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const [filteredItems, setFilteredItems] = useState('');
+    const [filteredItems, setFilteredItems] = useState([]);
     const [itemNamefilter, setItemNameFilter] = useState('');
     const [itemTypeFilter, setItemTypeFilter] = useState('');
-    const [sortOPtion, setSortOption] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
     const [items, setItems] = useState([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const toastId = toast.loading('Loading items...');
                 const [itemRes] = await Promise.all([fetch('/api/inventory/items')]);
                 const itemsData = await itemRes.json();
                 setItems(itemsData);
+                toast.success('Items loaded successfully!', { id: toastId });
             } catch (error) {
-                setMessage({ error: 'Failed to load items.', success: '' });
+                toast.error('Failed to load items.');
+                setError('Failed to load items.');
             }
         }
         fetchData();
@@ -69,13 +74,16 @@ function Item(){
     useEffect(() => {
         const fetchItems = async () => {
             try {
+                const toastId = toast.loading('Loading items...');
                 const response = await fetch('/api/inventory/items');
                 if(!response.ok){
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const data = await response.json();
                 setItemInformation(data);
+                toast.success('Items loaded successfully!', { id: toastId });
             } catch (error) {
+                toast.error(error.message);
                 setError(error.message);
             } finally {
                 setLoading(false);
@@ -93,7 +101,7 @@ function Item(){
             filtered = filtered.filter(item => item.Item_type.toLowerCase().includes(itemTypeFilter.toLowerCase()));
         }
         filtered.sort((a,b) => {
-            switch (sortOPtion) {
+            switch (sortOption) {
                 case 'nameAsc':
                     return a.Item_name.localeCompare(b.Item_name);
                 case 'nameDesc':
@@ -111,52 +119,84 @@ function Item(){
             }
         });
         setFilteredItems(filtered);
-    }, [itemInformation, itemNamefilter, itemTypeFilter, sortOPtion]);
+    }, [itemInformation, itemNamefilter, itemTypeFilter, sortOption]);
 
     const handleAddItem = (newItem) => {
         setItemInformation([...itemInformation, newItem]);
+        toast.success('Item added successfully!');
     };
+
     const handleEditItem = (item) => {
         setSelectedItem(item);
         setIsEditOpen(true);
     };
+
     const handleUpdateItem = (updatedItem) => {
         setItemInformation(prev => prev.map(item => item.Item_ID === updatedItem.Item_ID ? updatedItem : item));
+        toast.success('Item updated successfully!');
     };
-    const handleDeleteItem = async (itemID) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this item? This action cannot be undone.');
-        if(!confirmDelete) return;
+
+    const handleDeleteItem = (item) => {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete this item?</p>
+                <p>This action cannot be undone.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteItem(item);
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteItem = async (item) => {
         try {
+            const toastId = toast.loading('Deleting item...');
             const response = await fetch('/api/inventory/delete-selected-item', {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({Item_ID: itemID}),
+                body: JSON.stringify({Item_ID: item.Item_ID}),
             });
-            const data = await response.json();
+            
             if(response.ok){
-                alert('Item deleted successfully!');
-                setItemInformation(prev => prev.filter(item => item.Item_ID !== itemID));
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                toast.success('Item deleted successfully!', { id: toastId });
+                setItemInformation(prev => prev.filter(i => i.Item_ID !== item.Item_ID));
             } else {
-                alert(data.message || 'Failed to delete item.');
+                const data = await response.json();
+                toast.error(data.message || 'Failed to delete item.', { id: toastId });
             }
         } catch (error) {
-            alert('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.');
         }
     };
+
     const resetFilters = () => {
         setItemNameFilter('');
         setItemTypeFilter('');
         setSortOption('');
+        toast.success('Filters reset successfully!');
     };
-    if(loading){
-        return <div>Loading...</div>
-    }
-    if(error){
-        return <div>Error: {error}</div>
-    }
+
+    if(loading) return <div>Loading...</div>;
+    if(error) return <div>Error: {error}</div>;
 
     return(
         <>
@@ -190,7 +230,7 @@ function Item(){
                     </div>
                     <div className="filter-group">
                         <label htmlFor="sort">Sort By:</label>
-                        <select id="sort" value={sortOPtion} onChange={(e) => setSortOption(e.target.value)}>
+                        <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
                             <option value="">-- Sort Method --</option>
                             <option value="nameAsc">Item Name (A-Z)</option>
                             <option value="nameDesc">Item Name (Z-A)</option>
@@ -209,9 +249,26 @@ function Item(){
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Item</button>
                 </div>
             </div>
-            <ItemTable itemInformation={filteredItems} setIsModalOpen={setIsModalOpen} onEditItem={handleEditItem} onDeleteItem={handleDeleteItem} />
-            <AddItem isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddItem={handleAddItem} />
-            <UpdateItem isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedItem(null);}} itemToEdit={selectedItem} onUpdateItem={handleUpdateItem} />
+            <ItemTable 
+                itemInformation={filteredItems} 
+                setIsModalOpen={setIsModalOpen} 
+                onEditItem={handleEditItem} 
+                onDeleteItem={handleDeleteItem} 
+            />
+            <AddItem 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onAddItem={handleAddItem} 
+            />
+            <UpdateItem 
+                isOpen={isEditOpen} 
+                onClose={() => {
+                    setIsEditOpen(false); 
+                    setSelectedItem(null);
+                }} 
+                itemToEdit={selectedItem} 
+                onUpdateItem={handleUpdateItem} 
+            />
         </>
     )
 }

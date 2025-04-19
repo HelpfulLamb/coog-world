@@ -28,16 +28,22 @@ exports.getRainoutsPerMonth = async () => {
 exports.getRainoutRows = async () => {
   const query = `
     SELECT
-      Wtr_id,
-      Wtr_created,
-      Wtr_level,
-      Wtr_cond,
-      Is_park_closed
-    FROM weather
-    WHERE Wtr_level = 'Severe'
-      AND Is_park_closed = 1
-      AND Wtr_cond NOT IN ('Sunny', 'Foggy')
-    ORDER BY Wtr_created ASC;
+      w.Wtr_id,
+      w.Wtr_created,
+      w.Wtr_level,
+      w.Wtr_cond,
+      w.Is_park_closed,
+      (
+          SELECT COALESCE(SUM(pp.quantity_sold), 0)
+          FROM product_purchases pp
+          WHERE DATE(pp.visit_date) = DATE(w.Wtr_created)
+            AND pp.product_type = 'Ticket'
+      ) AS Tickets_sold
+  FROM weather w
+  WHERE w.Wtr_level = 'Severe'
+    AND w.Is_park_closed = 1
+    AND w.Wtr_cond NOT IN ('Sunny', 'Foggy')
+  ORDER BY w.Wtr_created ASC;
   `;
 
   try {

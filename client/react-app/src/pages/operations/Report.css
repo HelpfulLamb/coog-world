@@ -455,6 +455,21 @@
         transform: rotate(360deg);
     }
 }
+.password-change-section {
+    margin-top: 20px;
+}
+
+.password-change-section input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+}
+
+.password-message {
+    color: #cc0000;
+    margin-top: 10px;
+}
 .custom-toast {
     padding: 1rem;
     background: white;

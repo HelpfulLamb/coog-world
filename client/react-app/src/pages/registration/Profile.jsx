@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import toast from 'react-hot-toast';
 import './Profile.css';
 
 const formatPhoneNumber = (phone) => {
@@ -28,7 +29,6 @@ function Profile() {
     const [showShows, setShowShows] = useState(false);
 
     const {cartItems} = useCart();
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,7 +43,16 @@ function Profile() {
     
     const fetchData = async (userId) => {
         try {
-            const ticketRes = await fetch(`/api/ticket-type/purchases/${userId}`);
+            const toastId = toast.loading('Loading your profile data...');
+            
+            const [ticketRes, shopRes, rideRes, showRes] = await Promise.all([
+                fetch(`/api/ticket-type/purchases/${userId}`),
+                fetch(`/api/shop-purchases/${userId}`),
+                fetch(`/api/rides/history/${userId}`),
+                fetch(`/api/shows/history/${userId}`)
+            ]);
+
+            // Process tickets
             const ticketData = await ticketRes.json();
             const today = new Date().setHours(0, 0, 0, 0);
             const upcoming = [], past = [];
@@ -53,52 +62,105 @@ function Profile() {
             });
             setUpcomingTickets(upcoming);
             setPastTickets(past);
-            const shopRes = await fetch(`/api/shop-purchases/${userId}`);
+
+            // Process purchases
             const shopData = await shopRes.json();
             setPurchases(shopData.purchases);
-            const rideRes = await fetch(`/api/rides/history/${userId}`);
+
+            // Process rides
             const rideData = await rideRes.json();
             setRides(rideData.rides);
-            const showRes = await fetch(`/api/shows/history/${userId}`);
+
+            // Process shows
             const showData = await showRes.json();
             setShows(showData.shows);
+
+            toast.success('Profile data loaded successfully!', { id: toastId });
         } catch (err) {
+            toast.error('Error loading profile data');
             console.error('Error fetching user-related data:', err);
         }
     };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
     const handleEdit = async () => {
-        const userId = user.id || user.Visitor_ID;
-        const updatedData = { ...user, ...formData, email: formData.email || user.email };
-        const response = await fetch(`/api/users/${userId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData),
-        });
-        const data = await response.json();
-        if (response.ok) {
-            setUser(data);
-            localStorage.setItem('user', JSON.stringify(data));
-            alert('Profile updated successfully!');
-            setIsEditing(false);
-        } else {
-            alert(data.message || 'Update failed.');
+        try {
+            const toastId = toast.loading('Updating profile...');
+            const userId = user.id || user.Visitor_ID;
+            const updatedData = { ...user, ...formData, email: formData.email || user.email };
+            
+            const response = await fetch(`/api/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData),
+            });
+            
+            const data = await response.json();
+            if (response.ok) {
+                setUser(data);
+                localStorage.setItem('user', JSON.stringify(data));
+                toast.success('Profile updated successfully!', { id: toastId });
+                setIsEditing(false);
+            } else {
+                toast.error(data.message || 'Update failed', { id: toastId });
+            }
+        } catch (error) {
+            toast.error('An error occurred while updating your profile');
         }
     };
+
     const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+        toast.custom((t) => (
+            <div className="custom-toast">
+                <p>Are you sure you want to delete your account?</p>
+                <p>This action cannot be undone and all your data will be lost.</p>
+                <div className="toast-buttons">
+                    <button 
+                        onClick={() => {
+                            deleteAccount();
+                            toast.dismiss(t.id);
+                        }}
+                        className="toast-confirm"
+                    >
+                        Confirm
+                    </button>
+                    <button 
+                        onClick={() => toast.dismiss(t.id)}
+                        className="toast-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+        });
+    };
+
+    const deleteAccount = async () => {
+        try {
+            const toastId = toast.loading('Deleting your account...');
             const userId = user.id || user.Visitor_ID;
-            const response = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
+            const response = await fetch(`/api/users/${userId}`, { 
+                method: 'DELETE' 
+            });
+            
             if (response.ok) {
+                toast.success('Account deleted successfully', { id: toastId });
                 localStorage.removeItem('user');
                 navigate('/registration');
             } else {
-                alert('Failed to delete account.');
+                toast.error('Failed to delete account', { id: toastId });
             }
+        } catch (error) {
+            toast.error('An error occurred while deleting your account');
         }
     };
+
     const groupByDate = (tickets) => {
         return tickets.reduce((acc, ticket) => {
             const date = new Date(ticket.date).toLocaleDateString();
@@ -109,6 +171,7 @@ function Profile() {
     };
     
     if (!user) return <div className="loading">Loading user data...</div>;
+    
     return (
         <div className='profile-page'>
             <div className="profile-page-container">
@@ -201,37 +264,36 @@ function Profile() {
                                     {upcomingTickets.length > 0 ? (
                                         <div className="ticket-list">
                                             {Object.entries(groupByDate(upcomingTickets))
-  .sort(([a], [b]) => new Date(a) - new Date(b)) // sort dates ascending
-  .map(([date, ticketsOnDate], index) => {
-    const formattedDate = new Date(date).toLocaleDateString(undefined, {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    const dayTotal = ticketsOnDate.reduce((sum, t) => sum + parseFloat(t.total), 0);
-    
-    return (
-      <div key={`group-${index}`} className="ticket-date-group">
-        <h5 style={{ marginBottom: '0.5rem' }}>{formattedDate}</h5>
-        {ticketsOnDate.map((ticket, subIndex) => (
-          <div key={`ticket-${subIndex}`} className="ticket-item">
-            <div className="ticket-type purchase-header">
-              <span>{ticket.type}</span>
-              <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
-            </div>
-            <div className="ticket-meta">
-              <span>Qty: {ticket.quantity}</span>
-            </div>
-          </div>
-        ))}
-        <div style={{ textAlign: 'right', fontWeight: 'bold', marginTop: '0.25rem' }}>
-          Total: ${dayTotal.toFixed(2)}
-        </div>
-      </div>
-    );
-})}
-
+                                              .sort(([a], [b]) => new Date(a) - new Date(b))
+                                              .map(([date, ticketsOnDate], index) => {
+                                                const formattedDate = new Date(date).toLocaleDateString(undefined, {
+                                                  weekday: 'long',
+                                                  year: 'numeric',
+                                                  month: 'long',
+                                                  day: 'numeric'
+                                                });
+                                                const dayTotal = ticketsOnDate.reduce((sum, t) => sum + parseFloat(t.total), 0);
+                                                
+                                                return (
+                                                  <div key={`group-${index}`} className="ticket-date-group">
+                                                    <h5 style={{ marginBottom: '0.5rem' }}>{formattedDate}</h5>
+                                                    {ticketsOnDate.map((ticket, subIndex) => (
+                                                      <div key={`ticket-${subIndex}`} className="ticket-item">
+                                                        <div className="ticket-type purchase-header">
+                                                          <span>{ticket.type}</span>
+                                                          <span className='purchase-price'>${parseFloat(ticket.total).toFixed(2)}</span>
+                                                        </div>
+                                                        <div className="ticket-meta">
+                                                          <span>Qty: {ticket.quantity}</span>
+                                                        </div>
+                                                      </div>
+                                                    ))}
+                                                    <div style={{ textAlign: 'right', fontWeight: 'bold', marginTop: '0.25rem' }}>
+                                                      Total: ${dayTotal.toFixed(2)}
+                                                    </div>
+                                                  </div>
+                                                );
+                                              })}
                                         </div>
                                     ) : (
                                         <p className="no-items">No upcoming visits scheduled</p>

@@ -127,6 +127,7 @@ function RainoutReport() {
                             <th>Condition</th>
                             <th>Level</th>
                             <th>Park Closed</th>
+                            <th>Tickets Sold</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,6 +138,7 @@ function RainoutReport() {
                                     <td>{entry.Wtr_cond}</td>
                                     <td>{entry.Wtr_level}</td>
                                     <td>{entry.Is_park_closed ? "Yes" : "No"}</td>
+                                    <td>{entry.Tickets_sold}</td>
                                 </tr>
                             ))
                         ) : (

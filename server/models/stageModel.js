@@ -107,3 +107,7 @@ exports.getAllStagesWithEmployeeInfo = async () => {
         throw new Error('Error fetching stages with employee information: ' + err.message); 
     }
 };
+
+exports.deleteStage = async (stageid) => {
+    await db.query('DELETE FROM stages WHERE Stage_ID = ?', [stageid]);
+};
