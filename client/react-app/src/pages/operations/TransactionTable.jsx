@@ -17,9 +17,10 @@ const TransactionTable = ({ transactions }) => {
         </thead>
         <tbody>
           {transactions.map((entry, idx) => {
-            const fullName = entry.First_name && entry.Last_name
-              ? `${entry.First_name} ${entry.Last_name}`
-              : 'N/A';
+            const fullName =
+              entry.First_name && entry.Last_name
+                ? `${entry.First_name} ${entry.Last_name}`
+                : 'N/A';
 
             return (
               <tr key={idx}>
@@ -27,7 +28,7 @@ const TransactionTable = ({ transactions }) => {
                 <td>{entry.product_type || '—'}</td>
                 <td>{entry.quantity_sold}</td>
                 <td>${Number(entry.purchase_price || 0).toFixed(2)}</td>
-                <td><strong>${Number(entry.total_amount || 0).toFixed(2)}</strong></td>
+                <td>${Number(entry.total_amount || 0).toFixed(2)}</td>
                 <td>{new Date(entry.purchase_created).toISOString().slice(0, 10)}</td>
               </tr>
             );

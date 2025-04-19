@@ -41,6 +41,10 @@ exports.getRevenueDetails = async (req, res) => {
       SELECT 
         pp.product_type,
         pp.product_id,
+        CASE 
+          WHEN pp.product_type = 'Ticket' THEN tt.ticket_type
+          ELSE NULL
+        END AS ticket_type,
         pp.quantity_sold,
         pp.purchase_price,
         pp.total_amount,
@@ -50,8 +54,10 @@ exports.getRevenueDetails = async (req, res) => {
       FROM product_purchases pp
       JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
       JOIN visitors v ON t.Visitor_ID = v.Visitor_ID
+      LEFT JOIN ticket_type tt ON pp.product_id = tt.ticket_id
       ORDER BY pp.purchase_created DESC
     `);
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
   } catch (error) {
@@ -60,6 +66,7 @@ exports.getRevenueDetails = async (req, res) => {
     res.end(JSON.stringify({ message: "Failed to retrieve revenue details." }));
   }
 };
+
 
 exports.getRevenueSummary = async (req, res) => {
   try {
