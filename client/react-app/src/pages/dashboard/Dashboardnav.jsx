@@ -131,8 +131,8 @@ const DashboardNav = () => {
                             {isReportsDropdownOpen && (
                                 <ul className="dropdown-menu">
                                     <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
-                                    <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Trends</Link></li>
-                                    <li><Link to={'/employee-dashboard/customer-trends-report'}>Customer Trends Report</Link></li>
+                                    <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Report</Link></li>
+                                    <li><Link to={'/employee-dashboard/customer-trends-report'}>Park Attendance Summary</Link></li>
                                 </ul>
                             )}
                         </li>
