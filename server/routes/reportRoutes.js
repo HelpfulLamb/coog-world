@@ -31,6 +31,9 @@ module.exports = async function reportRoutes(req, res){
             } else if(pathname.endsWith('/ticket-sales-trends')){
                 return reportController.getTicketSalesTrends(req, res);
             }
+            else if (pathname.endsWith('/ticket-purchases')) {
+                return reportController.getTicketPurchaseDetails(req, res);
+            }            
         }
         res.writeHead(404, {'Content-Type': 'application/json'});
         res.end('Report Route Not Found');

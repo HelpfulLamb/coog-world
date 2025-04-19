@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import TransactionTable from './TransactionTable.jsx';
+import TicketTransactionTable from './TicketTransactionTable.jsx';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // ✅ Correct import for PDF export
+import autoTable from 'jspdf-autotable';
 
 const COLORS = ['#c8102e', '#0088FE', '#00C49F', '#FFBB28'];
 
@@ -33,15 +33,18 @@ const TicketSalesTrends = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await axios.get('/api/reports/revenue-details');
-        console.log('📋 Transactions (Trends):', res.data);
+        const res = await axios.get('/api/reports/ticket-purchases'); 
         setTransactionData(res.data || []);
       } catch (err) {
-        console.error('Failed to load transactions for trends report');
+        console.error('Failed to load ticket purchase transactions');
       }
-    };
+    };    
     fetchTransactions();
-  }, []);
+  }, []);  
+
+  const filteredTransactions = transactionData.filter(
+    (entry) => entry.product_type === 'Ticket'
+  );
 
   const temp = {};
   trends[view]?.forEach(row => {
@@ -68,20 +71,25 @@ const TicketSalesTrends = () => {
   );
 
   const handleExportPDF = () => {
+    if (filteredTransformed.length === 0) {
+      alert("No data to export.");
+      return;
+    }
+  
     const doc = new jsPDF();
     doc.text(`Ticket Sales Report - ${view.toUpperCase()}`, 14, 16);
     autoTable(doc, {
-      head: [Object.keys(filteredTransformed[0] || {})],
+      head: [Object.keys(filteredTransformed[0])],
       body: filteredTransformed.map(obj => Object.values(obj)),
       startY: 24
     });
     doc.save(`ticket_sales_${view}.pdf`);
-  };
+  };  
 
   return (
     <div style={{ marginTop: '3rem' }}>
       <h2 style={{ padding: '1rem', color: '#c8102e', fontWeight: 'bold' }}>
-        📊 Ticket Sales Trends ({view.toUpperCase()})
+        📊 Ticket Sales Report ({view.toUpperCase()})
       </h2>
 
       <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
@@ -144,7 +152,7 @@ const TicketSalesTrends = () => {
           )}
         </BarChart>
       </ResponsiveContainer>
-      <TransactionTable transactions={transactionData} />
+      <TicketTransactionTable transactions={filteredTransactions} />
     </div>
   );
 };
