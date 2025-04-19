@@ -88,6 +88,29 @@ exports.getRevenueSummary = async () => {
   }
 };
 
+exports.getRevenueDetails = async () => {
+  const query = `
+    SELECT 
+      pp.product_type,
+      pp.quantity_sold,
+      pp.purchase_price,
+      pp.total_amount,
+      pp.purchase_created,
+      v.First_name,
+      v.Last_name
+    FROM product_purchases pp
+    LEFT JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+    LEFT JOIN visitors v ON t.Visitor_ID = v.Visitor_ID
+  `;
+
+  try {
+    const [results] = await db.query(query);
+    return results;
+  } catch (error) {
+    throw new Error('Error fetching revenue details with visitor info: ' + error.message);
+  }
+};
+
 exports.getTopRidePerMonth = async () => {
     const query = `
       SELECT
