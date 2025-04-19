@@ -39,27 +39,24 @@ exports.getRevenueDetails = async (req, res) => {
   try {
     const [results] = await db.query(`
       SELECT 
-  pp.product_type,
-  pp.product_id,
-  CASE 
-    WHEN pp.product_id = 1 THEN 'Day Pass'
-    WHEN pp.product_id = 2 THEN 'VIP'
-    WHEN pp.product_id = 3 THEN 'Season Pass'
-    WHEN pp.product_id = 4 THEN 'Parking'
-    ELSE 'Unknown'
-  END AS ticket_type,
-  pp.quantity_sold,
-  pp.purchase_price,
-  pp.total_amount,
-  pp.purchase_created
-FROM product_purchases pp
-WHERE pp.product_type = 'Ticket';
+        pp.product_type,
+        pp.product_id,
+        pp.quantity_sold,
+        pp.purchase_price,
+        pp.total_amount,
+        pp.purchase_created,
+        v.First_name,
+        v.Last_name
+      FROM product_purchases pp
+      JOIN transactions t ON pp.Transaction_ID = t.Transaction_ID
+      JOIN visitors v ON t.Visitor_ID = v.Visitor_ID
+      ORDER BY pp.purchase_created DESC
     `);
-    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(results));
   } catch (error) {
     console.error("Error fetching revenue details:", error);
-    res.writeHead(500, {'Content-Type': 'application/json'});
+    res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ message: "Failed to retrieve revenue details." }));
   }
 };
