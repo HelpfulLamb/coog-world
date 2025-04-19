@@ -37,7 +37,7 @@ exports.getRevenueReport = async (req, res) => {
 
 exports.getRevenueDetails = async (req, res) => {
   try {
-    const [results] = await db.query(`
+    const [rows] = await db.query(`
       SELECT 
         pp.product_type,
         pp.product_id,
@@ -57,9 +57,8 @@ exports.getRevenueDetails = async (req, res) => {
       LEFT JOIN ticket_type tt ON pp.product_type = 'Ticket' AND pp.product_id = tt.ticket_id
       ORDER BY pp.purchase_created DESC;
     `);
-    const results = await reportModel.getRevenueDetails();
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(results));
+    res.end(JSON.stringify(rows));
   } catch (error) {
     console.error("Error fetching revenue details:", error);
     res.writeHead(500, { 'Content-Type': 'application/json' });
