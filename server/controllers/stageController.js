@@ -4,20 +4,23 @@ const stageModel = require('../models/stageModel.js');
 exports.getStages = async (req, res) => {
     try {
         const stages = await stageModel.getAllStages();
-        res.status(200).json(stages);  // Return stages as response
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(stages));
     } catch (err) {
         console.error("Error fetching stages:", err);
-        res.status(500).json({ error: 'Failed to fetch stages' }); // More specific error message
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({error: 'Failed to fetch stages'}));
     }
 };
 
 // Add a new stage
-exports.addStage = async (req, res) => {
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by } = req.body;
+exports.addStage = async (req, res, body) => {
+    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_created_by } = body;
 
     // Check if the required fields are provided
     if (!Stage_name || !area_ID || !Stage_maint || !Staff_num || !Seat_num || !Stage_created_by) {
-        return res.status(400).json({ error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_created_by' });
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_created_by'}));
     }
 
     try {
@@ -33,26 +36,28 @@ exports.addStage = async (req, res) => {
         });
 
         // Return success response with the new stage ID
-        res.status(201).json({ message: 'Stage added successfully', Stage_ID: newStageID });
+        res.writeHead(201, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: 'Stage added successfully', Stage_ID: newStageID }));
     } catch (err) {
         console.error('Error adding stage:', err);
-        res.status(500).json({ error: 'Failed to add stage' }); // Specific error for adding stage
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ error: 'Failed to add stage' })); // Specific error for adding stage
     }
 };
 
 // Update an existing stage
-exports.updateStage = async (req, res) => {
-    const Stage_ID = req.params.id;  // Get Stage_ID from the URL parameters
-    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = req.body;
+exports.updateStage = async (req, res, id, body) => {
+    const { Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by } = body;
 
     // Check if the required fields are provided
     if (!Stage_name || !area_ID || !Stage_maint || !Staff_num || !Seat_num || !Stage_updated_by) {
-        return res.status(400).json({ error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_updated_by' });
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({ error: 'Missing required fields: Stage_name, area_ID, Stage_maint, Staff_num, Seat_num, Stage_updated_by' }));
     }
 
     try {
         // Perform the update
-        const updated = await stageModel.updateStage(Stage_ID, {
+        const updated = await stageModel.updateStage(id, {
             Stage_name,
             area_ID,
             Stage_maint,
@@ -64,26 +69,31 @@ exports.updateStage = async (req, res) => {
 
         if (updated) {
             // Fetch the updated stage data and return it in the response
-            const updatedStage = await stageModel.getStageById(Stage_ID);
-            res.status(200).json({ message: 'Stage updated successfully', stage: updatedStage });
+            const updatedStage = await stageModel.getStageById(id);
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({ message: 'Stage updated successfully', stage: updatedStage }));
         } else {
-            res.status(404).json({ error: 'Stage not found' }); // If no stage was found to update
+            res.writeHead(404, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({ error: 'Stage not found' })); // If no stage was found to update
         }
     } catch (err) {
         console.error('Error updating stage:', err);
-        res.status(500).json({ error: 'Failed to update stage' }); // Specific error for updating stage
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ error: 'Failed to update stage' })); // Specific error for updating stage
     }
 };
 
-exports.deleteStage = async (req, res) => {
+exports.deleteStage = async (req, res, id) => {
     try {
-        const Stage_ID = req.params.id;
-        if(!Stage_ID){
-            return res.status(400).json({message: 'Invalid stage ID.'});
+        if(!id){
+            res.writeHead(400, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: 'Invalid stage ID.'}));
         }
-        await stageModel.deleteStage(Stage_ID);
-        return res.status(200).json({message: 'Stage deleted successfully.'});
+        await stageModel.deleteStage(id);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({message: 'Stage deleted successfully.'}));
     } catch (error) {
-        return res.status(500).json({message: error.message});
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({message: error.message}));
     }
 };
