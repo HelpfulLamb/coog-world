@@ -16,7 +16,7 @@ Welcome to Coog World! This project is a full-stack Theme Park Management System
             - This file also gives step-by-step instructions on how to install the repository in order to host locally.
         server (Folder)
             - This folder contains the backend of the web application. 
-            - To use the backend, you are required to have downloaded and added the .env file to the server folder.
+            - To use the backend, you are required to create a ".env" file in the server folder and add the text from "env.txt" to the ".env" file.
             - More installation instructions are located further below.
         react-app (folder)
             - This folder is located in the client folder and serves as the frontend of the web application. 
@@ -27,9 +27,9 @@ Welcome to Coog World! This project is a full-stack Theme Park Management System
         Dump20250420.sql
             - The SQL dump of the populated database, made through MySQL.
             - Use MySQL Workbench to import the SQL dump file.
-        .env
+        env.txt
             - Contains the environment variables necessary to run the backend and connect to the database server.
-            - Download this file and move it to the server folder after cloning the GitHub repository.
+            - Copy the text in this file and paste it into the .env file you will add to the server folder.
         Team 5 Project Document.docx
             - Contains the user logins for the various user roles.
             - Contains the details of the database application, which includes:
@@ -44,9 +44,10 @@ Welcome to Coog World! This project is a full-stack Theme Park Management System
     a. Make sure you have downloaded Node.js, git, and Visual Studio Code.
     b. Make a folder and open the git bash terminal in VSCode. Make sure you are in the folder you wish to clone the repository to.
     c. Clone the GitHub repository using 'git clone' and the link from GitHub in the git bash terminal in VSCode.
-    d. Download the .env file from the OneDrive and move the .env file to the server folder of the repository.
-    e. In the server folder, locate the config folder and open the db.js file.
-    f. Remove '//' from the five lines in the db.js file, starting from "//  if (process.env.USE_SSL === 'true')".
+    d. In VSCode, go to the server folder and make a new file called ".env".
+    e. Copy the text in the "env.txt" file on OneDrive and paste into the ".env" file.
+    f. In the server folder, locate the config folder and open the db.js file.
+    g. Remove '//' from the five lines in the db.js file, starting from "//  if (process.env.USE_SSL === 'true')".
 Once you finished the steps above, move on to the Backend Setup.
 
 ### 1. Backend Setup
@@ -62,7 +63,7 @@ Once you finished the steps above, move on to the Backend Setup.
 
 DO NOT CLOSE THE TERMINAL ONCE YOU ARE DONE SETTING UP THE BACKEND. YOU NEED TO KEEP IT OPEN FOR THE FRONTEND.
 
-DO NOT DO THE PROCEED TO FRONTEND SETUP UNLESS YOU HAVE FINISHED SETTING UP THE BACKEND
+DO NOT PROCEED TO FRONTEND SETUP UNLESS YOU HAVE FINISHED SETTING UP THE BACKEND
 ### 2. Frontend Setup (Only do after Backend Setup is finished)
     a. Open a new Command Prompt terminal in VSCode.
     b. Move to the repository folder 'coog-world' by typing 'cd coog-world' into the Command Prompt terminal.
