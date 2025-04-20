@@ -44,7 +44,7 @@ const DashboardNav = () => {
         <nav className="dashboard-nav">
             <ul>
                 <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
-                {(role === 'admin' || role === 'manager') && (
+                {(role === 'admin') && (
                     <>
                         {(role === 'admin') && (
                             <li><Link to={'/employee-dashboard/visitors'}>Park Visitors</Link></li>
@@ -87,9 +87,7 @@ const DashboardNav = () => {
                             )}
                         </li>
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
-                        {(role === 'admin') && (
-                            <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
-                        )}
+                        <li><Link to={'/employee-dashboard/ticket-report'}>Tickets</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleInvDropdown}>
                                 Inventory
@@ -102,10 +100,6 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
-                    </>
-                )}
-                {role === 'admin' && (
-                    <>
                         <li className="dropdown">
                             <button onClick={toggleMaintDropdown}>
                                 Maintenance
@@ -155,13 +149,43 @@ const DashboardNav = () => {
                         </li>
                     </>
                 )}
-
+                {role === 'manager' && (
+                    <>
+                        <li className="dropdown">
+                            <button onClick={toggleEmpDropdown}>
+                                Employees
+                                <span className={`arrow-icon ${isEmpDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isEmpDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/employees'}>Employee List</Link></li>
+                                    <li><Link to={'/employee-dashboard/attendance'}>Attendance</Link></li>
+                                </ul>
+                            )}
+                        </li>
+                        <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
+                        <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
+                        <li><Link to={'/employee-dashboard/shows'}>Shows List</Link></li>
+                        <li className="dropdown">
+                            <button onClick={toggleInvDropdown}>
+                                Inventory
+                                <span className={`arrow-icon ${isInvDropdownOpen ? 'open' : ''}`}>▼</span>
+                            </button>
+                            {isInvDropdownOpen && (
+                                <ul>
+                                    <li><Link to={'/employee-dashboard/items'}>Items List</Link></li>
+                                    <li><Link to={'/employee-dashboard/inventory-report'}>Inventory Management</Link></li>
+                                </ul>
+                            )}
+                        </li>
+                    </>
+                )}
                 {role === 'maintenance' && (
                     <>
                         <li><Link to={'/employee-dashboard/rides'}>Rides</Link></li>
                         <li><Link to={'/employee-dashboard/kiosks'}>Kiosks</Link></li>
                         <li><Link to={'/employee-dashboard/stages'}>Stages</Link></li>
-                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Report</Link></li>
+                        <li><Link to={'/employee-dashboard/maintenance-report'}>Maintenance Logs</Link></li>
                         <li><Link to={'/employee-dashboard/park-maintenance'}>Park Maintenance</Link></li>
                         <li><Link to={'/employee-dashboard/weather-report'}>Weather Logs</Link></li>
                     </>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import AddEmployee, {UpdateEmployee} from "../modals/AddEmployee.jsx";
+import AddEmployee, { UpdateEmployee } from "../modals/AddEmployee.jsx";
 import toast from 'react-hot-toast';
+import { useAuth } from "../../context/AuthContext";
 
-function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDeleteEmp}){
+function EmployeeTable({ employeeInformation, setIsModalOpen, onEditEmp, onDeleteEmp, user }) {
     if (!employeeInformation || !Array.isArray(employeeInformation)) {
         return <div>No employee data is currently available.</div>;
     }
@@ -10,7 +11,8 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    return(
+    const isAuthorized = user && (user.role === 'Admin');
+    return (
         <div className="table-container">
             <table className="table">
                 <thead>
@@ -23,7 +25,7 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
                         <th>Salary</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th></th>
+                        {isAuthorized && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -37,10 +39,12 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
                             <td>${Number(employee.Emp_salary).toLocaleString()}</td>
                             <td>{formatDate(employee.Start_date)}</td>
                             <td>{employee.End_date ? formatDate(employee.End_date) : 'No End Date'}</td>
-                            <td>
-                                <button onClick={() => onEditEmp(employee)} className="action-btn edit-button">Edit</button>
-                                <button onClick={() => onDeleteEmp(employee.Emp_ID)} className="action-btn delete-button">Delete</button>
-                            </td>
+                            {isAuthorized && (
+                                <td>
+                                    <button onClick={() => onEditEmp(employee)} className="action-btn edit-button">Edit</button>
+                                    <button onClick={() => onDeleteEmp(employee.Emp_ID)} className="action-btn delete-button">Delete</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
@@ -49,7 +53,8 @@ function EmployeeTable({employeeInformation, setIsModalOpen, onEditEmp, onDelete
     );
 }
 
-function Employee(){
+function Employee() {
+    const { user } = useAuth();
     const [employeeInformation, setEmployeeInformation] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -69,7 +74,7 @@ function Employee(){
         const fetchEmployees = async () => {
             try {
                 const response = await fetch('/api/employees/info');
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const data = await response.json();
@@ -89,26 +94,26 @@ function Employee(){
         const toDateOnly = (date) => {
             return new Date(date).toISOString().split('T')[0];
         };
-        if(empFirstNameFilter){
+        if (empFirstNameFilter) {
             filtered = filtered.filter(emp => emp.First_name.toLowerCase().includes(empFirstNameFilter.toLowerCase()));
         }
-        if(empLastNameFilter){
+        if (empLastNameFilter) {
             filtered = filtered.filter(emp => emp.Last_name.toLowerCase().includes(empLastNameFilter.toLowerCase()));
         }
-        if(empLocationFilter){
+        if (empLocationFilter) {
             filtered = filtered.filter(emp => emp.area_name.toLowerCase().includes(empLocationFilter.toLowerCase()));
         }
-        if(empOccFilter){
+        if (empOccFilter) {
             filtered = filtered.filter(emp => emp.Occ_name.toLowerCase().includes(empOccFilter.toLowerCase()));
         }
-        if(salaryRangeFilter){
+        if (salaryRangeFilter) {
             const [min, max] = salaryRangeFilter.split('-').map(Number);
             filtered = filtered.filter(emp => {
                 const salary = Number(emp.Emp_salary);
                 return salary >= min && (isNaN(max) || salary <= max);
             });
         }
-        filtered.sort((a,b) => {
+        filtered.sort((a, b) => {
             switch (sortOption) {
                 case 'nameAsc':
                     return a.Last_name.localeCompare(b.Last_name);
@@ -117,7 +122,7 @@ function Employee(){
                 case 'salaryAsc':
                     return a.Emp_salary - b.Emp_salary;
                 case 'salaryDesc':
-                    return b.Emp_salary - a.Emp_salary;            
+                    return b.Emp_salary - a.Emp_salary;
                 default:
                     return 0;
             }
@@ -138,7 +143,7 @@ function Employee(){
             toast.error(`Failed to add employee: ${error.message}`);
         }
     };
-    
+
     const handleEditEmp = (employee) => {
         setSelectedEmp(employee);
         setIsEditOpen(true);
@@ -160,14 +165,14 @@ function Employee(){
             toast.error(`Failed to update employee: ${error.message}`);
         }
     };
-    
+
     const handleDelete = async (empID) => {
         toast.custom((t) => (
             <div className="custom-toast">
                 <p>Are you sure you want to delete this employee?</p>
                 <p>This action cannot be undone.</p>
                 <div className="toast-buttons">
-                    <button 
+                    <button
                         onClick={() => {
                             deleteEmployee(empID);
                             toast.dismiss(t.id);
@@ -176,7 +181,7 @@ function Employee(){
                     >
                         Confirm
                     </button>
-                    <button 
+                    <button
                         onClick={() => toast.dismiss(t.id)}
                         className="toast-cancel"
                     >
@@ -185,7 +190,7 @@ function Employee(){
                 </div>
             </div>
         ), {
-            duration: Infinity, 
+            duration: Infinity,
             position: 'top-center',
         });
     };
@@ -193,16 +198,16 @@ function Employee(){
     const deleteEmployee = async (empID) => {
         try {
             const toastId = toast.loading('Deleting employee...');
-            const response = await fetch('/api/employees/delete-selected',{
+            const response = await fetch('/api/employees/delete-selected', {
                 method: 'DELETE',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify({Emp_ID: empID}),
+                body: JSON.stringify({ Emp_ID: empID }),
             });
             const data = await response.json();
-            
-            if(response.ok){
+
+            if (response.ok) {
                 toast.success('Employee deleted successfully!', { id: toastId });
                 setEmployeeInformation(prev => prev.filter(emp => emp.Emp_ID !== empID));
             } else {
@@ -223,13 +228,14 @@ function Employee(){
         toast.success('Filters reset successfully!');
     };
 
-    if(loading){
+    if (loading) {
         return <div>Loading...</div>
     }
-    if(error){
+    if (error) {
         return <div>Error: {error}</div>
     }
-    return(
+    const isAuthorized = user && (user.role === 'Admin');
+    return (
         <>
             <EmployeeNumbers />
             <div className="filter-controls">
@@ -297,18 +303,20 @@ function Employee(){
             <div className="db-btn">
                 <h1>Coog World Employees</h1>
                 <div>
-                    <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                    {isAuthorized && (
+                        <button className="add-button" onClick={() => setIsModalOpen(true)}>Add Employee</button>
+                    )}
                 </div>
             </div>
 
-            <EmployeeTable employeeInformation={filteredEmps} setIsModalOpen={setIsModalOpen} onEditEmp={handleEditEmp} onDeleteEmp={handleDelete} />
+            <EmployeeTable employeeInformation={filteredEmps} setIsModalOpen={setIsModalOpen} onEditEmp={handleEditEmp} onDeleteEmp={handleDelete} user={user} />
             <AddEmployee isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddEmployee={handleAddEmployee} />
-            <UpdateEmployee isOpen={isEditOpen} onClose={() => {setIsEditOpen(false); setSelectedEmp(null);}} empToEdit={selectedEmp} onUpdateEmp={handleUpdateEmp} />
+            <UpdateEmployee isOpen={isEditOpen} onClose={() => { setIsEditOpen(false); setSelectedEmp(null); }} empToEdit={selectedEmp} onUpdateEmp={handleUpdateEmp} />
         </>
     );
 }
 
-export function EmployeeNumbers(){
+export function EmployeeNumbers() {
     const [data, setData] = useState([]);
     useEffect(() => {
         const fetchEmpNum = async () => {
@@ -327,7 +335,7 @@ export function EmployeeNumbers(){
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    return(
+    return (
         <div>
             <h2>Number of Employees Per Area</h2>
             <div className="table-container">

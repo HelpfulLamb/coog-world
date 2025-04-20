@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import './Modal.css';
 
-export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
+export function UpdateEmployee({ isOpen, onClose, empToEdit, onUpdateEmp }) {
     const [formData, setFormData] = useState({
         First_name: '',
         Last_name: '',
@@ -12,9 +12,9 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
         Emp_salary: '',
         End_date: ''
     });
-    const [message, setMessage] = useState({error: '', success: ''});
+    const [message, setMessage] = useState({ error: '', success: '' });
     useEffect(() => {
-        if(empToEdit){
+        if (empToEdit) {
             setFormData({
                 First_name: empToEdit.First_name || '',
                 Last_name: empToEdit.Last_name || '',
@@ -28,19 +28,23 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
         }
     }, [empToEdit]);
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value});
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const updatedFormData = { ...formData, End_date: formData.End_date || null };
+
         try {
-            const response = await fetch(`/api/employees/${empToEdit.Emp_ID}`,{
+            const response = await fetch(`/api/employees/${empToEdit.Emp_ID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(updatedFormData),
             });
+
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Employee updated successfully!', error: ''});
@@ -50,13 +54,13 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
                     setTimeout(() => {onClose();}, 1000);
                 }
             } else {
-                setMessage({error: data.message || 'Update failed.', success: ''});
+                setMessage({ error: data.message || 'Update failed.', success: '' });
             }
         } catch (error) {
-            setMessage({error: 'An error occurred while updating employee.', success: ''});
+            setMessage({ error: 'An error occurred while updating employee.', success: '' });
         }
     };
-    if(!isOpen || !empToEdit) return null;
+    if (!isOpen || !empToEdit) return null;
     const getPlaceholders = (field) => {
         const placeholders = {
             'First_name': 'e.g. John',
@@ -67,26 +71,37 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
         };
         return placeholders[field] || '';
     };
-    return(
+    return (
         <div className="modal-overlay">
             <div className="modal">
                 <h2>Edit Employee #{empToEdit.Emp_ID}</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="modal-form-grid">
-                        {['First_name', 'Last_name', 'Emp_phone', 'Emp_email','Emp_salary', 'End_date'].map((field) => (
+                        {['First_name', 'Last_name', 'Emp_phone', 'Emp_email', 'Emp_salary'].map((field) => (
                             <div className="modal-input-group" key={field}>
                                 <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
-                                <input 
-                                id={field}
-                                type={field === 'End_date' ? 'date' : field === 'Emp_salary' ? 'number' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
-                                name={field}
-                                required
-                                autoComplete="off"
-                                value={formData[field]}
-                                onChange={handleInputChange}
-                                placeholder={getPlaceholders(field)} />
+                                <input
+                                    id={field}
+                                    type={field === 'Emp_salary' ? 'number' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
+                                    name={field}
+                                    required
+                                    autoComplete="off"
+                                    value={formData[field]}
+                                    onChange={handleInputChange}
+                                    placeholder={getPlaceholders(field)} />
                             </div>
                         ))}
+                        <div className="modal-input-group">
+                            <label htmlFor="End_date">End Date</label>
+                            <input
+                                id="End_date"
+                                type="date"
+                                name="End_date"
+                                value={formData.End_date}
+                                onChange={handleInputChange}
+                                placeholder="e.g. 2025-12-31"
+                            />
+                        </div>
                         <div className="modal-input-group">
                             <label htmlFor="Emp_sec">Location</label>
                             <select name="Emp_sec" id="Emp_sec" required value={formData.Emp_sec} onChange={handleInputChange}>
@@ -124,7 +139,7 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
     );
 }
 
-function AddEmployee({isOpen, onClose, onAddEmployee}){
+function AddEmployee({ isOpen, onClose, onAddEmployee }) {
     const [newEmployee, setNewEmployee] = useState({
         First_name: '',
         Last_name: '',
@@ -137,22 +152,22 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
         Start_date: '',
     });
 
-    const [message, setMessage] = useState({error: '', success: ''});
+    const [message, setMessage] = useState({ error: '', success: '' });
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setNewEmployee({...newEmployee, [name]: value});
+        const { name, value } = e.target;
+        setNewEmployee({ ...newEmployee, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if(!newEmployee.First_name || !newEmployee.Last_name || !newEmployee.Emp_phone || !newEmployee.Emp_email || !newEmployee.Emp_password || !newEmployee.Emp_sec || !newEmployee.Emp_pos || !newEmployee.Emp_salary || !newEmployee.Start_date){
-            setMessage({error: 'All fields are required.', success: ''});
+        if (!newEmployee.First_name || !newEmployee.Last_name || !newEmployee.Emp_phone || !newEmployee.Emp_email || !newEmployee.Emp_password || !newEmployee.Emp_sec || !newEmployee.Emp_pos || !newEmployee.Emp_salary || !newEmployee.Start_date) {
+            setMessage({ error: 'All fields are required.', success: '' });
             return;
         }
-        if(isNaN(newEmployee.Emp_salary)){
-            setMessage({error: 'Salary must be a number.', success:''});
+        if (isNaN(newEmployee.Emp_salary)) {
+            setMessage({ error: 'Salary must be a number.', success: '' });
             return;
         }
         try {
@@ -164,8 +179,8 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                 body: JSON.stringify(newEmployee),
             });
             const data = await response.json();
-            if(response.ok){
-                setMessage({success: 'Employee added succesfully!', error: ''});
+            if (response.ok) {
+                setMessage({ success: 'Employee added succesfully!', error: '' });
                 setNewEmployee({
                     First_name: '',
                     Last_name: '',
@@ -180,14 +195,14 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                 onAddEmployee(data.employee);
                 onClose();
             } else {
-                setMessage({error: data.message || 'Failed to add employee.', success: ''});
+                setMessage({ error: data.message || 'Failed to add employee.', success: '' });
             }
         } catch (error) {
-            setMessage({error: 'An error occurred. Please try again.', success: ''});
+            setMessage({ error: 'An error occurred. Please try again.', success: '' });
         }
     };
 
-    if(!isOpen) return null;
+    if (!isOpen) return null;
 
     const getPlaceholders = (field) => {
         const placeholders = {
@@ -202,7 +217,7 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
         return placeholders[field] || '';
     };
 
-    return(
+    return (
         <div className="modal-overlay">
             <div className="modal">
                 <h2>Add New Employee</h2>
@@ -213,16 +228,16 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                                 <label htmlFor={field}>
                                     {field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
                                 </label>
-                                <input 
-                                id={field}
-                                type={field === 'Emp_salary' ? 'number' : field === 'Start_date' ? 'date' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
-                                name={field}
-                                required
-                                autoComplete="off"
-                                value={newEmployee[field]}
-                                onChange={handleInputChange}
-                                placeholder={getPlaceholders(field)}
-                                min={field === 'Start_date' ? new Date().toISOString().split('T')[0] : undefined} />
+                                <input
+                                    id={field}
+                                    type={field === 'Emp_salary' ? 'number' : field === 'Start_date' ? 'date' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
+                                    name={field}
+                                    required
+                                    autoComplete="off"
+                                    value={newEmployee[field]}
+                                    onChange={handleInputChange}
+                                    placeholder={getPlaceholders(field)}
+                                    min={field === 'Start_date' ? new Date().toISOString().split('T')[0] : undefined} />
                             </div>
                         ))}
                         <div className="modal-input-group">

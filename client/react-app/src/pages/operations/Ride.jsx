@@ -12,7 +12,7 @@ function RideTable({ rideInformation, setIsModalOpen, onEditRide, onDeleteRide, 
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
+    const isAuthorized = user && (user.role === 'Admin');
     return (
         <div className="table-container">
             <table className="table">
@@ -234,7 +234,7 @@ function Ride() {
     if (error) {
         return <div>Error: {error}</div>
     }
-    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
+    const isAuthorized = user && (user.role === 'Admin');
     return (
         <>
             <div className="filter-controls">
