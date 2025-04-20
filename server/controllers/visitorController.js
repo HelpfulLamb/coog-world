@@ -63,6 +63,17 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
+exports.getUserInfo = async (req, res) => {
+    try {
+        const info = await userModel.getUserInfo();
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(info));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
+    }
+};
+
 exports.getUserById = async (req, res, id) => {
     try {
         const user = await userModel.getUserById(id);
@@ -89,9 +100,14 @@ exports.deleteAllUsers = async (req, res) => {
     }
 };
 
-exports.deleteUserById = async (req, res, id) => {
+exports.deleteUserById = async (req, res, body) => {
     try {
-        await userModel.deleteUserById(id);
+        const {Visitor_ID} = body;
+        if(!Visitor_ID){
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ message: 'Invalid visitor ID provided.' }));
+        }
+        await userModel.deleteUserById(Visitor_ID);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({message: 'User deleted successfully.'}));
     } catch (error) {
@@ -125,5 +141,22 @@ exports.updateVisitor = async (req, res, id, body) => {
         console.error('Error updating visitor:', error);
         res.writeHead(500, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({message: 'Update failed'}));
+    }
+};
+
+exports.updateVisitorInfo = async (req, res, id, body) => {
+    try {
+        const updatedData = body;
+        const selectedUser = {...updatedData, Visitor_ID: id};
+        const updatedUser = await userModel.updateVisitorInfo(selectedUser);
+        if(!updatedUser){
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ message: 'User not found or not updated.' }));
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'User updated successfully.', user: updatedData }));
+    } catch (error) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: error.message }));
     }
 };

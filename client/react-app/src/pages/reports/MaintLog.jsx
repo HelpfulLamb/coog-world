@@ -12,6 +12,10 @@ function ParkMaintenanceReport() {
     const [sortOption, setSortOption] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
+    const [showModal, setShowModal] = useState(false);
+    const [selectedObject, setSelectedObject] = useState(null);
+    const [maintenanceDetails, setMaintenanceDetails] = useState([]);
+
     const [objectType, setObjectType] = useState('ride'); 
     const [maintenanceType, setMaintenanceType] = useState('both');
 
@@ -80,6 +84,19 @@ function ParkMaintenanceReport() {
 
         setFilteredData(filtered);
     }, [rideMaintenanceData, searchTerm, sortOption]);
+
+    const handleRowClick = async (item) => {
+        setSelectedObject(item);
+        setShowModal(true);
+        try {
+            const response = await fetch(`/api/maintenance/details?objectType=${objectType}&objectID=${item.object_id}`);
+            const data = await response.json();
+            setMaintenanceDetails(data);
+        } catch (error) {
+            setMaintenanceDetails([]);
+        }
+    };
+
     const chartData = {
         labels: filteredData.map((item) => item.object_name), 
         datasets: [
@@ -174,7 +191,7 @@ function ParkMaintenanceReport() {
                             </thead>
                             <tbody>
                                 {filteredData.map((item, index) => (
-                                    <tr key={index}>
+                                    <tr key={index} onClick={() => handleRowClick(item)} className="clickable-row">
                                         <td>{item.object_name}</td>
                                         <td>{item.total_maintenance}</td>
                                         <td>{item.routine_count || 0}</td>
@@ -202,6 +219,36 @@ function ParkMaintenanceReport() {
                 <p>No data available for the selected month.</p>
             )}
             {error && <p>Error: {error}</p>}
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h3>Maintenance History for {selectedObject?.object_name}</h3>
+                        {maintenanceDetails.length > 0 ? (
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {maintenanceDetails.map((entry, index) => (
+                                        <tr key={index}>
+                                            <td>{formatDate(entry.date)}</td>
+                                            <td>{entry.type}</td>
+                                            <td>{entry.status}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p>No Maintenance history available.</p>
+                        )}
+                        <button type="button" className="close-button" onClick={() => setShowModal(false)}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

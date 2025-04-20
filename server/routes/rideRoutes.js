@@ -42,6 +42,8 @@ module.exports = async function rideRouter(req, res) {
                 return rideController.getRideForCard(req, res);
             } else if (pathname.endsWith('/ride-stats')) {
                 return rideController.getRideStatsByMonth(req, res);
+            } else if(pathname.endsWith('/ride-details')){
+                return rideController.getDetailedRideLog(req, res);
             } else if (/\/history\/\d+$/.test([pathname])) {
                 const id = pathname.split('/').pop();
                 return rideController.getVisitorRideHistory(req, res, id);

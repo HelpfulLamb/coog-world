@@ -12,12 +12,14 @@ const Home = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [weatherAlert, setWeatherAlert] = useState([]);
   const [restockAlert, setRestockAlert] = useState([]);
+  const [maintenanceAlert, setMaintenanceAlert] = useState([]);
+  const [repairAlert, setRepairAlert] = useState([]);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const role = user?.role?.toLowerCase();
 
   useEffect(() => {
-    const hasShownAlerts = { weather: false, restock: false };
+    const hasShownAlerts = { weather: false, restock: false, maintenance: false, repair: false };
 
     const fetchAndShowAlerts = async () => {
       if (hasShownAlerts.weather) return;
@@ -108,19 +110,107 @@ const Home = () => {
         ));
       });
       hasShownAlerts.restock = true;
-    };
 
+      if(hasShownAlerts.maintenance) return;
+      const maintenanceRes = await fetch('/api/maintenance/maintenance-alerts');
+      const maintenanceData = await maintenanceRes.json();
+      setMaintenanceAlert(maintenanceData);
+      maintenanceData.forEach(alert => {
+        toast.custom((t) => (
+            (role === 'admin') && (
+                <div style={{
+                    background: '#fff',
+                    padding: '1rem 1.5rem',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                    color: '#333',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                    minWidth: '260px',
+                }}>
+                  <strong>🛠 Maintenance Alert</strong>
+                  <div>{alert.Message}</div>
+                  <button style={{
+                  alignSelf: 'flex-end',
+                  background: '#c8102e',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                    acknowledge('maintenance', alert.Alert_ID);
+                    toast.dismiss(t.id);
+                  }}>
+                    OK
+                  </button>
+                </div>
+            )
+        ));
+      });
+      hasShownAlerts.maintenance = true;
+
+      if(hasShownAlerts.repair) return;
+      const repairRes = await fetch('/api/maintenance/repair-alerts');
+      const repairData = await repairRes.json();
+      setRepairAlert(repairData);
+      repairData.forEach(alert => {
+        toast.custom((t) => (
+            (role === 'admin') && (
+                <div style={{
+                    background: '#fff',
+                    padding: '1rem 1.5rem',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                    color: '#333',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                    minWidth: '260px',
+                }}>
+                  <strong>🛠 Maintenance Alert</strong>
+                  <div>{alert.message}</div>
+                  <button style={{
+                  alignSelf: 'flex-end',
+                  background: '#c8102e',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                    acknowledge('repair', alert.log_id);
+                    toast.dismiss(t.id);
+                  }}>
+                    OK
+                  </button>
+                </div>
+            )
+        ));
+      });
+    };
     fetchAndShowAlerts();
   }, []);
   const acknowledge = async (type, id) => {
     const url = type === 'weather'
       ? `/api/weather/weather-alerts/${id}/acknowledge`
+      : type === 'maintenance'
+      ? `/api/maintenance/maintenance-alerts/${id}/acknowledge`
+      : type === 'repair'
+      ? `/api/maintenance/repair-alerts/${id}/acknowledge`
       : `/api/inventory/restock-alerts/${id}/acknowledge`;
     await fetch(url, { method: 'PATCH' });
     if (type === 'weather') {
       setWeatherAlert(prev => prev.filter(a => a.Alert_ID !== id));
-    } else {
+    } else if(type === 'restock') {
       setRestockAlert(prev => prev.filter(a => a.Notification_ID !== id));
+    } else if(type === 'maintenance'){
+        setMaintenanceAlert(prev => prev.filter(a => a.Alert_ID !== id));
+    } else if(type === 'repair'){
+        setRepairAlert(prev => prev.filter(a => a.log_id !== id));
     }
   };
 

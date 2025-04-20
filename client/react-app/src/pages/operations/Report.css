@@ -483,3 +483,108 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
+
+/* Button Styles */
+.table-toggle-buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.table-toggle-buttons button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #4a6baf;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+}
+
+.table-toggle-buttons button:hover {
+    background-color: #3a5a9f;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.table-toggle-buttons button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* If you want different colors for each button */
+.table-toggle-buttons button:first-child {
+    background-color: #4a6baf; /* Blue */
+}
+
+.table-toggle-buttons button:last-child {
+    background-color: #5a7bbf; /* Lighter blue */
+}
+
+/* Loading spinner button state */
+button .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+/* Button icons */
+.table-toggle-buttons button .icon {
+    margin-right: 6px;
+    font-size: 0.8em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table-toggle-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .table-toggle-buttons button {
+        width: 100%;
+    }
+}
+.action-buttons .primary-button{
+    background-color: #b5b5b69f;
+}
+.action-buttons .secondary-button{
+    background-color: #e6a1a1c4;
+}
+.clickable-row {
+    cursor: pointer;
+}
+.close-button {
+    float: right;
+    background: red;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.modal-table th, .modal-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+}
