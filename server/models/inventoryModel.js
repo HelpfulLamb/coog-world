@@ -34,7 +34,6 @@ exports.updateItem = async (selectedItem) => {
     return item;
 };
 
-
 exports.restockItem = async (newRestockLevel, Inventory_ID) => {
     const [result] = await db.query(
         'UPDATE inventory SET Item_quantity = ? WHERE Inventory_ID = ?',
