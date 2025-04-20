@@ -74,7 +74,7 @@ function Register() {
                 }),
             });
             const data = await response.json();
-            // Once the user registers, they will be auto logged in and redirected to their profile
+            
             if (response.ok) {    
                 setMessage({ success: 'Account successfully created!', error: '' });
                 const loginResponse = await fetch('/api/users/login', {

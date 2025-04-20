@@ -57,7 +57,6 @@ function Weather() {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedWeather, setSelectedWeather] = useState(null);
 
-    // Filter state
     const [filteredWeather, setFilteredWeather] = useState([]);
     const [conditionFilter, setConditionFilter] = useState('');
     const [levelFilter, setLevelFilter] = useState('');

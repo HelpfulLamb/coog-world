@@ -167,7 +167,7 @@ function Employee(){
                 </div>
             </div>
         ), {
-            duration: Infinity, // Stays until dismissed
+            duration: Infinity, 
             position: 'top-center',
         });
     };

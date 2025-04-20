@@ -23,14 +23,14 @@ function formatDate(datetime) {
     if (!datetime) return 'N/A';
   
     const formattedDate = formatUTCToCentralTime(datetime);
-    return formattedDate.split(',')[0]; // Extracts only the date part (YYYY-MM-DD)
+    return formattedDate.split(',')[0]; 
 }
 
 function formatTime(datetime) {
     if (!datetime) return 'N/A';
 
     const formattedTime = formatUTCToCentralTime(datetime);
-    return formattedTime.split(',')[1].trim(); // Extracts only the time part (HH:MM:SS)
+    return formattedTime.split(',')[1].trim(); 
 }
 
 const AllAttendance = () => {
@@ -48,7 +48,7 @@ const AllAttendance = () => {
 
       if (res.ok) {
         setAttendanceData(data);
-        setFilteredAttendance(data); // Initially, show all attendance data
+        setFilteredAttendance(data); 
         setStatus('');
       } else {
         setStatus(data.error || 'Failed to load records.');
@@ -66,7 +66,6 @@ const AllAttendance = () => {
   useEffect(() => {
     let filtered = [...attendanceData];
 
-    // Filter by employee name if any
     if (employeeFilter) {
       filtered = filtered.filter((record) =>
         `${record.employee_first_name} ${record.employee_last_name}`
@@ -75,7 +74,6 @@ const AllAttendance = () => {
       );
     }
 
-    // Filter by date range
     if (dateFromFilter) {
       filtered = filtered.filter(
         (record) => new Date(record.Attendance_created) >= new Date(dateFromFilter)

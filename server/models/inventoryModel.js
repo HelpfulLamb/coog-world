@@ -11,7 +11,7 @@ exports.findAssignmentByID = async (kiosk, item) => {
 };
 
 exports.createAssignment = async (assignmentData) => {
-    const {Kiosk_ID, Item_ID, Item_quantity, Restock_level} = assignmentData;
+    const { Kiosk_ID, Item_ID, Item_quantity, Restock_level } = assignmentData;
     await db.query(
         'INSERT INTO inventory (Kiosk_ID, Item_ID, Item_quantity, Restock_level) VALUES (?, ?, ?, ?)',
         [Kiosk_ID, Item_ID, Item_quantity, Restock_level]
@@ -19,7 +19,7 @@ exports.createAssignment = async (assignmentData) => {
 };
 
 exports.createItem = async (itemData) => {
-    const {Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = itemData;
+    const { Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price } = itemData;
     await db.query(
         'INSERT INTO items (Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price) VALUES (?, ?, ?, ?, ?)',
         [Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price]
@@ -27,14 +27,13 @@ exports.createItem = async (itemData) => {
 };
 
 exports.updateItem = async (selectedItem) => {
-    const {Item_ID, Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price} = selectedItem;
+    const { Item_ID, Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price } = selectedItem;
     const [item] = await db.query(
-        'UPDATE items SET Item_type = ?, Item_name = ?, Item_desc = ?, Item_shop_price = ?, Item_supply_price = ? WHERE Item_ID = ?', 
+        'UPDATE items SET Item_type = ?, Item_name = ?, Item_desc = ?, Item_shop_price = ?, Item_supply_price = ? WHERE Item_ID = ?',
         [Item_type, Item_name, Item_desc, Item_shop_price, Item_supply_price, Item_ID]);
     return item;
 };
 
-//Restock
 exports.restockItem = async (newRestockLevel, Inventory_ID) => {
     const [result] = await db.query(
         'UPDATE inventory SET Item_quantity = ? WHERE Inventory_ID = ?',
@@ -42,13 +41,13 @@ exports.restockItem = async (newRestockLevel, Inventory_ID) => {
     );
     return result;
 };
-//Restock controller uses this
+
 exports.getRestockLevel = async (Inventory_ID) => {
     const [rows] = await db.query(
         'SELECT Item_quantity FROM inventory WHERE Inventory_ID = ?',
         [Inventory_ID]
     );
-    return rows[0]; // returns the record or undefined if not found
+    return rows[0]; 
 };
 
 exports.markMessageSeen = async (alertID) => {
@@ -78,6 +77,21 @@ exports.getAllItems = async () => {
     return items;
 };
 
+exports.getInventoryCosts = async () => {
+    const query = `
+        SELECT t.Item_name, t.Item_type, t.Item_supply_price, SUM(i.Item_quantity) AS Total_Quantity
+        FROM inventory AS i
+        JOIN items AS t ON i.Item_ID = t.Item_ID
+        GROUP BY t.Item_name, t.Item_type, t.Item_supply_price;`;
+
+    try {
+        const [results] = await db.query(query);
+        return results;
+    } catch (err) {
+        throw new Error('Error fetching inventory: ' + err.message);
+    }
+};
+
 exports.deleteAllInventory = async () => {
     await db.query('DELETE FROM inventory');
 };
@@ -101,9 +115,7 @@ exports.getAllAvailableItems = async () => {
         items as it ON i.Item_ID = it.Item_ID
     `);
     return items;
-  };
-  
-
+};
 
 exports.deleteItemById = async (itemid) => {
     await db.query('DELETE FROM items WHERE Item_ID = ?', [itemid]);

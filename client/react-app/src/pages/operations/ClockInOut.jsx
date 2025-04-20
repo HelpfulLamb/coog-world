@@ -148,7 +148,6 @@ const ClockInOut = () => {
     useEffect(() => {
         let filtered = [...allAttendance];
 
-        // Filter by date range
         if (dateFromFilter) {
             filtered = filtered.filter((record) => new Date(record.Attendance_created) >= new Date(dateFromFilter));
         }

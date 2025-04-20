@@ -91,7 +91,7 @@
     overflow: auto;
     background-color: rgb(247, 247, 247);
 }
-/* Buttons */
+
 .db-logout-button {
     background-color: var(--danger-color);
     border-radius: var(--border-radius);
@@ -109,7 +109,7 @@
 .db-logout-button:hover {
     background-color: var(--danger-hover);
 }
-/* Card styling for main content */
+
 .dashboard-card {
     background: white;
     border-radius: var(--border-radius);
@@ -118,7 +118,7 @@
     box-shadow: var(--shadow-sm);
     border: 1px solid #e2e8f0;
 }
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .dashboard-content {
         flex-direction: column;
@@ -149,21 +149,21 @@
         padding: 1rem;
     }
 }
-/* Animation for smoother transitions */
+
 .dashboard-nav ul li a, 
 .dashboard-nav ul li button,
 .logout-button {
     transition: all var(--transition-speed) ease;
 }
 
-/* Accessibility improvements */
+
 .dashboard-nav ul li a:focus, 
 .dashboard-nav ul li button:focus,
 .logout-button:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
-/* Dark mode support */
+
 @media (prefers-color-scheme: dark) {
     .dashboard-container {
         background-color: #0f172a;

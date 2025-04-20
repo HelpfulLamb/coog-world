@@ -12,7 +12,7 @@ function ParkMaintenanceReport() {
     const [sortOption, setSortOption] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
-    const [objectType, setObjectType] = useState('ride'); // or 'kiosk', 'stage'
+    const [objectType, setObjectType] = useState('ride'); 
     const [maintenanceType, setMaintenanceType] = useState('both');
 
     const formatDate = (dateString) => {
@@ -20,7 +20,7 @@ function ParkMaintenanceReport() {
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    //Calculate Total
+    
     const getTotalMaintenance = () => {
         return filteredData.reduce((sum, ride) => sum + (ride.total_maintenance || 0), 0);
     };
@@ -29,7 +29,6 @@ function ParkMaintenanceReport() {
     const currentMonth = currentDate.getMonth() + 1;
     const maxMonth = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
 
-    // Fetch ride frequency data based on the selected month
     const fetchParkMaintenanceData = async (month) => {
         if (!month) return;
         setLoading(true);
@@ -48,7 +47,6 @@ function ParkMaintenanceReport() {
             fetchParkMaintenanceData(selectedMonth);
         }, [selectedMonth, objectType, maintenanceType]);
 
-    // Handle dropdown change
     const handleMonthChange = (event) => {
         const month = event.target.value;
         setSelectedMonth(month);
@@ -56,15 +54,13 @@ function ParkMaintenanceReport() {
 
     useEffect(() => {
         let filtered = [...rideMaintenanceData];
-
-        // Filter by search term
+        
         if (searchTerm) {
             filtered = filtered.filter(ride =>
                 ride.object_name?.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
 
-        // Sort the data
         switch (sortOption) {
             case 'nameAsc':
               filtered.sort((a, b) => a.object_name.localeCompare(b.object_name));
@@ -85,7 +81,7 @@ function ParkMaintenanceReport() {
         setFilteredData(filtered);
     }, [rideMaintenanceData, searchTerm, sortOption]);
     const chartData = {
-        labels: filteredData.map((item) => item.object_name), // rename as needed
+        labels: filteredData.map((item) => item.object_name), 
         datasets: [
           {
             label: 'Routine',

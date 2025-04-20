@@ -13,6 +13,7 @@ const DashboardNav = () => {
     const [isShowDropdownOpen, setIsShowDropdownOpen] = useState(false);
     const [isMaintDropdownOpen, setIsMaintDropdownOpen] = useState(false);
     const [isRideDropdownOpen, setIsRideDropdownOpen] = useState(false);
+    const [isRevenueDropdownOpen, setIsRevenueDropdownOpen] = useState(false);
 
     const toggleWeatherDropdown = () => {
         setIsWeatherDropdownOpen(prev => !prev);
@@ -34,6 +35,9 @@ const DashboardNav = () => {
     };
     const toggleRideDropdown = () => {
         setIsRideDropdownOpen(prev => !prev);
+    };
+    const toggleRevenueDropdown = () => {
+        setIsRevenueDropdownOpen(prev => !prev);
     };
 
     return (
@@ -130,9 +134,20 @@ const DashboardNav = () => {
                             </button>
                             {isReportsDropdownOpen && (
                                 <ul className="dropdown-menu">
-                                    <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
-                                    <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Report</Link></li>
-                                    <li><Link to={'/employee-dashboard/customer-trends-report'}>Park Attendance Summary</Link></li>
+                                    <li className="dropdown">
+                                        <button onClick={toggleRevenueDropdown} className="dropdown-btn">
+                                            Revenue
+                                            <span className={`arrow-icon ${isRevenueDropdownOpen ? 'open' : ''}`}>▼</span>
+                                        </button>
+                                        {isRevenueDropdownOpen && (
+                                            <ul className="dropdown-menu">
+                                                <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
+                                                <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Report</Link></li>
+                                                <li><Link to={'/employee-dashboard/customer-trends-report'}>Park Attendance Summary</Link></li>
+                                            </ul>
+                                        )}
+                                    </li>
+                                    <li><Link to={'/employee-dashboard/cost-report'}>Overall Cost Report</Link></li>
                                 </ul>
                             )}
                         </li>

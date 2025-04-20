@@ -1,4 +1,3 @@
-//This is used when adding rides to the database
 import { useState, useEffect } from "react";
 
 export function UpdateRide({isOpen, onClose, rideToEdit, onUpdateRide}){
@@ -204,7 +203,6 @@ function AddRide({isOpen, onClose, onAddRide}){
                             placeholder={getPlaceholders(field)} />
                         </div>
                     ))}
-                    {/* Dropdown for Ride_type */}
                     <div className="modal-input-group">
                         <label htmlFor="Ride_type">Type of Ride</label>
                         <select id="Ride_type" name="Ride_type" required value={newRide.Ride_type} onChange={handleInputChange}>

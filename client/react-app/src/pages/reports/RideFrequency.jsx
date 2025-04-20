@@ -25,7 +25,6 @@ function RideFrequencyReport() {
     const currentMonth = currentDate.getMonth() + 1;
     const maxMonth = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
 
-    // Fetch ride frequency data based on the selected month
     const fetchRideFrequencyData = async (month) => {
         if (!month) return;
         setLoading(true);
@@ -189,7 +188,6 @@ function RideFrequencyReport() {
         }
       };
 
-    //For date formatting
     const formatDate = (dateString) => {
         if (!dateString) return "-";
         const date = new Date(dateString);

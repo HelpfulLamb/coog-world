@@ -20,7 +20,7 @@ function Cart() {
     zip: '',
     billingAddress: ''
   });
-  const [isProcessing, setIsProcessing] = useState(false);  // new
+  const [isProcessing, setIsProcessing] = useState(false); 
   const [taxRate, setTaxRate] = useState(0.0825);
   const [taxAmount, setTaxAmount] = useState(0);
   const [orderTotal, setOrderTotal] = useState(0);
@@ -63,11 +63,11 @@ function Cart() {
       alert("Please fill in card number and billing address.");
       return;
     }
-    if (paymentMethod === 'pay_at_store' && hasMerch) {  // changed
+    if (paymentMethod === 'pay_at_store' && hasMerch) { 
       alert("Pay at Store is only allowed for ticket purchases. Please switch to Credit/Debit Card.");
       return;
     }
-    setIsProcessing(true);  // new
+    setIsProcessing(true); 
     try {
       for (const item of cartItems) {
         let endpoint = '';

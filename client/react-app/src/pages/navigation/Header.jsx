@@ -15,22 +15,20 @@ function Header() {
         }
     }, [setIsAuthenticated]);
     const handleLogout = () => {
-        setUser(null);                  // clear user context
-        setIsAuthenticated(false);     // reset auth status
-        Logout(navigate);              // clear localStorage and redirect
-        setIsSidebarOpen(false);       // close mobile sidebar if open
+        setUser(null);                  
+        setIsAuthenticated(false);     
+        Logout(navigate);              
+        setIsSidebarOpen(false);       
     };    
     const toggleSidebar = () => {
         setIsSidebarOpen(prev => !prev);
     };
     return (
         <>
-            {/* 🔥 Hamburger Icon */}
             <div className="hamburger" onClick={toggleSidebar}>
                 &#9776;
             </div>
 
-            {/* 🧭 Sidebar */}
             <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <button className="close-btn" onClick={toggleSidebar}>×</button>
                 <nav className="sidebar-nav">
@@ -51,14 +49,12 @@ function Header() {
             </div>
             {isSidebarOpen && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
 
-            {/* 🧢 Main Header */}
             <nav className="nav-main">
                 <div className="header-container">
                     <Link to='/'>
                         <img src={logo} alt="CoogWorld Logo" id="site-logo" draggable="false" />
                     </Link>
 
-                    {/* Desktop Nav Links (optional) */}
                     <ul className="header-list">
                         <li><Link to="/home" className="nav-link">Home</Link></li>
                         <li><Link to="/tickets" className="nav-link">Tickets</Link></li>

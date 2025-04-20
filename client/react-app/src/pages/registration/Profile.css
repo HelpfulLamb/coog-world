@@ -2,7 +2,7 @@
     background-color: #f4f4f4;
     min-height: 100vh;
 }
- /* Profile Page Container */
+ 
 .profile-page-container {
     width: 100%;
     max-width: 1200px;
@@ -17,7 +17,7 @@
     font-size: 1.2rem;
     color: #666;
 }
-/* Header Section */
+
 .profile-header-container {
     margin-bottom: 2rem;
     text-align: center;
@@ -33,13 +33,13 @@
     color: #7f8c8d;
     margin-bottom: 1.5rem;
 }
-/* Main Content Container */
+
 .profile-content-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
-/* Profile Sections */
+
 .profile-section {
     background: white;
     border-radius: 10px;
@@ -50,7 +50,7 @@
 .profile-information {
     padding: 2rem;
 }
-/* Profile Actions */
+
 .profile-actions {
     display: flex;
     gap: 1rem;
@@ -98,7 +98,7 @@
 .profile-btn-cancel:hover {
     background-color: #e0e0e0;
 }
-/* Profile View Mode */
+
 .profile-view {
     display: flex;
     gap: 2rem;
@@ -139,7 +139,7 @@
     margin-left: 1rem;
     color: #34495e;
 }
-/* Edit Form */
+
 .profile-edit-form {
     display: flex;
     flex-direction: column;
@@ -174,7 +174,7 @@
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
-/* Section Headers */
+
 .section-header {
     padding: 1.2rem 1.5rem;
     background-color: #f8f9fa;
@@ -198,7 +198,7 @@
     font-size: 1rem;
     color: #7f8c8d;
 }
-/* Section Content */
+
 .section-content {
     padding: 1.5rem;
 }
@@ -212,7 +212,7 @@
     padding-bottom: 0.5rem;
     border-bottom: 1px solid #eee;
 }
-/* Lists */
+
 .ticket-list, .purchase-list, .ride-list {
     display: flex;
     flex-direction: column;
@@ -265,7 +265,7 @@
     text-align: center;
     padding: 1rem;
 }
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .profile-page-container {
         padding: 1rem;

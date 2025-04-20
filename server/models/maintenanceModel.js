@@ -80,7 +80,6 @@ exports.getMaintenanceById = async (id) => {
     return maintenance[0];
 };
 
-// For ride maintenance Report
 exports.getParkMaintenance = async (month, objectType, maintenanceType) => {
     const tableMap = {
         ride: { table: 'rides', id: 'Ride_ID', name: 'Ride_name' },

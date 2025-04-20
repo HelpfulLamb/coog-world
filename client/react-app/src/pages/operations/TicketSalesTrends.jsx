@@ -162,7 +162,6 @@ const TicketSalesTrends = () => {
         </label>
       </div>
 
-      {/* ✅ PDF Export Button Only */}
       <div style={{ marginTop: '1rem' }}>
         <button onClick={handleExportPDF} className="export-btn">Export PDF</button>
       </div>

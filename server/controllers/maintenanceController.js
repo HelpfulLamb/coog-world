@@ -89,7 +89,6 @@ exports.getMaintenanceById = async (req, res, id) => {
     }
 };
 
-// Function to fetch ride maintenance stats by month
 exports.getParkMaintenance = async (req, res) => {
     const {query} = url.parse(req.url, true);
     const { month, object = 'ride', type = 'both' } = query;
@@ -109,7 +108,7 @@ exports.getParkMaintenance = async (req, res) => {
     }
     try {
         const stats = await maintenanceModel.getParkMaintenance(month, object, type);
-        if (stats.length === 0) { // Handle case where no data is found
+        if (stats.length === 0) { 
             res.writeHead(404, {'Content-Type': 'application/json'});
             return res.end(JSON.stringify({message: `No ${object} stats found for this month.`}));
         }
