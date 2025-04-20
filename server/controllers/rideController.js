@@ -182,3 +182,35 @@ exports.getRideStatsByMonth = async (req, res) => {
         res.end(JSON.stringify({ message: error.message }));
     }
 };
+
+exports.getDetailedRideLog = async (req, res, body) => {
+    try {
+        const {query} = url.parse(req.url, true);
+        const {month, rideName} = query;
+        let sqlquery = `
+        SELECT
+        r.Ride_name,
+        CONCAT(v.First_name, ' ', v.Last_name) AS visitor_name,
+        DATE(vrl.ride_date) AS ride_date
+        FROM visitor_ride_log vrl
+        JOIN rides r ON vrl.Ride_ID = r.Ride_ID
+        JOIN visitors v ON v.Visitor_ID = vrl.Visitor_ID
+        WHERE 1=1`;
+        const params = [];
+        if(month){
+            sqlquery += ` AND DATE_FORMAT(vrl.ride_date, '%Y-%m') = ?`;
+            params.push(month);
+        }
+        if(rideName){
+            sqlquery += ` AND r.Ride_name = ?`;
+            params.push(rideName);
+        }
+        sqlquery += ` ORDER BY r.Ride_name, vrl.ride_date`;
+        const [rows] = await db.query(sqlquery, params);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(rows));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: `Error while generating ride log: ${error.message}`}));
+    }
+};

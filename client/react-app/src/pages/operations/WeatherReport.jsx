@@ -11,7 +11,7 @@ function WeatherTable({ weatherInformation, setIsModalOpen, onEditWtr, onDeleteW
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
-    const isAuthorized = user && (user.role === 'admin' || user.role === 'manager');
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return(
         <div className="table-container">
             <table className="table">
@@ -210,7 +210,7 @@ function Weather() {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-    const isAuthorized = user && (user.role === 'admin' || user.role === 'manager');
+    const isAuthorized = user && (user.role === 'Admin' || user.role === 'Manager');
     return (
         <>
             <div className="filter-controls">
