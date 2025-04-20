@@ -58,8 +58,11 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Show updated successfully!', error: ''});
-                if(onUpdateShow) onUpdateShow({...data.show, Show_ID: showToEdit.Show_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateShow){
+                    onUpdateShow();
+                    setMessage({success: 'Show updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -89,7 +92,7 @@ export function UpdateShow({isOpen, onClose, showToEdit, onUpdateShow}){
                                 </label>
                                 <input 
                                 id={field} 
-                                type={field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : field === 'Show_date' ? 'date' : 'text'} 
+                                type={field === 'Show_cost' ? 'number' : field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : field === 'Show_date' ? 'date' : 'text'} 
                                 name={field} 
                                 required
                                 autoComplete="off"
@@ -184,7 +187,7 @@ function AddShow({isOpen, onClose, onAddShow}){
                     Show_date: '',
                 });
                 onAddShow(data.show);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add show.', success: ''});
             }
@@ -217,7 +220,7 @@ function AddShow({isOpen, onClose, onAddShow}){
                             </label>
                             <input 
                             id={field}
-                            type={field === 'Show_date' ? 'date' : field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
+                            type={field === 'Show_cost' ? 'number' : field === 'Show_date' ? 'date' : field === 'Perf_num' ? 'number' : field === 'Show_start' ? 'time' : field === 'Show_end' ? 'time' : 'text'}
                             name={field}
                             required
                             autoComplete="off" 

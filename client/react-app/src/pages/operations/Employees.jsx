@@ -130,9 +130,18 @@ function Employee() {
         setFilteredEmps(filtered);
     }, [employeeInformation, empFirstNameFilter, empLastNameFilter, empLocationFilter, empOccFilter, salaryRangeFilter, sortOption]);
 
-    const handleAddEmployee = (newEmployee) => {
-        setEmployeeInformation([...employeeInformation, newEmployee]);
-        toast.success('Employee added successfully!');
+    const handleAddEmployee = async () => {
+        try {
+            const response = await fetch('/api/employees/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setEmployeeInformation(data);
+            toast.success('Employee added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add employee: ${error.message}`);
+        }
     };
 
     const handleEditEmp = (employee) => {
@@ -142,10 +151,19 @@ function Employee() {
 
     useEffect(() => {
     }, [selectedEmp]);
-
-    const handleUpdateEmp = (updatedEmp) => {
-        setEmployeeInformation(prev => prev.map(employee => employee.Emp_ID === updatedEmp.Emp_ID ? updatedEmp : employee));
-        toast.success('Employee updated successfully!');
+    
+    const handleUpdateEmp = async () => {
+        try {
+            const response = await fetch('/api/employees/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setEmployeeInformation(data);
+            toast.success('Employee updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update employee: ${error.message}`);
+        }
     };
 
     const handleDelete = async (empID) => {

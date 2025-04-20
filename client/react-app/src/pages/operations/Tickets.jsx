@@ -64,9 +64,18 @@ function TicketReport(){
         fetchTickets();
     }, []);    
 
-    const handleAddTicket = (newTicket) => {
-        setTicketInformation([...ticketInformation, newTicket]);
-        toast.success('Ticket added successfully!');
+    const handleAddTicket = async () => {
+        try {
+            const response = await fetch('/api/ticket-type/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setTicketInformation(data);
+            toast.success('Ticket added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add ticket: ${error.message}`);
+        }
     };
     
     const handleEditTicket = (ticket) => {
@@ -74,9 +83,18 @@ function TicketReport(){
         setIsEditOpen(true);
     };
     
-    const handleUpdateTicket = (updatedTicket) => {
-        setTicketInformation(prev => prev.map(ticket => ticket.ticket_id === updatedTicket.ticket_id ? updatedTicket : ticket));
-        toast.success('Ticket updated successfully!');
+    const handleUpdateTicket = async () => {
+        try {
+            const response = await fetch('/api/ticket-type/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setTicketInformation(data);
+            toast.success('Ticket updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update ticket: ${error.message}`);
+        }
     };
     
     const handleDeleteTicket = async (ticketID) => {

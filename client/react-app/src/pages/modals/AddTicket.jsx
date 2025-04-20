@@ -31,8 +31,11 @@ export function UpdateTicket({isOpen, onClose, ticketToEdit, onUpdateTicket}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Ticket updated successfully!', error: ''});
-                if(onUpdateTicket) onUpdateTicket({...data.ticket, ticket_id: ticketToEdit.ticket_id});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateTicket){
+                    onUpdateTicket();
+                    setMessage({success: 'Ticket updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -111,7 +114,7 @@ function AddTicket({isOpen, onClose, onAddTicket}){
                     price: '',
                 });
                 onAddTicket(data.ticket);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add new ticket.', success: ''});
             }

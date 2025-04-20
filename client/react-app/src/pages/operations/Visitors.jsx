@@ -100,9 +100,18 @@ function Visitor(){
         setIsEditOpen(true);
     };
     
-    const handleUpdateVisitor = (updatedVisitor) => {
-        setVisitorInformation(prev => prev.map(user => user.Visitor_ID === updatedVisitor.Visitor_ID ? updatedVisitor : user));
-        toast.success('Visitor updated successfully!');
+    const handleUpdateVisitor = async () => {
+        try {
+            const response = await fetch('/api/users/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setVisitorInformation(data);
+            toast.success('Visitor updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update visitor: ${error.message}`);
+        }
     };
 
     const handleDeleteVisitor = async (userID) => {
