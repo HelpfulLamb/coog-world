@@ -275,7 +275,7 @@ function PopularShows() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Show</th>
+                                    <th>Show Name</th>
                                     <th>Stage</th>
                                     <th>Viewers</th>
                                     <th>Capacity</th>
@@ -305,7 +305,7 @@ function PopularShows() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Show</th>
+                                    <th>Show Name</th>
                                     <th>Visitor</th>
                                     <th>Watch Date</th>
                                 </tr>

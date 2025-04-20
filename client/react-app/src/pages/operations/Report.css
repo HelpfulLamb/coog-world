@@ -547,20 +547,6 @@
     background-color: #5a7bbf; /* Lighter blue */
 }
 
-/* For the filter buttons (if you have any) */
-.filter-controls button {
-    padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.filter-controls button:hover {
-    background-color: #e0e0e0;
-}
-
 /* Loading spinner button state */
 button .spinner {
     display: inline-block;
