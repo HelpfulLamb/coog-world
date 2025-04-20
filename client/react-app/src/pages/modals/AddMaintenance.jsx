@@ -88,7 +88,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                         Maintenance_Object_ID: '',
                     });
                     onAddMaintenance(data.maintenance);
-                    setTimeout(() => { onClose(); window.location.reload(); }); 
+                    setTimeout(() => { onClose(); window.location.reload(); }); //setTimeout(() => {onClose(); window.location.href = window.location.href;});
                 } else {
                     setMessage({error: data.message || 'Failed to add maintenance.', success: ''});
                 }
