@@ -52,7 +52,7 @@ function Profile() {
                 fetch(`/api/shows/history/${userId}`)
             ]);
 
-            // Process tickets
+            
             const ticketData = await ticketRes.json();
             const today = new Date().setHours(0, 0, 0, 0);
             const upcoming = [], past = [];
@@ -63,15 +63,12 @@ function Profile() {
             setUpcomingTickets(upcoming);
             setPastTickets(past);
 
-            // Process purchases
             const shopData = await shopRes.json();
             setPurchases(shopData.purchases);
-
-            // Process rides
+            
             const rideData = await rideRes.json();
             setRides(rideData.rides);
-
-            // Process shows
+            
             const showData = await showRes.json();
             setShows(showData.shows);
 
@@ -180,7 +177,6 @@ function Profile() {
                     <p className="profile-welcome">Welcome back, {user.first_name}!</p>
                 </div>
                 <div className="profile-content-container">
-                    {/* Profile Information Section */}
                     <section className="profile-section profile-information">
                         <div className="profile-actions">
                             {isEditing ? (

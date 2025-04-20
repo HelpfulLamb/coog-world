@@ -17,15 +17,14 @@
   margin-bottom: 2rem;
   color: #c8102e; 
 }
-/* Styling for the login form */
 .login-form {
   display: flex;
   flex-direction: column;
   width: 300px;
   padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent */
+  background-color: rgba(255, 255, 255, 0.85); 
   border-radius: 10px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); 
 }
 .form-group input {
   padding: 1rem;
@@ -34,13 +33,13 @@
   border-radius: 8px;
   width: 100%;
   margin-bottom: 1rem;
-  box-sizing: border-box; /* Prevent overflow */
+  box-sizing: border-box; 
 }
 .form-group input:focus {
   border-color: #c8102e;
   outline: none;
 }
-/* Button Styles */
+
 .role-selection button{
     width: 100%;
 }

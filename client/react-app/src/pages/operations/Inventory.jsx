@@ -57,7 +57,6 @@ function Inventory(){
     const [items, setItems] = useState([]);
     const [kiosks, setKiosks] = useState([]);
 
-    //Restock
     const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
     const [itemToRestock, setItemToRestock] = useState(null);
 

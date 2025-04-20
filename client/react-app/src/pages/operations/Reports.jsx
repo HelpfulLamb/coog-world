@@ -32,6 +32,10 @@ const RevenueReport = () => {
     fetchRevenue();
   }, []);
 
+  const formatWithCommas = (number) => {
+    return new Intl.NumberFormat().format(number);
+  };
+
   const toggleFilter = () => setShowFilters(prev => !prev);
 
   const filteredData = rawData.filter(entry => {
@@ -121,13 +125,13 @@ const RevenueReport = () => {
             </tr>
           </thead>
           <tbody>
-            <tr><td>🎟️ Tickets</td><td>${calcTotal('Ticket').toFixed(2)}</td></tr>
-            <tr><td>🛍️ Merchandise</td><td>${calcTotal('Merchandise').toFixed(2)}</td></tr>
-            <tr><td>🍔 Food</td><td>${calcTotal('Food').toFixed(2)}</td></tr>
-            <tr><td>🛎️ Services</td><td>${calcTotal('Service').toFixed(2)}</td></tr>
+            <tr><td>🎟️ Tickets</td><td>${formatWithCommas(calcTotal('Ticket').toFixed(2))}</td></tr>
+            <tr><td>🛍️ Merchandise</td><td>${formatWithCommas(calcTotal('Merchandise').toFixed(2))}</td></tr>
+            <tr><td>🍔 Food</td><td>${formatWithCommas(calcTotal('Food').toFixed(2))}</td></tr>
+            <tr><td>🛎️ Services</td><td>${formatWithCommas(calcTotal('Service').toFixed(2))}</td></tr>
             <tr style={{ fontWeight: 'bold', backgroundColor: '#f0f0f0' }}>
               <td>Total</td>
-              <td>${total.toFixed(2)}</td>
+              <td>${formatWithCommas(total.toFixed(2))}</td>
             </tr>
           </tbody>
         </table>

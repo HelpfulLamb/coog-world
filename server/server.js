@@ -39,7 +39,7 @@ const mimeTypes = {
     '.eot': 'application/vnd.ms-fontobject'
 };
 
-const staticPath = path.join(__dirname, 'client'); // client contains your built frontend
+const staticPath = path.join(__dirname, 'client');
 
 const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -50,7 +50,6 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    // ✅ API routing
     const routeMap = {
         '/api/rides': rideRouter,
         '/api/ticket-type': ticketRouter,
@@ -73,7 +72,7 @@ const server = http.createServer((req, res) => {
         return routeMap[matchedRoute](req, res);
     }
 
-    // ✅ Static file and frontend handling
+    
     if (req.method === 'GET') {
         let filePath;
 
@@ -82,7 +81,7 @@ const server = http.createServer((req, res) => {
         } else if (pathname.startsWith('/assets/') || pathname === '/favicon.ico') {
             filePath = path.join(staticPath, pathname);
         } else {
-            // React Router fallback
+            
             filePath = path.join(staticPath, 'index.html');
         }
 
@@ -95,7 +94,7 @@ const server = http.createServer((req, res) => {
                     res.writeHead(404);
                     return res.end('Not Found');
                 }
-                // fallback for unknown route
+                
                 fs.readFile(path.join(staticPath, 'index.html'), (fallbackErr, fallbackData) => {
                     if (fallbackErr) {
                         res.writeHead(404);
@@ -113,7 +112,7 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Default 404
+    
     res.writeHead(404);
     res.end('Not Found');
 });

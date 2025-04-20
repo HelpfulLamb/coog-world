@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import RainoutBarChart from "./RainoutBarChart.jsx"; // Import the chart component
+import RainoutBarChart from "./RainoutBarChart.jsx"; 
 
 function RainoutReport() {
     const [rainoutData, setRainoutData] = useState([]);
@@ -10,17 +10,16 @@ function RainoutReport() {
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("");
 
-    // Fetch the rainout data
     useEffect(() => {
         const fetchRainouts = async () => {
             try {
-                const response = await fetch("/api/reports/rainout-rows"); // Make sure the API endpoint is correct
+                const response = await fetch("/api/reports/rainout-rows"); 
                 if (!response.ok) {
                     throw new Error("Failed to fetch rainout data");
                 }
                 const data = await response.json();
                 setRainoutData(data);
-                setFilteredData(data); // Initialize filtered data with all rainouts
+                setFilteredData(data); 
             } catch (err) {
                 console.error("Error fetching rainout data:", err);
                 setError("Failed to fetch rainout data");
@@ -32,22 +31,18 @@ function RainoutReport() {
         fetchRainouts();
     }, []);
 
-    // Filter rainout data based on selected filters
     useEffect(() => {
         let filtered = [...rainoutData];
 
-        // Filter by weather condition
         if (selectedCondition) {
             filtered = filtered.filter(item => item.Wtr_cond === selectedCondition);
         }
 
-        // Filter by year (based on Wtr_created date)
         if (selectedYear && !selectedMonth) {
             filtered = filtered.filter(item => {
                 return new Date(item.Wtr_created).getFullYear() === Number(selectedYear)});
         }
 
-        // Filter by month (based on Wtr_created date)
         if (selectedMonth) {
             const [year, month] = selectedMonth.split('-').map(Number);
             filtered = filtered.filter(item => {
@@ -65,11 +60,8 @@ function RainoutReport() {
         setSelectedMonth("");
     };
 
-
-    // Generate months and ensure they are sorted (from 1 to 12)
-    const uniqueMonths = [...new Set(rainoutData.map(item => new Date(item.Wtr_created).getMonth() + 1))];  // Months are 0-indexed
-    uniqueMonths.sort((a, b) => a - b); // Ensure months are sorted from 1 to 12
-
+    const uniqueMonths = [...new Set(rainoutData.map(item => new Date(item.Wtr_created).getMonth() + 1))];  
+    uniqueMonths.sort((a, b) => a - b); 
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -115,10 +107,8 @@ function RainoutReport() {
                 </div>
             </div>
             
-            {/* Pass filtered data to the RainoutBarChart */}
             <RainoutBarChart filteredData={filteredData} />
 
-            {/* Render the Table */}
             <div className="table-container">
                 <table className="table">
                     <thead>

@@ -29,7 +29,7 @@ function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChan
                             <td>${Number(maintenance.Maint_cost).toLocaleString()}</td>
                             <td>{maintenance.Maint_Type}</td>
                             <td>{maintenance.Maint_obj}</td>
-                            <td>{maintenance.Maint_obj_name}</td>
+                            <td>{maintenance.Maint_obj_name ? maintenance.Maint_obj_name : "Object deleted."}</td>
                             <td>{maintenance.Maint_Status}</td>
                             <td>
                                 {maintenance.Maint_Status !== 'Completed' && (
@@ -53,8 +53,7 @@ function Maintenance() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // Filter state
+ 
     const [costMinFilter, setCostMinFilter] = useState('');
     const [costMaxFilter, setCostMaxFilter] = useState('');
     const [typeFilter, setTypeFilter] = useState('');
@@ -88,7 +87,6 @@ function Maintenance() {
     useEffect(() => {
         let filtered = [...maintenanceInformation];
 
-        // Filter by cost
         if (costMinFilter) {
             filtered = filtered.filter(maintenance => parseFloat(maintenance.Maint_cost) >= parseFloat(costMinFilter));
         }
@@ -96,29 +94,24 @@ function Maintenance() {
             filtered = filtered.filter(maintenance => parseFloat(maintenance.Maint_cost) <= parseFloat(costMaxFilter));
         }
 
-        // Filter by type
         if (typeFilter) {
             filtered = filtered.filter(maintenance => maintenance.Maint_Type === typeFilter);
         }
 
-        // Filter by object
         if (objectFilter) {
             filtered = filtered.filter(maintenance => maintenance.Maint_obj === objectFilter);
         }
 
-        // Filter by object name
         if (objectNameFilter) {
             filtered = filtered.filter(maintenance => 
                 maintenance.Maint_obj_name.toLowerCase().includes(objectNameFilter.toLowerCase())
             );
         }
 
-        // Filter by status
         if (statusFilter) {
             filtered = filtered.filter(maintenance => maintenance.Maint_Status === statusFilter);
         }
-
-        // Filter by date range
+        
         if (dateFromFilter) {
             filtered = filtered.filter(maintenance => 
                 new Date(maintenance.Maintenance_Date) >= new Date(dateFromFilter)

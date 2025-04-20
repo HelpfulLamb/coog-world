@@ -88,7 +88,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                         Maintenance_Object_ID: '',
                     });
                     onAddMaintenance(data.maintenance);
-                    setTimeout(() => { onClose(); window.location.reload(); }); //setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                    setTimeout(() => { onClose(); window.location.reload(); }); 
                 } else {
                     setMessage({error: data.message || 'Failed to add maintenance.', success: ''});
                 }
@@ -160,7 +160,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                                     />
                                 </div>
                             )}
-                            {objectsList.length === 0 && selectedObjectType && <p>No objects found for this type.</p>} {/* Display error if no objects are found */}
+                            {objectsList.length === 0 && selectedObjectType && <p>No objects found for this type.</p>} 
                         </div>
                         {message.error && <p className="error-message">{message.error}</p>}
                         {message.success && <p className="success-message">{message.success}</p>}

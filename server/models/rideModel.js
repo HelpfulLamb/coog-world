@@ -6,7 +6,7 @@ exports.findRideByName = async (name) => {
 }
 
 exports.createRide = async (rideData) => {
-    const {Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff} = rideData;
+    const { Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff } = rideData;
     const [result] = await db.query(
         'INSERT INTO rides (Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff) VALUES (?, ?, ?, ?, ?)',
         [Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff]
@@ -15,10 +15,10 @@ exports.createRide = async (rideData) => {
 };
 
 exports.updateRide = async (selectedRide) => {
-    const {Ride_ID, Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate} = selectedRide;
+    const { Ride_ID, Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate } = selectedRide;
     const [ride] = await db.query(
         'UPDATE rides SET Ride_name = ?, Ride_type = ?, Ride_loc = ?, Ride_cost = ?, Ride_staff = ?, Is_operate = ? WHERE Ride_ID = ?',
-    [Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate, Ride_ID]);
+        [Ride_name, Ride_type, Ride_loc, Ride_cost, Ride_staff, Is_operate, Ride_ID]);
     return ride;
 };
 
@@ -41,10 +41,20 @@ exports.getRideForCard = async () => {
     return ride;
 };
 
-
 exports.getRideById = async (id) => {
     const [ride] = await db.query('SELECT * FROM rides WHERE Ride_ID = ?', [id]);
     return ride[0];
+};
+
+exports.getRidesCost = async () => {
+    const query = `SELECT Ride_name, Ride_cost FROM rides;`;
+
+    try {
+        const [results] = await db.query(query);
+        return results;
+    } catch (err) {
+        throw new Error('Error fetching rides: ' + err.message);
+    }
 };
 
 exports.deleteAllRides = async () => {
@@ -111,7 +121,7 @@ exports.getRideStatsByMonth = async (month) => {
         GROUP BY 
             r.ride_id, r.ride_name, v_top.visitor_name, v_top.ride_count;
     `;
-  
-    const [rows] = await db.query(query, [month, month]); // Use the db connection's query method
+
+    const [rows] = await db.query(query, [month, month]); 
     return rows;
 };

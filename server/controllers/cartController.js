@@ -34,7 +34,6 @@ exports.addCartItem = async (req, res, body) => {
       Price
     } = body;
 
-    // Validate required fields
     if (!Visitor_ID || !Product_Type || !Product_ID || !Product_Name || !Quantity || !Price) {
         res.writeHead(400, {'Content-Type': 'application/json'});
         return res.end(JSON.stringify({ error: 'Missing required fields in request body.' }));

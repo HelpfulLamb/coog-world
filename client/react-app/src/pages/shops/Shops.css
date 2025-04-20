@@ -7,7 +7,7 @@
     padding: 20px;
 }
 .shop-card {
-    flex: 1 1 300px; /* Grow/shrink, base width */
+    flex: 1 1 300px; 
     max-width: 300px;
     background-color: #ffffff;
     border-radius: 16px;

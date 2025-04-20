@@ -17,13 +17,11 @@ const Home = () => {
   const role = user?.role?.toLowerCase();
 
   useEffect(() => {
-    // Track if we've already shown alerts
     const hasShownAlerts = { weather: false, restock: false };
 
     const fetchAndShowAlerts = async () => {
       if (hasShownAlerts.weather) return;
 
-      // Weather alerts
       const weatherRes = await fetch('/api/weather/weather-alerts');
       const weatherData = await weatherRes.json();
       setWeatherAlert(weatherData);
@@ -66,7 +64,6 @@ const Home = () => {
       });
       hasShownAlerts.weather = true;
 
-      // Restock alerts
       if (hasShownAlerts.restock) return;
 
       const restockRes = await fetch('/api/inventory/restock-alerts');
@@ -240,7 +237,6 @@ const Home = () => {
             🎡 CoogWorld Employee Overview
           </h1>
         )}
-        {/* Top Cards */}
         {(role === 'admin' || role === 'manager') && (
           <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem' }}>
             {role === 'admin' && (
@@ -271,7 +267,6 @@ const Home = () => {
             </div>
           </div>
         )}
-        {/* Bottom Cards */}
         <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem' }}>
           {(role === 'admin' || role === 'maintenance') && (
             <div style={cardStyle}>

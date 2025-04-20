@@ -1,4 +1,4 @@
-//This is used when adding an employee
+
 import React, {useState, useEffect} from "react";
 import './Modal.css';
 

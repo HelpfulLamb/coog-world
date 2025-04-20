@@ -111,7 +111,6 @@ export function UpdateWeather({isOpen, onClose, wtrToEdit, onUpdateWtr}){
 }
 
 function AddWeather({ isOpen, onClose, onAddWeather }) {
-    // Is_park_closed is set to open as default unless otherwise altered by trigger
     const [newWeather, setNewWeather] = useState({
         temperature: '',
         Wtr_cond: '',
@@ -119,7 +118,7 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
         Special_alerts: ''
     });
     const [message, setMessage] = useState({ error: '', success: '' });
-    const [showSpecialAlerts, setShowSpecialAlerts] = useState(false); // State to toggle special alerts input visibility
+    const [showSpecialAlerts, setShowSpecialAlerts] = useState(false); 
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -218,7 +217,7 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
                     <div className="modal-input-group" style={{ marginBottom: '10px' }}>
                         <button type="button" className="toggle-button"
                             onClick={() => {
-                                // Reset Special Alerts when the field becomes visible
+                                
                                 if (!showSpecialAlerts) {
                                     setNewWeather({ ...newWeather, Special_alerts: '' });
                                 }
