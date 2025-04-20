@@ -1,4 +1,4 @@
-const { json } = require('stream/consumers');
+const { waitForDebugger } = require('inspector');
 const showController = require('../controllers/showController.js');
 const url = require('url');
 
@@ -30,6 +30,9 @@ module.exports = async function showRouter(req, res){
             } else if(pathname.endsWith('/top-shows')){
                 const body = await parseBody(req);
                 return showController.getTopShows(req, res, body);
+            } else if(pathname.endsWith('/show-details')){
+                const body = await parseBody(req);
+                return showController.getDetailedShowLog(req, res, body);
             }
         }
         if(req.method === 'PUT' && /^\/api\/shows\/\d+$/.test(pathname)){

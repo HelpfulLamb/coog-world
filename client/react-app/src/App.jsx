@@ -50,6 +50,7 @@ import Stage from './pages/operations/Stage.jsx';
 import RideFrequencyReport from './pages/reports/RideFrequency.jsx';
 import ParkMaintenanceReport from './pages/reports/MaintLog.jsx';
 import CostReport from './pages/reports/CostReport.jsx';
+import Visitor from './pages/operations/Visitors.jsx';
 
 function App() {
     const location = useLocation();
@@ -82,6 +83,7 @@ function App() {
                             <Route index element={<AdminHome />} />
                             <Route path='employee-profile' element={<EmployeeProfile />} />
                             <Route path='employees' element={<Employee />} />
+                            <Route path='visitors' element={<Visitor />} />
                             <Route path='rides' element={<Ride />} />
                             <Route path='ride-frequency' element={<RideFrequencyReport />} />
                             <Route path='shows' element={<Show />} />

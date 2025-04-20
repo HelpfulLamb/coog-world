@@ -194,3 +194,38 @@ exports.getPopularShowToday = async (req, res) => {
         res.end(JSON.stringify({message: error.message}));
     }
 };
+
+exports.getDetailedShowLog = async (req, res, body) => {
+    try {
+        const {startDate, endDate, showName} = body;
+        let sqlquery = `
+        SELECT
+        s.Show_name,
+        CONCAT(v.First_name, ' ', v.Last_name) AS visitor_name,
+        DATE(vsl.watch_date) AS watch_date
+        FROM visitor_show_log vsl
+        JOIN shows s ON vsl.Show_ID = s.Show_ID
+        JOIN visitors v ON v.Visitor_ID = vsl.Visitor_ID
+        WHERE 1=1`;
+        const param = [];
+        if(startDate){
+            sqlquery += ` AND DATE(vsl.watch_date) >= ?`;
+            param.push(startDate);
+        }
+        if(endDate){
+            sqlquery += ` AND DATE(vsl.watch_date) <= ?`;
+            param.push(endDate);
+        }
+        if(showName){
+            sqlquery += ` AND s.Show_name = ?`;
+            param.push(showName);
+        }
+        sqlquery += ` ORDER BY s.Show_name, vsl.watch_date`;
+        const [rows] = await db.query(sqlquery, param);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(rows));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: `Error while generating report: ${error.message}`}));
+    }
+};

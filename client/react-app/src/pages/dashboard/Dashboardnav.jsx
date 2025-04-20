@@ -58,6 +58,7 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
+                        <li><Link to={'/employee-dashboard/visitors'}>Park Visitors</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleRideDropdown}>
                                 Rides
