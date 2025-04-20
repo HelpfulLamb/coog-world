@@ -36,8 +36,11 @@ export function UpdateWeather({isOpen, onClose, wtrToEdit, onUpdateWtr}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Weather log updated successfully!', error: ''});
-                if(onUpdateWtr) onUpdateWtr({...data.weather, Wtr_ID: wtrToEdit.Wtr_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateWtr){
+                    onUpdateWtr();
+                    setMessage({success: 'Weather log updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -155,7 +158,7 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
                     Special_alerts: '',
                 });
                 onAddWeather(data.weather);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add new log.', success: ''});
             }

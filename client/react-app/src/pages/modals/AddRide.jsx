@@ -39,8 +39,11 @@ export function UpdateRide({isOpen, onClose, rideToEdit, onUpdateRide}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Ride updated successfully!', error: ''});
-                if(onUpdateRide) onUpdateRide({...data.ride, Ride_ID: rideToEdit.Ride_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateRide){
+                    onUpdateRide();
+                    setMessage({success: 'Ride updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -164,7 +167,7 @@ function AddRide({isOpen, onClose, onAddRide}){
                     Ride_staff: '',
                 });
                 onAddRide(data.ride);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add ride.', success: ''});
             }

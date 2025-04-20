@@ -34,11 +34,21 @@ function MaintenanceTable({ maintenanceInformation, setIsModalOpen, onStatusChan
                             <td>
                                 {maintenance.Maint_Status !== 'Completed' && (
                                     <>
-                                        <button onClick={() => onStatusChange(maintenance)} className="action-btn edit-button">In Progress</button>
-                                        <button onClick={() => onStatusChange(maintenance)} className="action-btn delete-button">Complete</button>
+                                        <button 
+                                            onClick={() => onStatusChange(maintenance, 'In Progress')} 
+                                            className="action-btn edit-button"
+                                        >
+                                            In Progress
+                                        </button>
+                                        <button 
+                                            onClick={() => onStatusChange(maintenance, 'Completed')} 
+                                            className="action-btn delete-button"
+                                        >
+                                            Complete
+                                        </button>
                                     </>
                                 )}
-                             </td>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -53,6 +63,7 @@ function Maintenance() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [objectsList, setObjectsList] = useState([]);
  
     const [costMinFilter, setCostMinFilter] = useState('');
     const [costMaxFilter, setCostMaxFilter] = useState('');
@@ -82,6 +93,19 @@ function Maintenance() {
             }
         };
         fetchMaintenance();
+    }, [isModalOpen]); // Refresh when modal opens/closes
+
+    useEffect(() => {
+        const fetchObjects = async () => {
+            try {
+                const response = await fetch('/api/maintenance/all-objects');
+                const data = await response.json();
+                setObjectsList(data);
+            } catch (error) {
+                console.error('Error fetching objects:', error);
+            }
+        };
+        fetchObjects();
     }, []);
 
     useEffect(() => {
@@ -104,7 +128,7 @@ function Maintenance() {
 
         if (objectNameFilter) {
             filtered = filtered.filter(maintenance => 
-                maintenance.Maint_obj_name.toLowerCase().includes(objectNameFilter.toLowerCase())
+                maintenance.Maint_obj_name?.toLowerCase().includes(objectNameFilter.toLowerCase())
             );
         }
 
@@ -128,18 +152,32 @@ function Maintenance() {
         objectNameFilter, statusFilter, dateFromFilter, dateToFilter]);
 
     const handleAddMaintenance = (newMaintenance) => {
-        setMaintenanceInformation([...maintenanceInformation, newMaintenance]);
-        toast.success('Maintenance report added successfully!');
+        const maintType = newMaintenance.Maintenance_Type === "1" ? "Routine" : "Emergency";
+        const objName = objectsList.find(obj => 
+            obj.value === newMaintenance.Maintenance_Object_ID && 
+            obj.type === newMaintenance.Maintenance_Object
+        )?.label || '';
+
+        setMaintenanceInformation(prev => [...prev, {
+            MaintID: newMaintenance.MaintID,
+            Maintenance_Date: newMaintenance.Maintenance_Date,
+            Maint_cost: newMaintenance.Maintenance_Cost,
+            Maint_Type: maintType,
+            Maint_obj: newMaintenance.Maintenance_Object,
+            Maint_obj_ID: newMaintenance.Maintenance_Object_ID,
+            Maint_obj_name: objName,
+            Maint_Status: "Pending"
+        }]);
     };
 
-    const handleStatusUpdate = (maintenance) => {
+    const handleStatusUpdate = (maintenance, newStatus) => {
         toast.custom((t) => (
             <div className="custom-toast">
-                <p>Are you sure you want to change status to '{maintenance.Maint_Status === 'Pending' ? 'In Progress' : 'Completed'}'?</p>
+                <p>Are you sure you want to change status to '{newStatus}'?</p>
                 <div className="toast-buttons">
                     <button 
                         onClick={() => {
-                            updateStatus(maintenance);
+                            updateStatus(maintenance, newStatus);
                             toast.dismiss(t.id);
                         }}
                         className="toast-confirm"
@@ -160,8 +198,7 @@ function Maintenance() {
         });
     };
 
-    const updateStatus = async (maintenance) => {
-        const newStatus = maintenance.Maint_Status === 'Pending' ? 'In Progress' : 'Completed';
+    const updateStatus = async (maintenance, newStatus) => {
         try {
             const toastId = toast.loading(`Updating status to ${newStatus}...`);
             const response = await fetch(`/api/maintenance/status/${maintenance.MaintID}`, {
@@ -179,7 +216,11 @@ function Maintenance() {
             if (response.ok) {
                 toast.success(`Status updated to '${newStatus}' successfully!`, { id: toastId });
                 setMaintenanceInformation(prev => 
-                    prev.filter(maint => maint.MaintID !== maintenance.MaintID)
+                    prev.map(maint => 
+                        maint.MaintID === maintenance.MaintID 
+                            ? { ...maint, Maint_Status: newStatus } 
+                            : maint
+                    )
                 );
             } else {
                 const data = await response.json();
@@ -308,7 +349,7 @@ function Maintenance() {
             </div>
 
             <div className="db-btn">
-                <h1>Maintenance Report</h1>
+                <h1>Maintenance Logs</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
                 </div>

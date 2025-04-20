@@ -152,9 +152,18 @@ function Show(){
         setFilteredShows(filtered);
     }, [showInformation, showNameFilter, stageNameFilter, startDateFilter, endDateFilter, sortOption]);
 
-    const handleAddShow = (newShow) => {
-        setShowInformation([...showInformation, newShow]);
-        toast.success('Show added successfully!');
+    const handleAddShow = async () => {
+        try {
+            const response = await fetch('/api/shows/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setShowInformation(data);
+            toast.success('Show added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add show: ${error.message}`);
+        }
     };
     
     const handleEditShow = (show) => {
@@ -165,9 +174,18 @@ function Show(){
     useEffect(() => {
     }, [selectedShow]);
 
-    const handleUpdateShow = (updatedShow) => {
-        setShowInformation(prev => prev.map(show => show.Show_ID === updatedShow.Show_ID ? updatedShow : show));
-        toast.success('Show updated successfully!');
+    const handleUpdateShow = async () => {
+        try {
+            const response = await fetch('/api/shows/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setShowInformation(data);
+            toast.success('Show updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update show: ${error.message}`);
+        }
     };
     
     const handleDeleteShow = async (showID) => {

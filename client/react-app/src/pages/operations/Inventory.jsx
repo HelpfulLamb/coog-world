@@ -136,9 +136,18 @@ function Inventory(){
         fetchData();
     }, []);
 
-    const handleAssignItem = (newAssignment) => {
-        setInventoryInformation([...inventoryInformation, newAssignment]);
-        toast.success('Item assigned successfully!');
+    const handleAssignItem = async () => {
+        try {
+            const response = await fetch('/api/inventory/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setInventoryInformation(data);
+            toast.success('Item assigned successfully!');
+        } catch (error) {
+            toast.error(`Failed to assign item: ${error.message}`);
+        }
     };
 
     const handleDeleteInventory = async (invID) => {
@@ -193,9 +202,9 @@ function Inventory(){
         }
     };
 
-    const handleRestockItem = (item) => {
-        setItemToRestock(item);
-        setIsRestockModalOpen(true);
+    const handleRestockItem = (inventoryItem) => {
+        setItemToRestock(inventoryItem);
+        setIsRestockModalOpen(true);        
     };
 
     const resetFilters = () => {
