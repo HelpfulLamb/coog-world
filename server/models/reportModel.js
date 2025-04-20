@@ -82,7 +82,7 @@ exports.getRevenueSummary = async () => {
     if (!results || results.length === 0) {
       throw new Error('No revenue data found');
     }
-    return results[0]; // ✅ Make sure to return only the first result
+    return results[0]; 
   } catch (error) {
     throw new Error('Error fetching revenue summary: ' + error.message);
   }

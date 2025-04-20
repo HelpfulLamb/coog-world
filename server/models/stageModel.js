@@ -16,18 +16,18 @@ exports.getAllStages = async () => {
         FROM stages st
         JOIN sectors s ON st.area_ID = s.area_ID;
     `;
-    
+
     try {
         const [results] = await db.query(query);
-        return results; 
+        return results;
     } catch (err) {
-        throw new Error('Error fetching stages: ' + err.message); 
+        throw new Error('Error fetching stages: ' + err.message);
     }
 };
 
 
 exports.addStage = async (stageData) => {
-    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by} = stageData;
+    const { Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by } = stageData;
 
     const query = `
         INSERT INTO stages (area_ID, Stage_name, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created, Stage_created_by)
@@ -36,9 +36,9 @@ exports.addStage = async (stageData) => {
 
     try {
         const [result] = await db.query(query, [area_ID, Stage_name, Stage_cost, Stage_maint, Staff_num, Seat_num, Stage_created_by]);
-        return result.insertId;  
+        return result.insertId;
     } catch (err) {
-        throw new Error('Error adding stage: ' + err.message); 
+        throw new Error('Error adding stage: ' + err.message);
     }
 };
 
@@ -54,9 +54,9 @@ exports.updateStage = async (stageID, stageData) => {
 
     try {
         const [result] = await db.query(query, [Stage_name, area_ID, Stage_cost, Stage_maint, Staff_num, Seat_num, Is_operate, Stage_updated_by, stageID]);
-        return result.affectedRows > 0;  
+        return result.affectedRows > 0;
     } catch (err) {
-        throw new Error('Error updating stage: ' + err.message); 
+        throw new Error('Error updating stage: ' + err.message);
     }
 };
 
@@ -76,12 +76,12 @@ exports.getStageById = async (stageID) => {
         JOIN sectors s ON st.area_ID = s.area_ID
         WHERE Stage_ID = ?;
     `;
-    
+
     try {
         const [results] = await db.query(query, [stageID]);
-        return results[0]; 
+        return results[0];
     } catch (err) {
-        throw new Error('Error fetching stage by ID: ' + err.message); 
+        throw new Error('Error fetching stage by ID: ' + err.message);
     }
 };
 
@@ -103,12 +103,23 @@ exports.getAllStagesWithEmployeeInfo = async () => {
         JOIN sectors s ON st.area_ID = s.area_ID
         LEFT JOIN employees e ON st.Stage_created_by = e.Emp_ID; 
     `;
-    
+
     try {
         const [results] = await db.query(query);
-        return results; 
+        return results;
     } catch (err) {
-        throw new Error('Error fetching stages with employee information: ' + err.message); 
+        throw new Error('Error fetching stages with employee information: ' + err.message);
+    }
+};
+
+exports.getStagesCost = async () => {
+    const query = `SELECT Stage_name, Stage_cost FROM stages;`;
+
+    try {
+        const [results] = await db.query(query);
+        return results;
+    } catch (err) {
+        throw new Error('Error fetching stages: ' + err.message);
     }
 };
 

@@ -16,7 +16,6 @@ function AboutUs() {
                 </p>
             </div>
 
-            {/*"Meet the Developers" Section */}
             <div className="developer-section">
                 <h3 className="section-title">Meet the esteemed CoogWorld Developers!</h3>
                 <div className="developer-cards">
@@ -30,7 +29,6 @@ function AboutUs() {
                     <div className="dev-card"><h4>Erin Sebastian</h4><p>Computer Science</p><em>University of Houston</em></div>
                 </div>
                 </div>
-
             </div>
 
             <div className='contact-info'>

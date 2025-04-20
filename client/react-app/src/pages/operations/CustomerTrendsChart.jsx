@@ -40,7 +40,6 @@ const CustomerTrendsChart = () => {
   const maxY = Math.max(...currentData.map(d => d.customers), 10);
   const paddedMaxY = Math.ceil((maxY + 5) / 5) * 5;
 
-  // ✅ PDF export
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.text(`Park Attendance Summary - ${activeView.toUpperCase()}`, 14, 16);

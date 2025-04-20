@@ -19,7 +19,7 @@ const getImageForRideType = (type) => {
     case 'spinning': return spinningImg;
     case 'water coaster': return waterCoasterImg;
     case 'extreme': return extremeImg;
-    default: return rideImg; // fallback image
+    default: return rideImg; 
   }
 };
 

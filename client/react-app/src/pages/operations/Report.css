@@ -1,4 +1,3 @@
-/* Ride.css */
 .table-container {
     margin: 2rem;
     overflow-x: auto;
@@ -57,7 +56,6 @@
     transition: background-color 0.2s ease;
 }
 
-/* Status indicators */
 .table td:nth-child(6) {
     font-weight: 600;
 }
@@ -74,14 +72,12 @@
     color: #6c757d;
 }
 
-/* Cost styling */
 .table td:nth-child(5) {
     font-family: 'Courier New', monospace;
     font-weight: bold;
     color: #2c3e50;
 }
 
-/* Add button */
 .add-button {
     background-color: #3498db;
     color: white;
@@ -106,7 +102,6 @@
     transform: translateY(0);
 }
 
-/*Delete Button*/
 .action-btn {
     color: white;
     border: none;
@@ -139,7 +134,6 @@
     background-color: #c0392b;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .table-container {
         margin: 1rem;
@@ -163,7 +157,6 @@
     margin: 0 40px;
 }
 
-/* Filter controls styling */
 .filter-controls {
     background-color: #f5f5f5;
     padding: 20px;
@@ -226,35 +219,24 @@
 }
 .bar-chart {
     background-color: white;
-    /* White background for the chart */
     padding: 10px;
-    /* Padding around the chart */
     border-radius: 8px;
-    /* Optional: Adds rounded corners to the chart container */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Optional: Light shadow around the chart */
     max-width: 800px;
-    /* Maximum width of the chart */
     margin: 0 auto;
-    /* Center the chart horizontally */
 }
 .report-container {
     max-width: 800px;
-    /* Maximum width of the entire report */
     margin: 0 auto;
-    /* Center the report on the page */
     padding: 20px;
-    /* Padding around the report */
 }
 .bar-chart-container {
     padding-top: 20px;
-    /* Add space above the chart */
 }
 .attendance-wrapper {
     display: flex;
     justify-content: center;
     gap: 3rem;
-    /* spacing between boxes */
     flex-wrap: wrap;
 }
 .attendance-card.single {
@@ -426,7 +408,7 @@
 
 .table-wrapper {
     position: relative;
-    min-height: 300px; /* Adjust based on your table size */
+    min-height: 300px;
 }
 
 .loading-overlay {

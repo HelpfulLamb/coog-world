@@ -92,7 +92,6 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                 <li>{description1}</li>
                 <li>{description2}</li>
             </ul>
-
             <div style={{ marginBottom: '10px' }}>
                 <label>Quantity: </label>
                 <select 
@@ -105,7 +104,6 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                     ))}
                 </select>
             </div>
-
             <div style={{ marginBottom: '10px' }}>
                 <label>Visit Date: </label>
                 <input
@@ -117,9 +115,7 @@ function TicketCard({ title, price, description1, description2, ticketId }) {
                     min={minDate}
                 />
             </div>
-
             <div><strong>Total: ${(price * quantity).toFixed(2)}</strong></div>
-
             <button className='fancy' onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );

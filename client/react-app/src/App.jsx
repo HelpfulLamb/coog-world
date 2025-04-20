@@ -49,6 +49,7 @@ import Attendance from './pages/operations/Attendance.jsx';
 import Stage from './pages/operations/Stage.jsx';
 import RideFrequencyReport from './pages/reports/RideFrequency.jsx';
 import ParkMaintenanceReport from './pages/reports/MaintLog.jsx';
+import CostReport from './pages/reports/CostReport.jsx';
 
 function App() {
     const location = useLocation();
@@ -56,7 +57,7 @@ function App() {
 
     return (
         <AuthProvider>
-            <CartProvider> {/* ✅ wrap inside AuthProvider */}
+            <CartProvider> 
                 <div className="app-container">
                     <Toaster position='top-right' containerStyle={{
                         top: '75px'
@@ -101,6 +102,7 @@ function App() {
                             <Route path='revenue-report' element={<Revenue />} />
                             <Route path='ticket-sales-trends' element={<TicketSalesTrends />} />
                             <Route path='customer-trends-report' element={<CustomerTrendsChart />} />
+                            <Route path='cost-report' element={<CostReport />} />
 
                         </Route>
                         <Route path="*" element={<div>404 - Page Not Found</div>} />

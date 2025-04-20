@@ -3,12 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx'; 
 import './Login.css';
 
-// Login.jsx
 export const Logout = (navigate) => {
     localStorage.removeItem('user');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userType');
-    window.location.href = '/login'; // full reload to clear memory
+    window.location.href = '/login'; 
   };  
 
 const Login = () => {
@@ -46,7 +45,7 @@ const Login = () => {
                 setMessage({ success: 'Login Successful!', error: '' });
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userType', role);
-                localStorage.setItem('user', JSON.stringify(data)); // Saves user data
+                localStorage.setItem('user', JSON.stringify(data)); 
                 //console.log("Saved to localStorage:", localStorage.getItem('user'));
                 setIsAuthenticated(true);
                 if(role === 'user'){
@@ -54,13 +53,13 @@ const Login = () => {
                 } else if(role === 'employee'){
                     const userRole = data.role?.toLowerCase();
                     if(userRole === 'admin') {
-                        navigate('/employee-dashboard');  // change to admin dashboard
+                        navigate('/employee-dashboard');  
                     } else if (userRole === 'manager') {
-                        navigate('/employee-dashboard');  // change to manager dashboard
+                        navigate('/employee-dashboard');  
                     } else if(userRole === 'maintenance') {
-                        navigate('/employee-dashboard');  // change to maintenance dashboard
+                        navigate('/employee-dashboard');  
                     } else {
-                        navigate('/employee-dashboard');  // change to employee dashboard
+                        navigate('/employee-dashboard');  
                     }
                 }
             } else {
