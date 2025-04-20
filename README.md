@@ -40,7 +40,7 @@ Welcome to Coog World! This project is a full-stack Theme Park Management System
 
 ## Installation Instructions (This assumes you are using VSCode and you wish to run the program on a localhost)
 
-Before you begin:
+### Before you begin:
     a. Make sure you have downloaded Node.js, git, and Visual Studio Code.
     b. Make a folder and open the git bash terminal in VSCode. Make sure you are in the folder you wish to clone the repository to.
     c. Clone the GitHub repository using 'git clone' and the link from GitHub in the git bash terminal in VSCode.
@@ -49,7 +49,7 @@ Before you begin:
     f. Remove '//' from the five lines in the db.js file, starting from "//  if (process.env.USE_SSL === 'true')".
 Once you finished the steps above, move on to the Backend Setup.
 
-## 1. Backend Setup
+### 1. Backend Setup
     a. Open a Command Prompt terminal in VSCode.
     b. Move to the repository folder 'coog-world' by typing 'cd coog-world' into the Command Prompt terminal, then press 'Enter' on your keyboard.
     c. Move to the server folder by typing 'cd server' into the Command Prompt terminal, then press 'Enter' on your keyboard. 
@@ -62,8 +62,8 @@ Once you finished the steps above, move on to the Backend Setup.
 
 DO NOT CLOSE THE TERMINAL ONCE YOU ARE DONE SETTING UP THE BACKEND. YOU NEED TO KEEP IT OPEN FOR THE FRONTEND.
 
+DO NOT DO THE PROCEED TO FRONTEND SETUP UNLESS YOU HAVE FINISHED SETTING UP THE BACKEND
 ### 2. Frontend Setup (Only do after Backend Setup is finished)
-DO NOT DO THE FOLLOWING STEPS UNLESS YOU HAVE FINISHED SETTING UP THE BACKEND
     a. Open a new Command Prompt terminal in VSCode.
     b. Move to the repository folder 'coog-world' by typing 'cd coog-world' into the Command Prompt terminal.
     c. Move to the react-app folder in the client folder by typing 'cd client\react-app' into the Command Prompt terminal.
@@ -73,6 +73,6 @@ DO NOT DO THE FOLLOWING STEPS UNLESS YOU HAVE FINISHED SETTING UP THE BACKEND
     e. Type in the terminal 'npm run dev', then press 'Enter' on your keyboard. 
         - If the terminal gives a localhost link, then you have finished setting up the frontend.
 
-To confirm you have finished setting up both the frontend and backend:      
+#### To confirm you have finished setting up both the frontend and backend:      
     a. Click the localhost link in the terminal where it says "Local: http://localhost:PORT_NUMBER/"
     b. Using the logins from the "Team 5 Project Document.docx", test the different user roles to confirm functionality.
