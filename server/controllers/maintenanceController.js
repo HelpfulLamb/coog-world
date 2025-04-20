@@ -41,6 +41,50 @@ exports.updateStatus = async (req, res, id, body) => {
     }
 };
 
+exports.markMessageSeen = async (req, res, id) => {
+    try {
+        await maintenanceModel.markMessageSeen(id);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'Maintenance alert acknowledged.'}));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
+    }
+};
+
+exports.markRepairSeen = async (req, res, id) => {
+    try {
+        await maintenanceModel.markRepairSeen(id);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: 'Repair alert acknowledged.'}));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
+    }
+};
+
+exports.getMaintenanceAlerts = async (req, res) => {
+    try {
+        const message = await maintenanceModel.getMaintenanceAlerts();
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(message || []));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
+    }
+};
+
+exports.getRepairAlerts = async (req, res) => {
+    try {
+        const message = await maintenanceModel.getRepairAlerts();
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(message || []));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({message: error.message}));
+    }
+};
+
 exports.getObjectsByType = async (req, res, type) => {
     try {
         const objects = await maintenanceModel.getObjectsByType(type);
@@ -120,6 +164,31 @@ exports.getParkMaintenance = async (req, res) => {
     }
 };
 
+exports.getDetailedMaintenance = async (req, res) => {
+    const {query} = url.parse(req.url, true);
+    const {objectType = 'ride', objectID = ''} = query;
+    const validObjects = ['ride', 'kiosk', 'stage'];
+    if(!validObjects.includes(objectType)){
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({message: 'Invalid object type.'}));
+    }
+    if(!objectID){
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end(JSON.stringify({message: 'Object ID is required.'}));
+    }
+    try {
+        const details = await maintenanceModel.getDetailedMaintenance(objectType, objectID);
+        if(details.length === 0){
+            res.writeHead(404, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({message: `No ${objectType} details found.`}));
+        }
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(details));
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify({ message: error.message }));
+    }
+};
 
 exports.deleteAllMaintenance = async (req, res) => {
     try {

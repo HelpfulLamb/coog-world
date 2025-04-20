@@ -567,3 +567,24 @@ button .spinner {
 .action-buttons .secondary-button{
     background-color: #e6a1a1c4;
 }
+.clickable-row {
+    cursor: pointer;
+}
+.close-button {
+    float: right;
+    background: red;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.modal-table th, .modal-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+}

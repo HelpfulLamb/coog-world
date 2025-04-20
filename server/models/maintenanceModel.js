@@ -33,6 +33,24 @@ exports.updateStatus = async (status) => {
     return report;
 };
 
+exports.markMessageSeen = async (alertID) => {
+    await db.query('UPDATE maintenance_alerts SET Is_Seen = TRUE WHERE Alert_ID = ?', [alertID]);
+};
+
+exports.markRepairSeen = async (logID) => {
+    await db.query('UPDATE maintenance_log SET Is_Seen = TRUE WHERE log_id = ?', [logID]);
+};
+
+exports.getMaintenanceAlerts = async () => {
+    const [alert] = await db.query('SELECT * FROM maintenance_alerts WHERE Is_Seen = FALSE ORDER BY Alert_time DESC');
+    return alert;
+};
+
+exports.getRepairAlerts = async () => {
+    const [log] = await db.query('SELECT * FROM maintenance_log WHERE Is_Seen = FALSE ORDER BY log_date DESC');
+    return log;
+};
+
 exports.getAllMaintenance = async () => {
     const [maintenances] = await db.query('SELECT * FROM maintenance');
     return maintenances;
@@ -91,7 +109,8 @@ exports.getParkMaintenance = async (month, objectType, maintenanceType) => {
     const typeFilter = maintenanceType === 'both' ? '' : `AND m.Maint_Type = '${maintenanceType}'`;
 
     const query = `
-        SELECT 
+        SELECT
+            o.${id} AS object_id,
             o.${name} AS object_name,
             IFNULL(m_count.total_maintenance, 0) AS total_maintenance,
             IFNULL(m_count.routine_count, 0) AS routine_count,
@@ -152,6 +171,28 @@ exports.getParkMaintenance = async (month, objectType, maintenanceType) => {
     return rows;
 };
 
+exports.getDetailedMaintenance = async (objectType, objectID) => {
+    const validObjects = {
+        ride: 'ride',
+        kiosk: 'kiosk',
+        stage: 'stage'
+    };
+    if (!validObjects[objectType]) {
+        throw new Error('Invalid object type.');
+    }
+    const query = `
+        SELECT 
+            MaintID,
+            DATE_FORMAT(Maintenance_Date, '%Y-%m-%d') AS date,
+            Maint_Type AS type,
+            Maint_Status AS status
+        FROM maintenance
+        WHERE Maint_obj = ? AND Maint_obj_ID = ?
+        ORDER BY Maintenance_Date DESC
+    `;
+    const [rows] = await db.query(query, [objectType, objectID]);
+    return rows;
+};
 
 exports.deleteAllMaintenance = async () => {
     await db.query('DELETE FROM maintenance');

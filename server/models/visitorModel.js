@@ -13,9 +13,22 @@ exports.createUsers = async (userData) => {
     );
 };
 
+exports.updateVisitorInfo = async (selectedUser) => {
+    const {Visitor_ID, First_name, Last_name, Email, Phone, Address} = selectedUser;
+    const [user] = await db.query('UPDATE visitors SET First_name = ?, Last_name = ?, Email = ?, Phone = ?, Address = ? WHERE Visitor_ID = ?',
+        [First_name, Last_name, Email, Phone, Address, Visitor_ID]
+    );
+    return user;
+};
+
 exports.getAllUsers = async () => {
     const [users] = await db.query('SELECT * FROM visitors');
     return users;
+};
+
+exports.getUserInfo = async () => {
+    const [info] = await db.query('SELECT Visitor_ID, First_name, Last_name, Email, Phone, Address FROM visitors');
+    return info;
 };
 
 exports.getUserById = async (id) => {
@@ -27,6 +40,6 @@ exports.deleteAllUsers = async () => {
     await db.query('DELETE FROM visitors');
 };
 
-exports.deleteUserById = async (id) => {
-    await db.query('DELETE FROM visitors WHERE Visitor_ID = ?', [id]);
+exports.deleteUserById = async (userid) => {
+    await db.query('DELETE FROM visitors WHERE Visitor_ID = ?', [userid]);
 };

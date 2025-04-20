@@ -32,6 +32,15 @@ module.exports = async function maintenanceRouter(req, res){
                 return maintenanceController.updateStatus(req, res, id, body);
             }
         }
+        if(req.method === 'PATCH'){
+            if(/^\/api\/maintenance\/maintenance-alerts\/\d+\/acknowledge$/.test(pathname)){
+                const id = pathname.split('/')[4];
+                return maintenanceController.markMessageSeen(req, res, id);
+            } else if(/^\/api\/maintenance\/repair-alerts\/\d+\/acknowledge$/.test(pathname)){
+                const id = pathname.split('/')[4];
+                return maintenanceController.markRepairSeen(req, res, id);
+            }
+        }
         if(req.method === 'GET'){
             if(pathname === '/api/maintenance'){
                 return maintenanceController.getAllMaintenance(req, res);
@@ -49,6 +58,12 @@ module.exports = async function maintenanceRouter(req, res){
                 return maintenanceController.getOpenMaintenanceCount(req, res);
             } else if(pathname.endsWith('/avg-stat')){
                 return maintenanceController.getParkMaintenance(req, res);
+            } else if(pathname.endsWith('/details')){
+                return maintenanceController.getDetailedMaintenance(req, res);
+            } else if(pathname.endsWith('/maintenance-alerts')){
+                return maintenanceController.getMaintenanceAlerts(req, res);
+            } else if(pathname.endsWith('/repair-alerts')){
+                return maintenanceController.getRepairAlerts(req, res);
             } else if(/\/objects\/\w+$/.test(pathname)){
                 const type = pathname.split('/').pop();
                 return maintenanceController.getObjectsByType(req, res, type);
