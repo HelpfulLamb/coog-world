@@ -78,7 +78,6 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                     body: JSON.stringify(newMaintenance),
                 });
                 const data = await response.json();
-                console.log("Data: ", data);
                 if(response.ok){
                     setMessage({success: 'Maintenance added succesfully!', error: ''});
                     setNewMaintenance({

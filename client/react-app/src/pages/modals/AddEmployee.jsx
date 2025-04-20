@@ -24,7 +24,7 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
                 Emp_sec: empToEdit.Emp_sec || '',
                 Emp_pos: empToEdit.Emp_pos || '',
                 Emp_salary: empToEdit.Emp_salary || '',
-                End_date: empToEdit.End_date || '',
+                End_date: empToEdit.End_date?.split('T')[0] || '',
             });
         }
     }, [empToEdit]);
@@ -73,9 +73,7 @@ export function UpdateEmployee({isOpen, onClose, empToEdit, onUpdateEmp}){
                     <div className="modal-form-grid">
                         {['First_name', 'Last_name', 'Emp_phone', 'Emp_email','Emp_salary', 'End_date'].map((field) => (
                             <div className="modal-input-group" key={field}>
-                                <label htmlFor={field}>
-                                    {field === 'End_date' ? 'Start Date' : field.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).trim()}
-                                </label>
+                                <label htmlFor={field}>{field.replace(/_/g, ' ')}</label>
                                 <input 
                                 id={field}
                                 type={field === 'End_date' ? 'date' : field === 'Emp_salary' ? 'number' : field === 'Emp_email' ? 'email' : field === 'Emp_phone' ? 'tel' : 'text'}
@@ -164,7 +162,6 @@ function AddEmployee({isOpen, onClose, onAddEmployee}){
                 body: JSON.stringify(newEmployee),
             });
             const data = await response.json();
-            console.log("Data: ", data);
             if(response.ok){
                 setMessage({success: 'Employee added succesfully!', error: ''});
                 setNewEmployee({

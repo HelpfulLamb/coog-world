@@ -162,6 +162,9 @@ function Show(){
         setIsEditOpen(true);
     };
     
+    useEffect(() => {
+    }, [selectedShow]);
+
     const handleUpdateShow = (updatedShow) => {
         setShowInformation(prev => prev.map(show => show.Show_ID === updatedShow.Show_ID ? updatedShow : show));
         toast.success('Show updated successfully!');

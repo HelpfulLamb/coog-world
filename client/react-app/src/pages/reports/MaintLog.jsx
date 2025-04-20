@@ -109,9 +109,6 @@ function ParkMaintenanceReport() {
           y: { beginAtZero: true }
         }
       };
-
-      console.log("Routine total:", filteredData.reduce((sum, item) => sum + (item.routine_count || 0), 0));
-console.log("Emergency total:", filteredData.reduce((sum, item) => sum + (item.emergency_count || 0), 0));
     return (
         <div className="ride-maintenance-report">
             <h2>Park Maintenance Report</h2>

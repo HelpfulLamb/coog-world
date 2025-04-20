@@ -115,7 +115,6 @@ const ClockInOut = () => {
 
     const fetchAllAttendance = useCallback(async () => {
         if (empId) {
-            console.log(`Fetching all attendance records for Emp_ID: ${empId}`);
             try {
                 const res = await fetch(`/api/attendance/all/${empId}`);
                 const data = await res.json();

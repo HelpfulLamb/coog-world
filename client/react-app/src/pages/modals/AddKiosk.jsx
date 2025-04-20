@@ -154,7 +154,6 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                 body: JSON.stringify(newKiosk),
             });
             const data = await response.json();
-            console.log('Backend Response: ', data);
             if(response.ok){
                 setMessage({success: 'Kisk added successfully!', error: ''});
                 setNewKiosk({

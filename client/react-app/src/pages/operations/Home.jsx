@@ -131,8 +131,6 @@ const Home = () => {
     const fetchRevenue = async () => {
       try {
         const response = await axios.get('/api/reports/revenue-summary');
-        console.log("📊 Revenue Summary Response:", response.data);
-
         const formattedRevenue = `$${Number(response.data.totalRevenue).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -158,7 +156,6 @@ const Home = () => {
     const fetchVisitorsToday = async () => {
       try {
         const response = await axios.get('/api/reports/visitors-today');
-        console.log("Visitor API Response:", response.data);
         const totalVisitors = response.data[0]?.visitors_today;
         setVisitorCount(typeof totalVisitors === 'number' ? totalVisitors : 'N/A');
       } catch (error) {

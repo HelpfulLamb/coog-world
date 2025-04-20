@@ -69,7 +69,6 @@ function Cart() {
     }
     setIsProcessing(true);  // new
     try {
-        console.log("🧾 Cart being submitted:", cartItems);
       for (const item of cartItems) {
         let endpoint = '';
         let bodyData = {};

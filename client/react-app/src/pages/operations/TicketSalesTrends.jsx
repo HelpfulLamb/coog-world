@@ -8,6 +8,36 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const COLORS = ['#c8102e', '#0088FE', '#00C49F', '#FFBB28'];
+const groupTransactionsByView = (entries, view) => {
+  return entries.filter((entry) => {
+    const date = new Date(entry.purchase_created);
+    const now = new Date();
+
+    switch (view) {
+      case 'daily':
+        return date.toDateString() === now.toDateString();
+      case 'weekly':
+        const currentWeek = getWeekNumber(now);
+        const entryWeek = getWeekNumber(date);
+        return entryWeek === currentWeek && date.getFullYear() === now.getFullYear();
+      case 'monthly':
+        return (
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear()
+        );
+      case 'yearly':
+        return date.getFullYear() === now.getFullYear();
+      default:
+        return true;
+    }
+  });
+};
+
+const getWeekNumber = (date) => {
+  const firstDay = new Date(date.getFullYear(), 0, 1);
+  const pastDaysOfYear = (date - firstDay) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDay.getDay() + 1) / 7);
+};
 
 const TicketSalesTrends = () => {
   const [trends, setTrends] = useState({ daily: [], weekly: [], monthly: [], yearly: [] });
@@ -152,7 +182,7 @@ const TicketSalesTrends = () => {
           )}
         </BarChart>
       </ResponsiveContainer>
-      <TicketTransactionTable transactions={filteredTransactions} />
+      <TicketTransactionTable transactions={groupTransactionsByView(filteredTransactions, view)} />
     </div>
   );
 };

@@ -29,7 +29,7 @@ exports.getAllRides = async () => {
 
 exports.getRideInfo = async () => {
     const [info] = await db.query(
-        'SELECT r.Ride_ID, r.Ride_name, r.Ride_type, r.Ride_maint, r.Ride_cost, r.Ride_staff, r.Is_operate, r.Ride_created, s.area_name FROM rides as r, sectors as s WHERE r.Ride_loc = s.area_ID'
+        'SELECT r.Ride_ID, r.Ride_name, r.Ride_type, r.Ride_loc, r.Ride_maint, r.Ride_cost, r.Ride_staff, r.Is_operate, r.Ride_created, s.area_name FROM rides as r, sectors as s WHERE r.Ride_loc = s.area_ID'
     );
     return info;
 };
