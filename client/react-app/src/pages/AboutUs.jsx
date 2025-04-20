@@ -29,7 +29,6 @@ function AboutUs() {
                     <div className="dev-card"><h4>Erin Sebastian</h4><p>Computer Science</p><em>University of Houston</em></div>
                 </div>
                 </div>
-
             </div>
 
             <div className='contact-info'>
