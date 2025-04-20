@@ -158,7 +158,7 @@ const Home = () => {
       setRepairAlert(repairData);
       repairData.forEach(alert => {
         toast.custom((t) => (
-            (role === 'admin') && (
+            (role === 'admin' || role === 'maintenance') && (
                 <div style={{
                     background: '#fff',
                     padding: '1rem 1.5rem',

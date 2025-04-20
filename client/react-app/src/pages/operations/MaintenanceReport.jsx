@@ -308,7 +308,7 @@ function Maintenance() {
             </div>
 
             <div className="db-btn">
-                <h1>Maintenance Report</h1>
+                <h1>Maintenance Logs</h1>
                 <div>
                     <button className="add-button" onClick={() => setIsModalOpen(true)}>Report Maintenance</button>
                 </div>
