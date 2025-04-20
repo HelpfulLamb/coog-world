@@ -39,8 +39,11 @@ export function UpdateKiosk({isOpen, onClose, kioskToEdit, onUpdateKiosk}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'Kiosk updated successfully!', error: ''});
-                if(onUpdateKiosk) onUpdateKiosk({...data.kiosk, Kiosk_ID: kioskToEdit.Kiosk_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateKiosk){
+                    onUpdateKiosk();
+                    setMessage({success: 'Kiosk updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -164,7 +167,7 @@ function AddKiosk({isOpen, onClose, onAddKiosk}){
                     Staff_num: '',
                 });
                 onAddKiosk(data.kiosk);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add kiosk.', success: ''});
             }

@@ -37,8 +37,11 @@ export function UpdateVisitor({isOpen, onClose, userToEdit, onUpdateUser}){
             const data = await response.json();
             if(response.ok){
                 setMessage({success: 'User updated successfully!', error: ''});
-                if(onUpdateUser) onUpdateUser({...data.user, Visitor_ID: userToEdit.Visitor_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onUpdateUser){
+                    onUpdateUser();
+                    setMessage({success: 'Visitor updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }

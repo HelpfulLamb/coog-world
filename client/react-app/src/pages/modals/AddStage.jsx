@@ -78,7 +78,7 @@ export function UpdateStage({ isOpen, onClose, stageToEdit, onUpdateStage }) {
                 setTimeout(() => {
                     onUpdateStage(data.stage);
                     onClose();
-                }, 1500);
+                }, 1000);
             } else {
                 setMessage({ error: data.message || 'Failed to update stage.', success: '' });
             }
@@ -216,7 +216,7 @@ export function AddStage({ isOpen, onClose, onAddStage }) {
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 1500);
+                }, 1000);
             } else {
                 setMessage({ error: data.message || 'Failed to add stage.', success: '' });
             }
