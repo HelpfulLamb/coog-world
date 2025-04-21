@@ -93,20 +93,7 @@ function Maintenance() {
             }
         };
         fetchMaintenance();
-    }, [isModalOpen]); // Refresh when modal opens/closes
-
-    useEffect(() => {
-        const fetchObjects = async () => {
-            try {
-                const response = await fetch('/api/maintenance/all-objects');
-                const data = await response.json();
-                setObjectsList(data);
-            } catch (error) {
-                console.error('Error fetching objects:', error);
-            }
-        };
-        fetchObjects();
-    }, []);
+    }, [isModalOpen]);
 
     useEffect(() => {
         let filtered = [...maintenanceInformation];
