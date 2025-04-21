@@ -93,9 +93,9 @@ export function UpdateWeather({isOpen, onClose, wtrToEdit, onUpdateWtr}){
                             </select>
                         </div>
                         <div className="modal-input-group">
-                            <label htmlFor="Wtr_level">Weather Level:</label>
+                            <label htmlFor="Wtr_level">Water Level:</label>
                             <select name="Wtr_level" id="Wtr_level" required value={formData.Wtr_level} onChange={handleInputChange}>
-                                <option value="">-- Weather Level --</option>
+                                <option value="">-- Water Level --</option>
                                 <option value="Normal">Normal</option>
                                 <option value="Severe">Severe</option>
                             </select>
@@ -210,9 +210,9 @@ function AddWeather({ isOpen, onClose, onAddWeather }) {
                         </select>
                     </div>
                     <div className="modal-input-group">
-                        <label htmlFor="Wtr_level">Weather Level:</label>
+                        <label htmlFor="Wtr_level">Water Level:</label>
                         <select name="Wtr_level" id="Wtr_level" required value={newWeather.Wtr_level} onChange={handleInputChange}>
-                            <option value="">-- Weather Level --</option>
+                            <option value="">-- Water Level --</option>
                             <option value="Normal">Normal</option>
                             <option value="Severe">Severe</option>
                         </select>

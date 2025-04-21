@@ -4,7 +4,6 @@ Group 5 project for a Themepark Management System
 Welcome to Coog World! This project is a full-stack Theme Park Management System built for COSC3380. It includes features for customers (ticket booking, merchandise shopping, ride logging), as well as employee dashboards and reporting tools.
 
 ## Project Structure
-├── away                  
 ├── client/react-app      # React frontend
 ├── server/               # Express.js backend
 ├── README.md             # Setup and instructions
