@@ -55,6 +55,9 @@ module.exports = async function visitorRouter(req, res){
             } else if(pathname.endsWith('/delete-selected')){
                 const body = await parseBody(req);
                 return visitorController.deleteUserById(req, res, body);
+            } else if(/\/api\/users\/\d+$/.test(pathname)){
+                const id = pathname.split('/').pop();
+                return visitorController.deleteUserByIdByParam(req, res, id);
             }
         }
         res.writeHead(404, {'Content-Type': 'application/json'});

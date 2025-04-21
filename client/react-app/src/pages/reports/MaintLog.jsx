@@ -177,6 +177,8 @@ function ParkMaintenanceReport() {
                     </div>
                 )}
                 {!loading && !error && filteredData.length > 0 && (
+                    <>
+                    <p>Click each row for a detailed look.</p>
                     <div className="table-container">
                         <table className="table">
                             <thead>
@@ -212,6 +214,7 @@ function ParkMaintenanceReport() {
                             </tfoot>
                         </table>
                     </div>
+                    </>
                 )}
             </div>
 

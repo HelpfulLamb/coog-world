@@ -115,6 +115,23 @@ exports.deleteUserById = async (req, res, body) => {
         res.end(JSON.stringify({message: err.message}));
     }
 };
+
+exports.deleteUserByIdByParam = async (req, res, id) => {
+    try {
+        if (!id) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ message: 'Invalid visitor ID provided.' }));
+        }
+        await userModel.deleteUserById(id);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'User deleted successfully.' }));
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Internal server error while deleting user' }));
+    }
+};
+
 exports.updateVisitor = async (req, res, id, body) => {
     const { first_name, last_name, email, phone, address } = body;
     try {

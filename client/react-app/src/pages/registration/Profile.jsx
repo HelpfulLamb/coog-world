@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {useAuth} from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import toast from 'react-hot-toast';
 import './Profile.css';
@@ -15,6 +16,7 @@ const formatPhoneNumber = (phone) => {
 };
 
 function Profile() {
+    const { setIsAuthenticated, setUserLogged } = useAuth();
     const [user, setUser] = useState(null);
     const [formData, setFormData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
@@ -149,7 +151,11 @@ function Profile() {
             if (response.ok) {
                 toast.success('Account deleted successfully', { id: toastId });
                 localStorage.removeItem('user');
-                navigate('/registration');
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('userType');
+                setIsAuthenticated(false);
+                setUser(null);
+                navigate('/login');
             } else {
                 toast.error('Failed to delete account', { id: toastId });
             }

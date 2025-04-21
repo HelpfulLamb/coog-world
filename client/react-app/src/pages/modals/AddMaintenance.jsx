@@ -81,7 +81,9 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                 },
                 body: JSON.stringify(newMaintenance),
             });
+            console.log('Raw response:', response)
             const data = await response.json();
+            console.log('Parsed data:', data);
             if(response.ok){
                 setMessage({success: 'Maintenance added successfully!', error: ''});
                 setNewMaintenance({
@@ -91,7 +93,7 @@ function AddMaintenance({isOpen, onClose, onAddMaintenance}){
                     Maintenance_Object: '',
                     Maintenance_Object_ID: '',
                 });
-                onAddMaintenance(data.maintenance);
+                onAddMaintenance(data);
                 setTimeout(() => onClose(), 1000);
             } else {
                 setMessage({error: data.message || 'Failed to add maintenance.', success: ''});
