@@ -17,6 +17,12 @@ const Home = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const role = user?.role?.toLowerCase();
+  useEffect(() => {
+    if(!sessionStorage.getItem('homeRefreshed')){
+        sessionStorage.setItem('homeRefreshed', 'true');
+        window.location.reload();
+    }
+  }, []);
 
   useEffect(() => {
     const hasShownAlerts = { weather: false, restock: false, maintenance: false, repair: false };
