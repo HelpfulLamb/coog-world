@@ -127,9 +127,18 @@ function Weather() {
         setFilteredWeather(filtered);
     }, [weatherInformation, conditionFilter, levelFilter, dateFromFilter, dateToFilter, sortOption]);
 
-    const handleAddWeather = (newWeather) => {
-        setWeatherInformation([...weatherInformation, newWeather]);
-        toast.success('Weather record added successfully!');
+    const handleAddWeather = async () => {
+        try {
+            const response = await fetch('/api/weather/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setWeatherInformation(data);
+            toast.success('Weather logged successfully!');
+        } catch (error) {
+            toast.error(`Failed to log weather: ${error.message}`);
+        }
     };
 
     const handleEditWeather = (weather) => {
@@ -137,11 +146,18 @@ function Weather() {
         setIsEditOpen(true);
     };
 
-    const handleUpdateWeather = (updatedWeather) => {
-        setWeatherInformation(prev => 
-            prev.map(weather => weather.Wtr_ID === updatedWeather.Wtr_ID ? updatedWeather : weather)
-        );
-        toast.success('Weather record updated successfully!');
+    const handleUpdateWeather = async () => {
+        try {
+            const response = await fetch('/api/weather/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setWeatherInformation(data);
+            toast.success('Weather updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update weather: ${error.message}`);
+        }
     };
 
     const handleDeleteWeather = (weather) => {

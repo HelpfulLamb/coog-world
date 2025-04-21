@@ -11,7 +11,7 @@ export const Logout = (navigate) => {
   };  
 
 const Login = () => {
-    const { setIsAuthenticated } = useAuth();
+    const { setIsAuthenticated, setUser } = useAuth();
     const [role, setRole] = useState(null); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -46,7 +46,7 @@ const Login = () => {
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userType', role);
                 localStorage.setItem('user', JSON.stringify(data)); 
-                //console.log("Saved to localStorage:", localStorage.getItem('user'));
+                setUser(data);
                 setIsAuthenticated(true);
                 if(role === 'user'){
                     navigate('/profile');

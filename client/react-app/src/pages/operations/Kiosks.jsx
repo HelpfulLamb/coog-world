@@ -145,9 +145,18 @@ function Kiosk(){
         setFilteredKiosks(filtered);
     }, [kioskInformation, kioskNameFilter, kioskTypeFilter, kioskLocationFilter, staffNumberFilter, costRangeFilter, sortOption]);
 
-    const handleAddKiosk = (newKiosk) => {
-        setKioskInformation([...kioskInformation, newKiosk]);
-        toast.success('Kiosk added successfully!');
+    const handleAddKiosk = async () => {
+        try {
+            const response = await fetch('/api/kiosks/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setKioskInformation(data);
+            toast.success('Kiosk added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add kiosk: ${error.message}`);
+        }
     };
     
     const handleEditKiosk = (kiosk) => {
@@ -158,9 +167,18 @@ function Kiosk(){
     useEffect(() => {
     }, [selectedKiosk]);
 
-    const handleUpdateKiosk = (updatedKiosk) => {
-        setKioskInformation(prev => prev.map(kiosk => kiosk.Kiosk_ID === updatedKiosk.Kiosk_ID ? updatedKiosk : kiosk));
-        toast.success('Kiosk updated successfully!');
+    const handleUpdateKiosk = async () => {
+        try {
+            const response = await fetch('/api/kiosks/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setKioskInformation(data);
+            toast.success('Kiosk updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update kiosk: ${error.message}`);
+        }
     };
     
     const handleDeleteKiosk = async (kioskID) => {

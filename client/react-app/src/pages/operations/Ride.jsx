@@ -132,9 +132,18 @@ function Ride() {
         setFilteredRides(filtered);
     }, [rideInformation, rideNameFilter, rideTypeFilter, rideLocationFilter, rideStatusFilter, costRangeFilter, sortOption]);
 
-    const handleAddRide = (newRide) => {
-        setRideInformation([...rideInformation, newRide]);
-        toast.success('Ride added successfully!');
+    const handleAddRide = async () => {
+        try {
+            const response = await fetch('/api/rides/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setRideInformation(data);
+            toast.success('Ride added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add ride: ${error.message}`);
+        }
     };
 
     const handleEditRide = (ride) => {
@@ -142,9 +151,18 @@ function Ride() {
         setIsEditOpen(true);
     };
 
-    const handleUpdateRide = (updatedRide) => {
-        setRideInformation(prev => prev.map(ride => ride.Ride_ID === updatedRide.Ride_ID ? updatedRide : ride));
-        toast.success('Ride updated successfully!');
+    const handleUpdateRide = async () => {
+        try {
+            const response = await fetch('/api/rides/info');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setRideInformation(data);
+            toast.success('Ride updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update ride: ${error.message}`);
+        }
     };
 
     const handleDeleteRide = async (rideID) => {

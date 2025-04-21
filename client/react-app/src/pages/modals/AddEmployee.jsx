@@ -46,10 +46,13 @@ export function UpdateEmployee({ isOpen, onClose, empToEdit, onUpdateEmp }) {
             });
 
             const data = await response.json();
-            if (response.ok) {
-                setMessage({ success: 'Employee updated successfully!', error: '' });
-                if (onUpdateEmp) onUpdateEmp({ ...data.emp, Emp_ID: empToEdit.Emp_ID });
-                setTimeout(() => { onClose(); window.location.href = window.location.href; });
+            if(response.ok){
+                setMessage({success: 'Employee updated successfully!', error: ''});
+                if(onUpdateEmp){
+                    onUpdateEmp();
+                    setMessage({success: 'Employee updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({ error: data.message || 'Update failed.', success: '' });
             }
@@ -190,7 +193,7 @@ function AddEmployee({ isOpen, onClose, onAddEmployee }) {
                     Start_date: '',
                 });
                 onAddEmployee(data.employee);
-                setTimeout(() => { onClose(); window.location.href = window.location.href; });
+                onClose();
             } else {
                 setMessage({ error: data.message || 'Failed to add employee.', success: '' });
             }

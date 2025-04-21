@@ -121,9 +121,18 @@ function Item(){
         setFilteredItems(filtered);
     }, [itemInformation, itemNamefilter, itemTypeFilter, sortOption]);
 
-    const handleAddItem = (newItem) => {
-        setItemInformation([...itemInformation, newItem]);
-        toast.success('Item added successfully!');
+    const handleAddItem = async () => {
+        try {
+            const response = await fetch('/api/inventory/items');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setItemInformation(data);
+            toast.success('Item added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add item: ${error.message}`);
+        }
     };
 
     const handleEditItem = (item) => {
@@ -131,9 +140,18 @@ function Item(){
         setIsEditOpen(true);
     };
 
-    const handleUpdateItem = (updatedItem) => {
-        setItemInformation(prev => prev.map(item => item.Item_ID === updatedItem.Item_ID ? updatedItem : item));
-        toast.success('Item updated successfully!');
+    const handleUpdateItem = async () => {
+        try {
+            const response = await fetch('/api/inventory/items');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setItemInformation(data);
+            toast.success('Item updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update item: ${error.message}`);
+        }
     };
 
     const handleDeleteItem = (item) => {

@@ -107,9 +107,12 @@ export function UpdateItem({isOpen, onClose, itemToEdit, onUpdateItem}){
             });
             const data = await response.json();
             if(response.ok){
-                setMessage({success: 'Ride updated successfully!', error: ''});
-                if(onUpdateItem) onUpdateItem({...data.item, Item_ID: itemToEdit.Item_ID});
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                setMessage({success: 'Item updated successfully!', error: ''});
+                if(onUpdateItem){
+                    onUpdateItem();
+                    setMessage({success: 'Item updated successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Update failed.', success: ''});
             }
@@ -228,8 +231,11 @@ export function AssignItem({isOpen, onClose, onAssignItem}){
                     Item_quantity: '',
                     Restock_level: '',
                 });
-                onAssignItem(data.assign);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                if(onAssignItem){
+                    onAssignItem();
+                    setMessage({success: 'Item assigned successfully!', error: ''});
+                    setTimeout(() => {onClose();}, 1000);
+                }
             } else {
                 setMessage({error: data.message || 'Failed to add assignment.', success: ''});
             }
@@ -338,7 +344,7 @@ function AddItem({isOpen, onClose, onAddItem}){
                     Item_supply_price: ''
                 });
                 onAddItem(data.item);
-                setTimeout(() => {onClose(); window.location.href = window.location.href;});
+                onClose();
             } else {
                 setMessage({error: data.message || 'Failed to add item.', success: ''});
             }

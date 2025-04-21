@@ -46,6 +46,9 @@ const DashboardNav = () => {
                 <li><Link to={'/employee-dashboard/hours'}>Hours</Link></li>
                 {(role === 'admin') && (
                     <>
+                        {(role === 'admin') && (
+                            <li><Link to={'/employee-dashboard/visitors'}>Park Visitors</Link></li>
+                        )}
                         <li className="dropdown">
                             <button onClick={toggleEmpDropdown}>
                                 Employees
@@ -58,7 +61,6 @@ const DashboardNav = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><Link to={'/employee-dashboard/visitors'}>Park Visitors</Link></li>
                         <li className="dropdown">
                             <button onClick={toggleRideDropdown}>
                                 Rides
@@ -138,7 +140,6 @@ const DashboardNav = () => {
                                             <ul className="dropdown-menu">
                                                 <li><Link to={'/employee-dashboard/revenue-report'}>Revenue Report</Link></li>
                                                 <li><Link to={'/employee-dashboard/ticket-sales-trends'}>Ticket Sales Report</Link></li>
-                                                <li><Link to={'/employee-dashboard/customer-trends-report'}>Park Attendance Summary</Link></li>
                                             </ul>
                                         )}
                                     </li>

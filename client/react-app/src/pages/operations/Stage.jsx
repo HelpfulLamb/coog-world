@@ -48,55 +48,46 @@ const StageList = () => {
 
     useEffect(() => {
         let filtered = [...stages];
-
         if (stageNameFilter) {
             filtered = filtered.filter(stage =>
                 stage.Stage_name.toLowerCase().includes(stageNameFilter.toLowerCase())
             );
         }
-
         if (areaNameFilter) {
             filtered = filtered.filter(stage =>
                 stage.area_name.toLowerCase().includes(areaNameFilter.toLowerCase())
             );
         }
-
         if (staffNumberFilter) {
             filtered = filtered.filter(stage =>
                 stage.Staff_num.toString().includes(staffNumberFilter)
             );
         }
-
         if (seatNumberFilter) {
             filtered = filtered.filter(stage =>
                 stage.Seat_num.toString().includes(seatNumberFilter)
             );
         }
-
         if (dateFromFilter) {
             filtered = filtered.filter(
                 stage => new Date(stage.Stage_maint) >= new Date(dateFromFilter)
             );
         }
-
         if (dateToFilter) {
             filtered = filtered.filter(
                 stage => new Date(stage.Stage_maint) <= new Date(dateToFilter)
             );
         }
-
         if (isOperationalFilter !== '') {
             filtered = filtered.filter(
                 stage => stage.Is_operate === (isOperationalFilter === '1' ? 1 : 0)
             );
         }
-
         if (stageCostFilter) {
             filtered = filtered.filter(stage =>
                 stage.Stage_cost.toString().includes(stageCostFilter)
             );
         }
-
         setFilteredStages(filtered);
     }, [
         stageNameFilter,
@@ -182,19 +173,32 @@ const StageList = () => {
         return date.toLocaleString();
     };
 
-    const handleAddStage = (newStage) => {
-        setStages(prev => [...prev, newStage]);
-        setFilteredStages(prev => [...prev, newStage]);
-        toast.success('Stage added successfully!');
-        fetchStages();
+    const handleAddStage = async () => {
+        try {
+            const response = await fetch('/api/stages/all');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setStages(data);
+            toast.success('Stage added successfully!');
+        } catch (error) {
+            toast.error(`Failed to add stage: ${error.message}`);
+        }
     };
 
-    const handleUpdateStage = (updatedStage) => {
-        const updatedList = stages.map(s => s.Stage_ID === updatedStage.Stage_ID ? updatedStage : s);
-        setStages(updatedList);
-        setFilteredStages(updatedList);
-        toast.success('Stage updated successfully!');
-        fetchStages();
+    const handleUpdateStage = async () => {
+        try {
+            const response = await fetch('/api/stages/all');
+            if(!response.ok){
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setStages(data);
+            toast.success('Stage updated successfully!');
+        } catch (error) {
+            toast.error(`Failed to update stage: ${error.message}`);
+        }
     };
 
     if (loading) return <div>Loading...</div>;
