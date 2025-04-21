@@ -86,9 +86,7 @@ Welcome to Coog World! This project is a full-stack Theme Park Management System
     b. Make a folder and open the git bash terminal in VSCode. Make sure you are in the folder you wish to clone the repository to.
     c. Clone the GitHub repository using 'git clone' and the link from GitHub in the git bash terminal in VSCode.
     d. In VSCode, go to the server folder and make a new file called ".env".
-    e. Copy the text in the "env.txt" file on OneDrive and paste into the ".env" file.
-    f. In the server folder, locate the config folder and open the db.js file.
-    g. Remove '//' from the five lines in the db.js file, starting from "//  if (process.env.USE_SSL === 'true')".
+    e. Copy the text in the "env.txt" file on OneDrive, paste the text into the ".env" file, and save the ".env" file.
 Once you finished the steps above, move on to the Backend Setup.
 
 ### 1. Backend Setup
